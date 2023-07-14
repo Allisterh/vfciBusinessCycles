@@ -1,11 +1,9 @@
-## code to prepare `var_results_xxx` datasets
-require(R.matlab)
+## Code to clean various VAR results from the BCA paper
+## into a tidy new file: `bca_original_var_results.csv`.
+#require(R.matlab)
 require(dplyr)
-require(readr)
 require(hdf5r)
-require(reshape2)
-
-require(ggplot2)
+require(data.table)
 
 ## Map of variable codes to names
 var_names <- tibble(
@@ -183,5 +181,4 @@ original_var_results <-
 
 
 ## Add to the package
-write_csv(original_var_results, "data/bca_original_var_results.csv")
-
+fwrite(original_var_results, "data/bca_original_var_results.csv")

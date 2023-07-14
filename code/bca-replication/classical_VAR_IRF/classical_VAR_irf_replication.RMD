@@ -30,6 +30,7 @@ Load in the packages.
 #devtools::install_github("VFCI/fevdid")
 
 require(ggplot2)
+require(data.table)
 require(dplyr)
 require(bcadata)
 require(vars)
@@ -66,7 +67,7 @@ mv_irf <- irf(mv, impulse = "Main", n.ahead = 40)
 
 ### Read in the original IRFs
 ```{r loadOriginalIRFs, message = F}
-bca_irf_df <- readr::read_csv("../../../data/bca_original_var_results.csv")
+bca_irf_df <- fread("../../../data/bca_original_var_results.csv")
 ```
 Some data cleaning steps.
 ```{r cleanOriginalIRFs, class.source = "fold-hide"}
