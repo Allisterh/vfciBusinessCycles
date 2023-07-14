@@ -3,7 +3,7 @@ title: "BCA Replication: Classical VAR IRFs"
 author: Matthew DeHaven
 date: July 13, 2023
 output: 
-    github_document
+    pdf_document
 ---
 ```{r setup, include = FALSE}
 require(here)
