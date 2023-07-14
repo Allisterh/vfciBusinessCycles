@@ -11,7 +11,7 @@ The first line in `main.R` will reinstantiate the project with the correct packa
 
 This project uses Github Actions to run `main.R` and unit tests in `tests/` everytime new code is pushed to Github.
 The tests are written using the R package [testthat](https://testthat.r-lib.org).
-Tests can be manually run with `testthat::test()`.
+Tests can be manually run with `testthat::test_dir("tests")`.
 
 In order to handle large data files, this project makes use of [Github Large File Storage](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage).
 Currently this is only used for some of the data in `data-raw/`.
@@ -30,7 +30,7 @@ It also contains data scripts that should not run everytime `main.R` is called, 
     - `.../` more subparts of the project.
 - `reports/` contains the *output* from Rmarkdown scripts.
 
-Default should be '.md' files as those display well on GitHub.  May add subfolders for '.pdf' or '.html'.
+Default should be '.pdf' files as those display well on GitHub and are self contained.  Difficulties with relative paths for markdown, html, etc.
 
 - `tests/` contains the unit tests for the project.
 
