@@ -6,12 +6,15 @@ Makes use of two helper packages: [bcadata](https://github.com/VFCI/bcadata) and
 # Running this Project
 Running `main.R` will recreate all output of the project, relying only upon `data-raw` and packages.
 
-This project uses the R package [`renv`](https://rstudio.github.io/renv/articles/renv.html) for package version control.
+This project uses the R package [renv](https://rstudio.github.io/renv/articles/renv.html) for package version control.
 The first line in `main.R` will reinstantiate the project with the correct packages, but this can also be done manually with `renv::restore()`.
 
 This project uses Github Actions to run `main.R` and unit tests in `tests/` everytime new code is pushed to Github.
-The tests are written using the R package [`testthat`](https://testthat.r-lib.org).
+The tests are written using the R package [testthat](https://testthat.r-lib.org).
 Tests can be manually run with `testthat::test()`.
+
+In order to handle large data files, this project makes use of [Github Large File Storage](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage).
+Currently this is only used for some of the data in `data-raw/`.
 
 ## Folder Structure
 
@@ -27,7 +30,7 @@ It also contains data scripts that should not run everytime `main.R` is called, 
     - `.../` more subparts of the project.
 - `reports/` contains the *output* from Rmarkdown scripts.
 
-Default is `.md` files as those display well on GitHub.  May add subfolders for `.pdf` or `.html`.
+Default should be '.md' files as those display well on GitHub.  May add subfolders for '.pdf' or '.html'.
 
 - `tests/` contains the unit tests for the project.
 
