@@ -14,4 +14,4 @@ source("./code/clean-data-raw/bca_replication_data.R")
 source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF.R")
 
 ## Build BCA Replication Reports
-knitr::knit("./code/reports/classical_VAR_IRF_replication.Rmd", output = "reports/Classical VAR IRF Replication.md")
+rmarkdown::render("./code/reports/classical_VAR_IRF_replication.Rmd", "pdf_document", "Classical VAR IRF Replication.pdf", "./reports/")
