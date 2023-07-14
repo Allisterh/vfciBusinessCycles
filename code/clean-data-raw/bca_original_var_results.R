@@ -179,6 +179,14 @@ original_var_results <-
         df_var_fd
     ), use.names = TRUE, fill = TRUE)
 
+## Round results to 4 digits, the extra digits change and cause excess commits
+original_var_results <- original_var_results |>
+    mutate(
+        median = round(median, digits = 4),
+        varirf = round(varirf, digits = 4),
+        pctl_84 = round(pctl_84, digits = 4),
+        pctl_16 = round(pctl_16, digits = 4)
+    )
 
 ## Add to the package
 fwrite(original_var_results, "data/bca_original_var_results.csv")
