@@ -1,0 +1,109 @@
+---
+title: "BCA Replication: Classical VAR IRFs"
+author: Matthew DeHaven
+date: July 13, 2023
+output: 
+    github_document
+---
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(ggplot2)
+```
+
+# What is being replicated
+The goal is to replicate Figure 20 of the Online Appendix, copied below.
+
+```{r fig20, echo = F, fig.cap="Figure 20: Impulse Response Functions to the MBC Shock: Bayesian vs Classical Inference", out.width = "100%"}
+knitr::include_graphics(here("./data-raw/figs-raw/bca-replication/figure20.png"), rel_path = F)
+```
+
+In particular, the orange line in the figure above shows the Classical VAR, the black line shows the Bayesian VAR.
+Both are targetting the business cycle frequency domain for unemployment.
+The orange band shows the 68% bootstrapped confidence interval.
+The orange line *actually* shows the median of the boostrapped VAR IRFs, but I have pulled the non-bootstrapped IRF series for comparison below. 
+The median is very close (see below).
+
+Yet to be implemented: bootstrapping the replicated VAR.
+
+# Replication
+
+```{r loadData, include = F}
+comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF.csv")) |>
+    mutate(
+        value = -1 * value,
+        median = -1 * median
+    ) |>
+    mutate(
+        variable = factor(variable, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"), ordered = T)
+    )
+    
+```
+
+Recreating Figure 20 exactly
+
+```{r plotRepFig20, echo = F, warning = F, fig.height = 2, out.width = "100%"}
+plot_variable <- function(plot_var, y_lims, y_breaks) {
+    comb_df |>
+    filter(model == "Replication") |> 
+    filter(variable == plot_var) |>
+    ggplot(aes(x = h + 1, y = value)) +
+    geom_line(color = "orange") +
+    labs(x = NULL, y = NULL, title = plot_var) +
+    theme_gray(base_size = 8) +
+    theme(panel.grid.minor = element_blank(), plot.title = element_text(hjust = 0.5)) +
+    scale_y_continuous(limits = y_lims, breaks = y_breaks, expand = c(0, 0)) +
+    scale_x_continuous(limits = c(1, 20))
+}
+
+plot <-
+    cowplot::plot_grid(
+        plot_variable("unemployment", c(-0.5, 0.5), c(-0.5, 0, 0.5)),
+        plot_variable("output", c(-1, 1), c(-1, 0, 1)),
+        plot_variable("hours_worked", c(-1, 1), c(-1, 0, 1)),
+        plot_variable("investment", c(-2, 2.75), c(0, 2.5)),
+        plot_variable("consumption", c(-0.75, 0.75), c(-0.5, 0, 0.5)),
+        plot_variable("TFP", c(-0.5, 0.5), c(-0.5, 0, 0.5)),
+        plot_variable("productivity", c(-0.5, 0.5), c(-0.5, 0, 0.5)),
+        plot_variable("labor_share", c(-0.5, 0.5), c(-0.5, 0, 0.5)),
+        plot_variable("inflation", c(-0.2, 0.2), c(-0.2, 0, 0.2)),
+        plot_variable("interest", c(-0.2, 0.2), c(-0.2, 0, 0.2)),
+        nrow = 2
+    )
+
+plot
+```
+
+Comparing replicated series to the original.
+```{r figCompare, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original", fig.height = 3, out.width = "100%"}
+comb_df |>
+    ggplot(aes(
+        x = h,
+        y = value
+    )) +
+    geom_hline(yintercept = 0, color = "black") +
+    geom_line(aes(color = model, linetype = model), linewidth = 1.25) +
+    facet_wrap(vars(variable), scales = "free_y", nrow = 2) +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    theme_gray() +
+    labs(y = NULL, x = "Horizon") +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+Comparing the original series to the median-bootstrap series (in Figure 20).
+```{r compareBootstrappedIRF, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original", fig.height = 3, out.width = "100%"}
+comb_df |>
+    filter(model == "classical_fd") |>
+    ggplot(aes(
+        x = h
+    )) +
+    geom_hline(yintercept = 0, color = "black") +
+    geom_line(aes(y = value, color = "Non-boostrapped IRF")) +
+    geom_line(aes(y = median, color = "Median Boostrapped IRF")) +
+    facet_wrap(vars(variable), scales = "free_y", nrow = 2) +
+    scale_color_manual(values = c("firebrick", "goldenrod3")) +
+    theme_gray() +
+    labs(y = NULL, x = "Horizon") +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
