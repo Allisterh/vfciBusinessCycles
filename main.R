@@ -7,7 +7,7 @@
 renv::restore()
 
 ## Data Cleaning
-source("./code/clean-data-raw/bca_original_var_results.R")
+# source("./code/clean-data-raw/bca_original_var_results.R")
 source("./code/clean-data-raw/bca_replication_data.R")
 
 ## BCA Replication
