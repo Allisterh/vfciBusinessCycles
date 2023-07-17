@@ -14,7 +14,8 @@ source("./code/clean-data-raw/bca_replication_data.R")
 source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF.R")
 
 ## Build BCA Replication Reports
-rmarkdown::render("./code/reports/classical_VAR_IRF_replication.Rmd", "pdf_document", "Classical VAR IRF Replication.pdf", "./reports/")
+options(tinytex.verbose = TRUE)
+rmarkdown::render("./code/reports/classical_VAR_IRF_replication.RMD", "pdf_document", "Classical VAR IRF Replication.pdf", "./reports/")
 
 
 ## Run tests
