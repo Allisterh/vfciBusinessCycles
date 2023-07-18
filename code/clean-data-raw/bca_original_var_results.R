@@ -5,9 +5,7 @@ require(dplyr)
 require(hdf5r)
 require(data.table)
 
-print(file.exists("./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat"))
-#system('chmod 777 ./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat')
-
+print(file.access("./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat", mode = 4))
 ## Map of variable codes to names
 var_names <- tibble(
     varnames = c(
