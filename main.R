@@ -15,8 +15,8 @@ source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF
 
 ## Build BCA Replication Reports
 options(tinytex.verbose = TRUE)
-rmarkdown::render("./code/reports/classical_VAR_IRF_replication.RMD", "pdf_document", "Classical VAR IRF Replication.pdf", "./reports/")
-
+#rmarkdown::render("./code/reports/classical_VAR_IRF_replication.RMD", "pdf_document", "Classical VAR IRF Replication.pdf", "./reports/")
+rmarkdown::render("./code/reports/classical_VAR_IRF_replication.RMD", "pdf_document", "test.pdf", "./reports/")
 
 ## Run tests
 testthat::test_dir("tests")
