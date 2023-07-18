@@ -54,5 +54,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: my-artifact
+          name: rmarkdown-logs
           path: ./code/reports/*.log
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: rmarkdown-tex
+          path: ./reports/*.tex
