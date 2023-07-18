@@ -1,5 +1,5 @@
 ---
-title: "BCA Replication: Classical VAR IRFs"
+title: "BCA Replication Classical VAR IRFs"
 author: Matthew DeHaven
 date: July 13, 2023
 output: 
