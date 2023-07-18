@@ -6,7 +6,6 @@ output:
     pdf_document
 ---
 ```{r setup, include = FALSE}
-options(tinytex.verbose = TRUE)
 require(here)
 require(data.table)
 require(dplyr)
