@@ -1,3 +1,4 @@
+![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg)
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
 
