@@ -47,3 +47,8 @@ jobs:
       - name: Run main.R
         run: |
           Rscript main.R
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: D:/a/vfciBusinessCycles/vfciBusinessCycles/reports/Classical VAR IRF Replication.log
