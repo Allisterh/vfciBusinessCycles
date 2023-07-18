@@ -55,5 +55,4 @@ jobs:
         if: failure()
         with:
           name: my-artifact
-          path: /d/a/vfciBusinessCycles/vfciBusinessCycles/code/reports/*.log
-
+          path: ./code/reports/*.log
