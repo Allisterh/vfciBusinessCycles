@@ -44,6 +44,9 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
       
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run main.R
         run: |
           Rscript main.R
@@ -52,5 +55,5 @@ jobs:
         if: failure()
         with:
           name: my-artifact
-          path: D:/a/vfciBusinessCycles/vfciBusinessCycles/reports/Classical VAR IRF Replication.log
+          path: Classical VAR IRF Replication.log
 
