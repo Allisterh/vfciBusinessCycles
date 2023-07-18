@@ -5,6 +5,9 @@ require(dplyr)
 require(hdf5r)
 require(data.table)
 
+print(file.exists("./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat"))
+#system('chmod 777 ./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat')
+
 ## Map of variable codes to names
 var_names <- tibble(
     varnames = c(
@@ -190,3 +193,4 @@ original_var_results <- original_var_results |>
 
 ## Add to the package
 fwrite(original_var_results, "data/bca_original_var_results.csv")
+
