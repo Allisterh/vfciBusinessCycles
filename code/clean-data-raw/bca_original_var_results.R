@@ -5,7 +5,7 @@ require(dplyr)
 require(hdf5r)
 require(data.table)
 
-print(file.access("./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat", mode = 4))
+
 ## Map of variable codes to names
 var_names <- tibble(
     varnames = c(
@@ -20,7 +20,7 @@ var_names <- tibble(
 ## Read in and organize the data behind Figure 1
 ## Bayesian VAR results, frequency domain, unemployment target
 file <- h5file(
-    "./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat", mode = "r")
+    "data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr.mat", mode = "r")
 
 irf <- file$open("IRFsr")$read()
 
@@ -60,7 +60,7 @@ df_bvar_fd <- df |> mutate(model = "bayesian_fd")
 
 ## Repeat process for other var_results: Time Domain targetting 0 - 4 qtrs
 file <- h5file(
-    "./data-raw/bca_original_var_results/benchmark_var_1955_2017_td4.mat", mode = "r")
+    "data-raw/bca_original_var_results/benchmark_var_1955_2017_td4.mat", mode = "r")
 
 ## 'm' is for median
 mirf <- file$open("mirf")$read()
@@ -96,7 +96,7 @@ df_bvar_td4 <- df |> mutate(model = "bayesian_td4")
 
 ## Repeat process for other var_results: Time Domain targetting 6 - 32 qtrs
 file <- h5file(
-    "./data-raw/bca_original_var_results/benchmark_var_1955_2017_td632.mat", mode = "r")
+    "data-raw/bca_original_var_results/benchmark_var_1955_2017_td632.mat", mode = "r")
 
 ## 'm' is for median
 mirf <- file$open("mirf")$read()
@@ -132,7 +132,7 @@ df_bvar_td632 <- df |> mutate(model = "bayesian_td632")
 
 ## Repeat process for other var_results: Classical VAR, frequency domain
 file <- h5file(
-    "./data-raw/bca_original_var_results/classical_var_1955_2017_fd_sr_varirf.mat", mode = "r")
+    "data-raw/bca_original_var_results/classical_var_1955_2017_fd_sr_varirf.mat", mode = "r")
 ## This file does not come from the replication files.
 ## I added as an export the original var IRF,
 ## rather than just the median of the bootstraps.
