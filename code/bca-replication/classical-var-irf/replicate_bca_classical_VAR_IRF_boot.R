@@ -75,6 +75,16 @@ boot_df_wild_r <-
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Wild Rademacher")
 
+boot_df_wild_g_sign <-
+    bootstrap(
+    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    method = "wild", design = "recursive", bias_adjust = FALSE,
+    wild_distr = "gaussian",
+    target = "unemployment", freqs = bc_freqs, sign_horizon = 20
+    )$IRF  |>
+    filter(shock == "Main") |>
+    mutate(model = "Bootstrap Replication Wild Gaussian, Sign Horizon")
+
 ## Some data wrangling to get a clean dataframe
 ## with original and replicated IRFs
 bca_irf_df <- bca_irf_df |>
@@ -98,7 +108,7 @@ mv_irf_df <- mv_irf[[1]] |>
 
 comb_df <- rbindlist(list(
     mv_irf_df, bca_irf_df, boot_df_resample, boot_df_resample_ba,
-    boot_df_wild_g, boot_df_wild_g_2000, boot_df_wild_r
+    boot_df_wild_g, boot_df_wild_g_2000, boot_df_wild_r, boot_df_wild_g_sign
     ), use.names = TRUE, fill = TRUE)
 
 fwrite(comb_df, "./data/replicated_bca_classical_VAR_IRF_boot.csv")
