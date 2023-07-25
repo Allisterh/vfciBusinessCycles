@@ -1,4 +1,3 @@
-require(ggplot2)
 require(data.table)
 require(dplyr)
 require(vars)
@@ -26,15 +25,55 @@ mv <- id_fevdfd(v, target = target_var, freqs = bc_freqs)
 
 ## Get the IRF
 mv_irf <- irf(mv, impulse = "Main", n.ahead = 40)
-mv_boot <- bootstrap(
+
+## Bootstrappeds
+boot_df_resample <-
+    bootstrap(
     mv, id_fevdfd, nboot = 1000, horizon = 40,
-    method = "wild", design = "recursive",
-    target = "unemployment", freqs = bc_freqs)
-
-boot_df <- mv_boot$IRF |>
+    method = "resample", design = "recursive", bias_adjust = FALSE,
+    target = "unemployment", freqs = bc_freqs
+    )$IRF |>
     filter(shock == "Main") |>
-    mutate(model = "Bootstrap Replication")
+    mutate(model = "Bootstrap Replication Resample")
 
+boot_df_resample_ba <-
+    bootstrap(
+    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    method = "resample", design = "recursive", bias_adjust = TRUE,
+    target = "unemployment", freqs = bc_freqs
+    )$IRF  |>
+    filter(shock == "Main") |>
+    mutate(model = "Bootstrap Replication Resample Bias Adjust")
+
+boot_df_wild_g <-
+    bootstrap(
+    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    method = "wild", design = "recursive", bias_adjust = FALSE,
+    wild_distr = "gaussian",
+    target = "unemployment", freqs = bc_freqs
+    )$IRF  |>
+    filter(shock == "Main") |>
+    mutate(model = "Bootstrap Replication Wild Gaussian")
+
+boot_df_wild_g_2000 <-
+    bootstrap(
+    mv, id_fevdfd, nboot = 2000, horizon = 40,
+    method = "wild", design = "recursive", bias_adjust = FALSE,
+    wild_distr = "gaussian",
+    target = "unemployment", freqs = bc_freqs
+    )$IRF  |>
+    filter(shock == "Main") |>
+    mutate(model = "Bootstrap Replication Wild Gaussian 2000")
+
+boot_df_wild_r <-
+    bootstrap(
+    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    method = "wild", design = "recursive", bias_adjust = FALSE,
+    wild_distr = "rademacher",
+    target = "unemployment", freqs = bc_freqs
+    )$IRF  |>
+    filter(shock == "Main") |>
+    mutate(model = "Bootstrap Replication Wild Rademacher")
 
 ## Some data wrangling to get a clean dataframe
 ## with original and replicated IRFs
@@ -57,6 +96,9 @@ mv_irf_df <- mv_irf[[1]] |>
     dplyr::select(!name) |>
     mutate(model = "Replication")
 
-comb_df <- rbindlist(list(mv_irf_df, bca_irf_df, boot_df), use.names = TRUE, fill = TRUE)
+comb_df <- rbindlist(list(
+    mv_irf_df, bca_irf_df, boot_df_resample, boot_df_resample_ba,
+    boot_df_wild_g, boot_df_wild_g_2000, boot_df_wild_r
+    ), use.names = TRUE, fill = TRUE)
 
 fwrite(comb_df, "./data/replicated_bca_classical_VAR_IRF_boot.csv")

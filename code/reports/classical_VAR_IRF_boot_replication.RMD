@@ -12,18 +12,6 @@ require(dplyr)
 require(ggplot2)
 ```
 
-# What is being replicated
-The goal is to replicate Figure 20 of the Online Appendix, copied below.
-
-```{r fig20, echo = F, fig.cap="Figure 20: Impulse Response Functions to the MBC Shock: Bayesian vs Classical Inference", out.width = "100%"}
-knitr::include_graphics(here("./data-raw/figs-raw/bca-replication/figure20.png"))
-```
-
-In particular, the orange line in the figure above shows the Classical VAR, the black line shows the Bayesian VAR.
-Both are targetting the business cycle frequency domain for unemployment.
-The orange band shows the 68% bootstrapped confidence interval.
-The orange line shows the median of the boostrapped VAR IRFs.
-
 # Replication of the Bootstrapped VARs
 
 ```{r loadData, include = F}
@@ -31,10 +19,11 @@ comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF_boot.csv")) |>
     mutate(model = ifelse(model == "classical_fd", "BCA Original", model))
 ```
 
-Using the Wild bootstrap with the gaussian distribution, the impulse responses are very different from the original BCA results.
-```{r figCompare, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Wild Bootstrap", fig.height = 3, out.width = "100%"}
+Using a resampled bootstrap method (drawing from VAR errors with replacement), the bootstrapped IRFs look very close to the original BCA IRFs.
+
+```{r figBootRes, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap", fig.height = 2.5, out.width = "100%"}
 comb_df |>
-    filter(model != "Replication") |>
+    filter(model %in% c("Bootstrap Replication Resample", "BCA Original")) |>
     ggplot(aes(
         x = h,
         color = model,
@@ -43,11 +32,99 @@ comb_df |>
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
     facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
-    scale_color_manual(values = c("firebrick", "goldenrod3")) +
-    scale_fill_manual(values = c("firebrick", "goldenrod3")) +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
     scale_x_continuous(limits = c(0, 20)) +
     labs(x = "Horizon", y = NULL) +
-    theme_gray() +
+    theme_gray(base_size = 8) +
     theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
 ```
 
+
+The original BCA paper also bias-adjusts their bootstraps, through a method called bootstrap-after-bootstrap.
+Implementing this makes the replicated IRFs even close to the original BCA IRFs.
+
+```{r figBootResBA, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap, Bias adjusted", fig.height = 2.5, out.width = "100%"}
+comb_df |>
+    filter(model %in% c("Bootstrap Replication Resample Bias Adjust", "BCA Original")) |>
+    ggplot(aes(
+        x = h,
+        color = model,
+        fill = model
+    )) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
+    geom_line(aes(y = median)) +
+    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    scale_x_continuous(limits = c(0, 20)) +
+    labs(x = "Horizon", y = NULL) +
+    theme_gray(base_size = 8) +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+### Comparison to Wild Bootsstrap
+
+Using the Wild bootstrap with the gaussian distribution (multiply the errors by a random vector drawn from N(0,1)), the impulse responses are very different from the original BCA results.
+
+```{r figBootWildG, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Wild Bootstrap, Gaussian, nboot = 1000", fig.height = 2.5, out.width = "100%"}
+comb_df |>
+    filter(model %in% c("Bootstrap Replication Wild Gaussian", "BCA Original")) |>
+    ggplot(aes(
+        x = h,
+        color = model,
+        fill = model
+    )) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
+    geom_line(aes(y = median)) +
+    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    scale_x_continuous(limits = c(0, 20)) +
+    labs(x = "Horizon", y = NULL) +
+    theme_gray(base_size = 8) +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+This remains true even if the number of bootstrap iterations are doubled. 
+There is almost no different between 1000 and 2000 iterations.
+
+```{r figBootWildG2000, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Wild Bootstrap, Gaussian, nboot = 2000", fig.height = 2.5, out.width = "100%"}
+comb_df |>
+    filter(model %in% c("Bootstrap Replication Wild Gaussian 2000", "BCA Original")) |>
+    ggplot(aes(
+        x = h,
+        color = model,
+        fill = model
+    )) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
+    geom_line(aes(y = median)) +
+    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    scale_x_continuous(limits = c(0, 20)) +
+    labs(x = "Horizon", y = NULL) +
+    theme_gray(base_size = 8) +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+Another distribution can be used in the Wild bootstrap method, "Rademacher" simply multiplies the VAR errors by a random vector of -1s and 1s.
+
+```{r figBootWildR, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Wild Bootstrap, Rademacher", fig.height = 2.5, out.width = "100%"}
+comb_df |>
+    filter(model %in% c("Bootstrap Replication Wild Rademacher", "BCA Original")) |>
+    ggplot(aes(
+        x = h,
+        color = model,
+        fill = model
+    )) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
+    geom_line(aes(y = median)) +
+    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    scale_x_continuous(limits = c(0, 20)) +
+    labs(x = "Horizon", y = NULL) +
+    theme_gray(base_size = 8) +
+    theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
+```
