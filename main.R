@@ -12,7 +12,7 @@ source("./code/clean-data-raw/bca_replication_data.R")
 
 ## BCA Replication
 source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF.R")
-source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF_boot.R")
+#source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF_boot.R") ## Takes a while to run because it tries lots of bootstraps
 
 
 ## Build BCA Replication Reports
