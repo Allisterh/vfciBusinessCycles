@@ -26,62 +26,63 @@ mv <- id_fevdfd(v, target = target_var, freqs = bc_freqs)
 ## Get the IRF
 mv_irf <- irf(mv, impulse = "Main", n.ahead = 40)
 
-## Bootstrappeds
+## Bootstraps
 boot_df_resample <-
     bootstrap(
-    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "resample", design = "recursive", bias_adjust = FALSE,
     target = "unemployment", freqs = bc_freqs
-    )$IRF |>
+    )$IRF_df |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Resample")
 
+
 boot_df_resample_ba <-
     bootstrap(
-    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "resample", design = "recursive", bias_adjust = TRUE,
     target = "unemployment", freqs = bc_freqs
-    )$IRF  |>
+    )$IRF_df  |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Resample Bias Adjust")
 
 boot_df_wild_g <-
     bootstrap(
-    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "wild", design = "recursive", bias_adjust = FALSE,
     wild_distr = "gaussian",
     target = "unemployment", freqs = bc_freqs
-    )$IRF  |>
+    )$IRF_df  |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Wild Gaussian")
 
 boot_df_wild_g_2000 <-
     bootstrap(
-    mv, id_fevdfd, nboot = 2000, horizon = 40,
+    mv, id_fevdfd, nboot = 2000, n_ahead = 40,
     method = "wild", design = "recursive", bias_adjust = FALSE,
     wild_distr = "gaussian",
     target = "unemployment", freqs = bc_freqs
-    )$IRF  |>
+    )$IRF_df  |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Wild Gaussian 2000")
 
 boot_df_wild_r <-
     bootstrap(
-    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "wild", design = "recursive", bias_adjust = FALSE,
     wild_distr = "rademacher",
     target = "unemployment", freqs = bc_freqs
-    )$IRF  |>
+    )$IRF_df  |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Wild Rademacher")
 
 boot_df_wild_g_sign <-
     bootstrap(
-    mv, id_fevdfd, nboot = 1000, horizon = 40,
+    mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "wild", design = "recursive", bias_adjust = FALSE,
     wild_distr = "gaussian",
     target = "unemployment", freqs = bc_freqs, sign_horizon = 20
-    )$IRF  |>
+    )$IRF_df  |>
     filter(shock == "Main") |>
     mutate(model = "Bootstrap Replication Wild Gaussian, Sign Horizon")
 
@@ -90,7 +91,7 @@ boot_df_wild_g_sign <-
 bca_irf_df <- bca_irf_df |>
     filter(model == "classical_fd") |>
     rename(h = "horizon") |>
-    mutate(h = h - 1) |>
+    mutate(h = h) |>
     rename(value = "varirf") |>
     rename(lower = "pctl_16") |>
     rename(upper = "pctl_84") |>

@@ -488,19 +488,16 @@
       "RemoteUsername": "VFCI",
       "RemoteRepo": "fevdid",
       "RemoteRef": "main",
-      "RemoteSha": "70dde2f7b76062f34376f137bfad40889e9bb090",
+      "RemoteSha": "e91809bb84f537bfcabe4959309bb9c4d343ebaa",
       "RemoteHost": "api.github.com",
       "Requirements": [
-        "dplyr",
         "ggplot2",
         "pracma",
         "stats",
-        "stringr",
         "svars",
-        "tidyr",
         "vars"
       ],
-      "Hash": "6eef83f7435f5f1b911dca0d7cef85e3"
+      "Hash": "9803f3c66d5791e687a5af8e4dc7e270"
     },
     "fontawesome": {
       "Package": "fontawesome",

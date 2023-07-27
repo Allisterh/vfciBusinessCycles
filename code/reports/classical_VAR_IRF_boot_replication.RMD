@@ -153,3 +153,20 @@ comb_df |>
     theme_gray(base_size = 8) +
     theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
 ```
+
+A question is if there is autocorrelation in the erorrs of the VAR that is causing this difference between the bootstrap methods.
+However, looking at the autocorrelation plots (below), this does not seem to be the case.
+```{r, echo = F, message = F}
+bcadata <- data.table::fread(here("./data/bca_replication_data.csv")) |>
+    dplyr::filter(date <= as.Date("2017-01-01"))
+x <- bcadata[, -"date"]
+
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+target_var <- "unemployment"
+
+v <- vars::VAR(x, p = 2, type = "const")
+
+u <- t(stats::resid(v))
+
+lapply(1:10, function(i) acf(u[i, ], lag.max = 20, main = rownames(u)[i]))
+```
