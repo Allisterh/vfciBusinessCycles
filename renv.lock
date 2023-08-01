@@ -16,6 +16,36 @@
       "Repository": "CRAN",
       "Hash": "aab9c2810d1ec384e73f2d8dba6952bb"
     },
+    "BVAR": {
+      "Package": "BVAR",
+      "Version": "1.0.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "grDevices",
+        "graphics",
+        "mvtnorm",
+        "stats",
+        "utils"
+      ],
+      "Hash": "7e5eb1b38e282f446f1ac7e61ade59b9"
+    },
+    "BVARverse": {
+      "Package": "BVARverse",
+      "Version": "0.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "BVAR",
+        "R",
+        "generics",
+        "ggplot2",
+        "rlang",
+        "tidyr"
+      ],
+      "Hash": "146a03229028af829cb69306e4cecddc"
+    },
     "DEoptim": {
       "Package": "DEoptim",
       "Version": "2.2-8",
@@ -488,16 +518,17 @@
       "RemoteUsername": "VFCI",
       "RemoteRepo": "fevdid",
       "RemoteRef": "main",
-      "RemoteSha": "e91809bb84f537bfcabe4959309bb9c4d343ebaa",
+      "RemoteSha": "7e63b22479e9eb8d6c517b9d5d2e1266393682e9",
       "RemoteHost": "api.github.com",
       "Requirements": [
+        "expm",
         "ggplot2",
         "pracma",
         "stats",
         "svars",
         "vars"
       ],
-      "Hash": "9803f3c66d5791e687a5af8e4dc7e270"
+      "Hash": "c6f38b71bbd9edfc5481f0dac414ede8"
     },
     "fontawesome": {
       "Package": "fontawesome",

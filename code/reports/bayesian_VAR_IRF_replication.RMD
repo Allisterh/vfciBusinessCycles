@@ -1,0 +1,137 @@
+---
+title: "BCA Replication: Bayesian VAR IRFs"
+author: Matthew DeHaven
+date: July 31, 2023
+output: 
+    pdf_document
+---
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(ggplot2)
+```
+
+# What is being replicated
+The goal is to replicate Figure 1 of ``Business Cycle Anatomy'', copied below.
+
+```{r fig20, echo = F, fig.cap="Impulse Response Functions to the MBC Shock", out.width = "100%"}
+knitr::include_graphics(here("./data-raw/figs-raw/bca-replication/figure1.pdf"))
+```
+
+The black line shows the median Bayesian posterior distribution of the IRF at that horizon.
+The shaded area shows the 16th to 84th percentile of that distribution.
+
+# Replication
+```{r loadData, include = F}
+df <- fread(here("./data/replicated_bca_bayesian_VAR_IRF.csv"))
+df[, variable := factor(variable, levels = c(
+    "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
+), ordered = TRUE)]
+df[model == "bayesian_fd", model := "Original BCA, Frequency Domain"]
+df[model == "bayesian_td4", model := "Original BCA, Time Domain, Horizon 4"]
+df[model == "bayesian_td632", model := "Original BCA, Time Domain, Horizon 6:32 (act. 32)"]
+```
+
+```{r plotRepBayFD, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain", fig.height = 2.5, out.width = "100%"}
+df[model %in% c("Replication, Frequency Domain", "Original BCA, Frequency Domain")] |>
+    ggplot(aes(
+        x = horizon,
+        color = model,
+        fill = model
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+\newpage
+
+# Time Domain Targetting
+
+In addition, the original paper compares targetting the time domain to the frequency domain.
+
+They argue that targetting a horizon of 4 is the most similar to the frequency domain result from above.
+The below plot compares a replication of a Bayesian VAR targetting a horizon of 4.
+
+```{r plotRepBayTD4, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 4", fig.height = 2.5, out.width = "100%"}
+df[model %in% c("Replication, Time Domain, Horizon 4", "Original BCA, Time Domain, Horizon 4")] |>
+    ggplot(aes(
+        x = horizon,
+        color = model,
+        fill = model
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+The authors argue that targetting a horizon of 6 to 32 (to match the frequencies of 2 pi / 6 tp 2 pi /32) would be naive and does not give the closest matched IRF.
+However, their code incorrectly targets only the 32nd horizon, not the full range.
+Thus in comparing the replication below, I target the 32nd horizon.
+
+```{r plotRepBayTD32, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 32", fig.height = 2.5, out.width = "100%"}
+df[model %in% c("Replication, Time Domain, Horizon 32", "Original BCA, Time Domain, Horizon 6:32 (act. 32)")] |>
+    ggplot(aes(
+        x = horizon,
+        color = model,
+        fill = model
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
