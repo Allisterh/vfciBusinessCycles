@@ -22,7 +22,291 @@ knitr::include_graphics(here("./data-raw/figs-raw/bca-replication/figure1.pdf"))
 The black line shows the median Bayesian posterior distribution of the IRF at that horizon.
 The shaded area shows the 16th to 84th percentile of that distribution.
 
-# Replication
+# Frequency Domain Replication - bvartools package
+```{r loadDatabvartools, include = F}
+df <- fread(here("./data/replicated_bca_bayesian_VAR_IRF_bvartools.csv"))
+df[, variable := factor(variable, levels = c(
+    "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
+), ordered = TRUE)]
+```
+
+```{r plotRepBayFD, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_fd" & version == "original") | model == "bayesian_fd"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayFDsmall, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain, 1000 burnin (small)", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_fd" & version == "original") | model == "bayesian_fd_small"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayFDexact, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain, exact priors", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_fd" & version == "original") | model == "bayesian_fd_exact"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+# Time Domain Replication - bvartools package
+
+```{r plotRepBayTD4, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 4", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td4" & version == "original") | model == "bayesian_td4"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayTD4small, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 4, 1000 burnin (small)", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td4" & version == "original") | model == "bayesian_td4_small"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayTD4exact, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 4, exact priors", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td4" & version == "original") | model == "bayesian_td4_exact"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+For the next three plots, the replication only targets a time horizon of 32, instead of the full range of 6:32, as the original BCA code does not correctly target the full range.
+
+```{r plotRepBayTD632, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 6:32", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td632" & version == "original") | model == "bayesian_td32"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayTD632small, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 6:32, 1000 burnin (small)", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td632" & version == "original") | model == "bayesian_td32_small"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+```{r plotRepBayTD632exact, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain: 6:32, exact priors", fig.height = 2.5, out.width = "100%"}
+df[(model == "bayesian_td632" & version == "original") | model == "bayesian_td32_exact"] |>
+    ggplot(aes(
+        x = h,
+        color = version,
+        fill = version
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_ribbon(aes(
+        ymin = lower,
+        ymax = upper
+        ),
+        alpha = 0.3,
+        color = NA
+        ) +
+    geom_line(aes(
+        y = median
+    )) +
+    labs(y = NULL, x = "Horizon") +
+    scale_color_manual(values = c("firebrick", "steelblue")) +
+    scale_fill_manual(values = c("firebrick", "steelblue")) +
+    facet_wrap(
+        vars(variable),
+        scales = "free_y",
+        nrow = 2
+        ) +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
+```
+
+\newpage
+
+# Frequency Domain Replication - BVAR package
 ```{r loadData, include = F}
 df <- fread(here("./data/replicated_bca_bayesian_VAR_IRF.csv"))
 df[, variable := factor(variable, levels = c(
@@ -33,7 +317,7 @@ df[model == "bayesian_td4", model := "Original BCA, Time Domain, Horizon 4"]
 df[model == "bayesian_td632", model := "Original BCA, Time Domain, Horizon 6:32 (act. 32)"]
 ```
 
-```{r plotRepBayFD, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain", fig.height = 2.5, out.width = "100%"}
+```{r plotRep2BayFD, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Frequency Domain", "Original BCA, Frequency Domain")] |>
     ggplot(aes(
         x = horizon,
@@ -63,16 +347,15 @@ df[model %in% c("Replication, Frequency Domain", "Original BCA, Frequency Domain
     theme(legend.position = "bottom", legend.margin = margin(-10, 0, 0, 0, "pt"), strip.background = element_blank(), panel.grid.minor = element_blank())
 ```
 
-\newpage
 
-# Time Domain Targetting
+# Time Domain Targetting - BVAR package
 
 In addition, the original paper compares targetting the time domain to the frequency domain.
 
 They argue that targetting a horizon of 4 is the most similar to the frequency domain result from above.
 The below plot compares a replication of a Bayesian VAR targetting a horizon of 4.
 
-```{r plotRepBayTD4, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 4", fig.height = 2.5, out.width = "100%"}
+```{r plotRep2BayTD4, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 4", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Time Domain, Horizon 4", "Original BCA, Time Domain, Horizon 4")] |>
     ggplot(aes(
         x = horizon,
@@ -106,7 +389,7 @@ The authors argue that targetting a horizon of 6 to 32 (to match the frequencies
 However, their code incorrectly targets only the 32nd horizon, not the full range.
 Thus in comparing the replication below, I target the 32nd horizon.
 
-```{r plotRepBayTD32, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 32", fig.height = 2.5, out.width = "100%"}
+```{r plotRep2BayTD32, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 32", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Time Domain, Horizon 32", "Original BCA, Time Domain, Horizon 6:32 (act. 32)")] |>
     ggplot(aes(
         x = horizon,

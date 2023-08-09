@@ -6,7 +6,7 @@ require(BVARverse)
 
 ## Pull the correct vintage of the BCA data
 bcadata <- fread("./data/bca_replication_data.csv")[
-    date <= as.Date("2017-01-01"), ]
+    date <= as.Date("2017-10-01"), ]
 x <- bcadata[, -"date"]
 
 ## Load the original BCA IRFs
@@ -17,13 +17,28 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 target_var <- "unemployment"
 
 ## Fit the VAR
-bv <- bvar(x, lags = 2, priors = bv_priors(hyper = "full"))
+#bv <- bvar(x, lags = 2, priors = bv_priors(hyper = "full"))
+bv <- bvar(
+    x,
+    lags = 2,
+    priors = bv_priors(
+        hyper = c("lambda", "alpha", "psi"),
+        mn = bv_mn(
+            b = 1,
+            lambda = bv_lambda(mode = 0.2),
+            alpha = bv_alpha(mode = 4),
+            psi = bv_psi(mode = rep(4, 10)),
+            var = 10^10)
+        ),
+    n_draw = 50000L,
+    n_burn = 49000L,
+    n_thin = 1L
+    )
 
 ## Identify the shock
 mbv <- id_fevdfd(bv, target = target_var, freqs = bc_freqs)
-
 mbvtd4 <- id_fevdtd(bv, target = target_var, horizon = 4)
-mbvtd32 <- id_fevdtd(bv, target = target_var, horizon = 32) ## 6:32 
+mbvtd32 <- id_fevdtd(bv, target = target_var, horizon = 32) ## 6:32
 
 
 ## Get IRFs
@@ -51,6 +66,7 @@ irf_df <-
         old = c("response", "16", "50", "84"),
         new = c("variable", "lower", "median", "upper")
     )
+
 
 irf_dftd4 <-
     irf_dftd4[impulse == "output", .(
@@ -100,28 +116,7 @@ df <- rbindlist(list(
 ## Save it out to disk
 fwrite(df, "./data/replicated_bca_bayesian_VAR_IRF.csv")
 
-## Plot!
-df[model %in% c("Replication, Frequency Domain", "bayesian_fd")] |>
-    ggplot(aes(
-        x = horizon,
-        color = model,
-        fill = model
-    )) +
-    geom_hline(yintercept = 0) +
-    geom_ribbon(aes(
-        ymin = lower,
-        ymax = upper
-        ),
-        alpha = 0.3,
-        color = NA
-        ) +
-    geom_line(aes(
-        y = median
-    )) +
-    facet_wrap(
-        vars(variable),
-        scales = "free_y",
-        nrow = 2
-        ) +
-    theme_bw() +
-    theme(legend.position = "bottom")
+
+
+irf(bv) <- irf(bv, bv_irf(horizon = 40L, identification = FALSE))
+irf(bv, conf_bands = c(0.16)) |> bv_ggplot()

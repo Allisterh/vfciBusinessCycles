@@ -223,6 +223,24 @@
       ],
       "Hash": "1b117970533deb6d4e992c1b34e9d905"
     },
+    "bvartools": {
+      "Package": "bvartools",
+      "Version": "0.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "RcppArmadillo",
+        "coda",
+        "grDevices",
+        "graphics",
+        "methods",
+        "parallel",
+        "stats"
+      ],
+      "Hash": "af346d5252cc8c352594f93018efecb7"
+    },
     "cachem": {
       "Package": "cachem",
       "Version": "1.0.8",
@@ -285,6 +303,17 @@
         "utils"
       ],
       "Hash": "5edbbabab6ce0bf7900a74fd4358628e"
+    },
+    "coda": {
+      "Package": "coda",
+      "Version": "0.19-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "lattice"
+      ],
+      "Hash": "24b6d006b8b2343876cf230687546932"
     },
     "colorspace": {
       "Package": "colorspace",
@@ -518,7 +547,7 @@
       "RemoteUsername": "VFCI",
       "RemoteRepo": "fevdid",
       "RemoteRef": "main",
-      "RemoteSha": "7e63b22479e9eb8d6c517b9d5d2e1266393682e9",
+      "RemoteSha": "faf34d882e31b1109a50b22cf797677b4570c82b",
       "RemoteHost": "api.github.com",
       "Requirements": [
         "expm",
@@ -528,7 +557,7 @@
         "svars",
         "vars"
       ],
-      "Hash": "c6f38b71bbd9edfc5481f0dac414ede8"
+      "Hash": "dc261563b2aa8fb3d64b2bfc3fcc035f"
     },
     "fontawesome": {
       "Package": "fontawesome",
