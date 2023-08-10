@@ -116,7 +116,3 @@ df <- rbindlist(list(
 ## Save it out to disk
 fwrite(df, "./data/replicated_bca_bayesian_VAR_IRF.csv")
 
-
-
-irf(bv) <- irf(bv, bv_irf(horizon = 40L, identification = FALSE))
-irf(bv, conf_bands = c(0.16)) |> bv_ggplot()

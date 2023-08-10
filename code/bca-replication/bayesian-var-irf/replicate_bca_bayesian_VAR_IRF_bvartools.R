@@ -48,10 +48,10 @@ mbv_small_rep_td4 <- id_fevdtd(bv_small_rep, tv, 4)
 mbv_small_rep_td32 <- id_fevdtd(bv_small_rep, tv, 32)
 mbv_small_rep_td632 <- id_fevdtd(bv_small_rep, tv, 6:32)
 
-irf_df_small_rep_fd <- vars::irf(mbv_small_rep_fd) |> setDT()
-irf_df_small_rep_td4 <- vars::irf(mbv_small_rep_td4) |> setDT()
-irf_df_small_rep_td32 <- vars::irf(mbv_small_rep_td32) |> setDT()
-irf_df_small_rep_td632 <- vars::irf(mbv_small_rep_td632) |> setDT()
+irf_df_small_rep_fd <- vars::irf(mbv_small_rep_fd, n.ahead = 40) |> setDT()
+irf_df_small_rep_td4 <- vars::irf(mbv_small_rep_td4, n.ahead = 40) |> setDT()
+irf_df_small_rep_td32 <- vars::irf(mbv_small_rep_td32, n.ahead = 40) |> setDT()
+irf_df_small_rep_td632 <- vars::irf(mbv_small_rep_td632, n.ahead = 40) |> setDT()
 
 irf_df_small_rep_fd[, version := "replication"][, model := "bayesian_fd_small"]
 irf_df_small_rep_td4[, version := "replication"][, model := "bayesian_td4_small"]
@@ -67,10 +67,10 @@ mbv_rep_td4 <- id_fevdtd(bv_rep, tv, 4)
 mbv_rep_td32 <- id_fevdtd(bv_rep, tv, 32)
 mbv_rep_td632 <- id_fevdtd(bv_rep, tv, 6:32)
 
-irf_df_rep_fd <- vars::irf(mbv_rep_fd) |> setDT()
-irf_df_rep_td4 <- vars::irf(mbv_rep_td4) |> setDT()
-irf_df_rep_td32 <- vars::irf(mbv_rep_td32) |> setDT()
-irf_df_rep_td632 <- vars::irf(mbv_rep_td632) |> setDT()
+irf_df_rep_fd <- vars::irf(mbv_rep_fd, n.ahead = 40) |> setDT()
+irf_df_rep_td4 <- vars::irf(mbv_rep_td4, n.ahead = 40) |> setDT()
+irf_df_rep_td32 <- vars::irf(mbv_rep_td32, n.ahead = 40) |> setDT()
+irf_df_rep_td632 <- vars::irf(mbv_rep_td632, n.ahead = 40) |> setDT()
 
 irf_df_rep_fd[, version := "replication"][, model := "bayesian_fd"]
 irf_df_rep_td4[, version := "replication"][, model := "bayesian_td4"]
@@ -86,10 +86,10 @@ mbv_exact_rep_td4 <- id_fevdtd(bv_exact_rep, tv, 4)
 mbv_exact_rep_td32 <- id_fevdtd(bv_exact_rep, tv, 32)
 mbv_exact_rep_td632 <- id_fevdtd(bv_exact_rep, tv, 6:32)
 
-irf_df_exact_rep_fd <- vars::irf(mbv_exact_rep_fd) |> setDT()
-irf_df_exact_rep_td4 <- vars::irf(mbv_exact_rep_td4) |> setDT()
-irf_df_exact_rep_td32 <- vars::irf(mbv_exact_rep_td32) |> setDT()
-irf_df_exact_rep_td632 <- vars::irf(mbv_exact_rep_td632) |> setDT()
+irf_df_exact_rep_fd <- vars::irf(mbv_exact_rep_fd, n.ahead = 40) |> setDT()
+irf_df_exact_rep_td4 <- vars::irf(mbv_exact_rep_td4, n.ahead = 40) |> setDT()
+irf_df_exact_rep_td32 <- vars::irf(mbv_exact_rep_td32, n.ahead = 40) |> setDT()
+irf_df_exact_rep_td632 <- vars::irf(mbv_exact_rep_td632, n.ahead = 40) |> setDT()
 
 irf_df_exact_rep_fd[, version := "replication"][, model := "bayesian_fd_exact"]
 irf_df_exact_rep_td4[, version := "replication"][, model := "bayesian_td4_exact"]
