@@ -1,0 +1,30 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on: [push]
+ 
+name: Run Tests
+
+jobs:
+  RunTests:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: dependencies on Linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make libicu-dev libxml2-dev libssl-dev pandoc librdf0-dev libnode-dev libcurl4-gnutls-dev
+
+    - uses: actions/checkout@v3
+
+    - uses: r-lib/actions/setup-pandoc@v2
+
+    - uses: r-lib/actions/setup-tinytex@v2
+    
+    - uses: r-lib/actions/setup-r@v2
+
+    - uses: r-lib/actions/setup-renv@v2
+
+    - name: Run Tests
+      run: |
+        Rscript -e 'testthat::test_dir("tests")'

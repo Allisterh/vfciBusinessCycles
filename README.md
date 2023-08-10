@@ -1,4 +1,5 @@
 ![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg)
+![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg)
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
 
@@ -10,7 +11,10 @@ Running `main.R` will recreate all output of the project, relying only upon `dat
 This project uses the R package [renv](https://rstudio.github.io/renv/articles/renv.html) for package version control.
 The first line in `main.R` will reinstantiate the project with the correct packages, but this can also be done manually with `renv::restore()`.
 
-This project uses Github Actions to run `main.R` and unit tests in `tests/` everytime new code is pushed to Github.
+This project uses Github Actions to run `main.R` and unit tests in `tests/`.
+The `Run Tests` Github Action is run for every push to repository, for any branch.
+The `Run Main.R` Github Action is only run on pull requests to the main branch.
+
 The tests are written using the R package [testthat](https://testthat.r-lib.org).
 Tests can be manually run with `testthat::test_dir("tests")`.
 
