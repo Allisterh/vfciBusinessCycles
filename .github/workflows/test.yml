@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: dependencies on Linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make libicu-dev libxml2-dev libssl-dev pandoc librdf0-dev libnode-dev libcurl4-gnutls-dev
 
     - uses: actions/checkout@v3
 
