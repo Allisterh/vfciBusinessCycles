@@ -21,7 +21,7 @@ Tests can be manually run with `testthat::test_dir("tests")`.
 In order to handle large data files, this project makes use of [Github Large File Storage](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage).
 Currently this is only used for some of the data in `data-raw/`.
 
-## Folder Structure
+# Folder Structure
 
 - `main.R` runs all of the code in the project from start to finish.
 - `data-raw/` contains all of the raw data files copied from elsewhere.
@@ -39,15 +39,28 @@ Default should be '.pdf' files as those display well on GitHub and are self cont
 
 - `tests/` contains the unit tests for the project.
 
-This will run after main.R is executed through Github Actions. Usual tests will be data validations at different steps in the project.
+
+# Reports
+
+Reports are compiled from Rmarkdown to PDFs and stored in `reports/`.
+For convenience, here are links to each report.
+
+### BCA Replication Reports
+
+[Classical VAR IRF Replication](reports/ClassicalVARIRFReplication.pdf)
+
+[Classical VAR IRF Replication with Bootstrap](reports/ClassicalVARIRFbootReplication.pdf)
+
+[Bayesian VAR IRF Replication](reports/BayesianVARIRFReplication.pdf)
+
+
 
 # Project Description
 
-## Business Cycle Anatomy Replication
+### Business Cycle Anatomy Replication
 The first step in this project replicates key results from the paper "[Business Cycle Anatomy](https://www.aeaweb.org/articles?id=10.1257/aer.20181174)" (2020) by Angeletos, Collard, and Dellas published in the AER.
 
-The report ___ replicates figure 20 from the online appendix.
 
-## Next step in the project
+### Next step in the project
 
-## Next next step
+### Next next step
