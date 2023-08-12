@@ -5,9 +5,19 @@ test_that("Replicated Classical VAR IRFs", {
   df <-
     fread(here::here("./data/replicated_bca_classical_VAR_IRF.csv")) |>
     dplyr::select(h, variable, value, model) |>
-    tidyr::pivot_wider(names_from = model, values_from = value)
+    tidyr::pivot_wider(names_from = model, values_from = value) |>
+    setDT()
 
-  expect_equal(df$Replication, df$classical_fd, tolerance = 0.075)
+
+  for (var in unique(df$variable)) {
+
+  expect_equal(
+    df[variable == var, Replication],
+    df[variable == var, classical_fd],
+    label = paste("Classical FD", var),
+    tolerance = 0.075)
+
+  }
 
 })
 
@@ -50,10 +60,8 @@ test_that("Replicated Bayesian VAR IRFs", {
         label = paste("Bayesian TD632", var),
         tolerance = 0.1
     ) # Diff 0.0462
-
   }
-
-
+  
 })
 
 
