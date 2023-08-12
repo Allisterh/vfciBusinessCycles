@@ -7,15 +7,9 @@
 
 estimate_bvartools <- function(
     v, ## var from gen_var
+    priors,
     iterations = 1000,
     burnin = 1000,
-    mn_priors = list(
-        kappa0 = 0.2^2,
-        kappa1 = 0.5^2,
-        kappa2 = 0.5^2,
-        kappa3 = 10^10 / 0.2^2
-    ),
-    a_v_i_prior = NULL,  ## Can pass a variance matrix to overwrite priors
     ...
 ) {
 
@@ -33,20 +27,8 @@ estimate_bvartools <- function(
     u_freq <- y - A_freq %*% x
     u_sigma_freq <- tcrossprod(u_freq) / (ncol(y) - nrow(x))
 
-    ## Set up Bayesain Minnesota Priors
-    priors <- bvartools::minnesota_prior(
-        v,
-        kappa0 = mn_priors$kappa0,
-        kappa1 = mn_priors$kappa1,
-        kappa2 = mn_priors$kappa2,
-        kappa3 = mn_priors$kappa3,
-        coint_var = TRUE,
-        sigma = "AR"
-        )
-
-    ## Set the priors
     a_mu_prior <- priors$mu
-    if (is.null(a_v_i_prior)) a_v_i_prior <- priors$v_i
+    a_v_i_prior <- priors$v_i
 
     u_sigma_df_prior <- k
     u_sigma_scale_prior <- diag(1, k)
