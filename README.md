@@ -53,6 +53,7 @@ For convenience, here are links to each report.
 
 [Bayesian VAR IRF Replication](reports/BayesianVARIRFReplication.pdf)
 
+[Correction: Comparing FD and TD Targetting](reports/compareFDTDTargetting.pdf)
 
 
 # Project Description
