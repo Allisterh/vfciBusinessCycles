@@ -11,7 +11,6 @@ tictoc::tic()
 ## Data Cleaning
 source("./code/clean-data-raw/bca_original_var_results.R")
 source("./code/clean-data-raw/bca_replication_data.R")
-source("./code/clean-data-raw/isigma.R")
 
 ## BCA Replication
 source("./code/bca-replication/classical-var-irf/replicate_bca_classical_VAR_IRF.R")
