@@ -1,4 +1,4 @@
-![Main Badge](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg?branch=main)
+![Main Badge](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg?event=push)
 ![Test Badge](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg?branch=main)
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
