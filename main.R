@@ -24,6 +24,7 @@ source("./code/bca-replication/bayesian-var-irf/replicate_bca_bayesian_VAR_IRF_b
 rmarkdown::render("./code/reports/classical_VAR_IRF_replication.RMD", "pdf_document", "ClassicalVARIRFReplication.pdf", "./reports/")
 rmarkdown::render("./code/reports/classical_VAR_IRF_boot_replication.RMD", "pdf_document", "ClassicalVARIRFbootReplication.pdf", "./reports/")
 rmarkdown::render("./code/reports/bayesian_VAR_IRF_replication.RMD", "pdf_document", "BayesianVARIRFReplication.pdf", "./reports/")
+rmarkdown::render("./code/reports/compare_FD_TD_targetting.RMD", "pdf_document", "CompareFDTDTargetting.pdf", "./reports/")
 
 tictoc::toc()
 tictoc::tic()
