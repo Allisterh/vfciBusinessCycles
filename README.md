@@ -1,4 +1,4 @@
-[![Run Main.R](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg)](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml)
+[![Run Main.R](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg?event=pull_request)](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml)
 [![Run Tests](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg)](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml)
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
