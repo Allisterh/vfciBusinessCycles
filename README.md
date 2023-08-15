@@ -1,5 +1,5 @@
-![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg)
-![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg)
+![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg?branch=main)
+![example workflow](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg?branch=main)
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
 
