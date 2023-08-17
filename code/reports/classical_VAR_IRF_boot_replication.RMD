@@ -15,8 +15,7 @@ require(ggplot2)
 # Replication of the Bootstrapped VARs
 
 ```{r loadData, include = F}
-comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF_boot.csv")) |>
-    mutate(model = ifelse(model == "classical_fd", "BCA Original", model))
+comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF_boot.csv"))
 ```
 
 Using a resampled bootstrap method (drawing from VAR errors with replacement), the bootstrapped IRFs look very close to the original BCA IRFs.
@@ -24,13 +23,13 @@ Using a resampled bootstrap method (drawing from VAR errors with replacement), t
 The original BCA paper also bias-adjusts their bootstraps, through a method called bootstrap-after-bootstrap.
 Implementing this makes the replicated IRFs almost exact to the original BCA IRFs.
 
-```{r figBootResBA, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap, Bias adjusted", fig.height = 2.5, out.width = "100%"}
+```{r figBootResBA, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap, Bias adjusted", fig.height = 3, out.width = "100%"}
 comb_df |>
-    filter(model %in% c("Bootstrap Replication Resample Bias Adjust", "BCA Original")) |>
+    filter(model == "classical_fd" & version %in% c('original', 'replication')) |>
     ggplot(aes(
         x = h,
-        color = model,
-        fill = model
+        color = version,
+        fill = version
     )) +
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
@@ -39,6 +38,6 @@ comb_df |>
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     scale_x_continuous(limits = c(0, 20)) +
     labs(x = "Horizon", y = NULL) +
-    theme_gray(base_size = 8) +
+    theme_bw(base_size = 8) +
     theme(legend.position = "bottom", strip.background = element_blank(), panel.grid.minor = element_blank())
 ```
