@@ -55,6 +55,7 @@ For convenience, here are links to each report.
 
 [Correction: Comparing FD and TD Targetting](reports/CompareFDTDTargetting.pdf)
 
+[Comparing Current Data to Replicated Data](reports/CurrentDataVARIRFs.pdf)
 
 # Project Description
 
