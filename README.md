@@ -57,6 +57,12 @@ For convenience, here are links to each report.
 
 [Comparing Current Data to Replicated Data](reports/CurrentDataVARIRFs.pdf)
 
+### VFCI Business Cycle Reports
+
+[VFCI Busincess Cycle Data Summary](reports/VFCIBusinessCycleDataSummary.pdf)
+
+[VFCI Busincess Cycle IRFs](reports/VFCIBusinessCycleVARIRFs.pdf)
+
 # Project Description
 
 ### Business Cycle Anatomy Replication
