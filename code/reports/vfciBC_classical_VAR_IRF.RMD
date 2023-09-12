@@ -24,7 +24,7 @@ Comparing here three VARs:
   - vfci: 11 variables, vfci sample
 
 The original BCA paper uses data from 1955 to 2017.
-The new vfci data uses a sample from `r min(vfci$date)` to `r max(vfci$date)`.
+The new vfci data uses a sample from `r min(vfci$date)` to 2017.
 
 Adding in the vfci series does not change much for the 10 variables already in the VAR.
 The change in the sample does have an impact, but all of the impulse response are still similar to before.
@@ -33,12 +33,12 @@ The change in the sample does have an impact, but all of the impulse response ar
 df[target == "u_bc"] |>
     ggplot(aes(
         x = h,
-        y = value,
+        y = irf,
         color = version
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     labs(x = "Horizon", y = NULL) +
     theme_bw(base_size = 8) +
     theme(
@@ -55,12 +55,12 @@ df[target == "u_bc"] |>
 df[version == "vfci"] |>
     ggplot(aes(
         x = h,
-        y = value,
+        y = irf,
         color = target
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     labs(x = "Horizon", y = NULL) +
     theme_bw(base_size = 8) +
     theme(
