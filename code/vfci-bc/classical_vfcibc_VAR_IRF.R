@@ -23,7 +23,7 @@ v <- VAR(vfciBCdata[, -"date"], p = 2, type = "const")
 mv0 <- id_fevdfd(v0, target = "unemployment", freqs = bc_freqs)
 
 grid <- rbindlist(list(
-    list("unemployment", bc_freqs[1], bc_freqs[2], "pos"),
+    list("unemployment", bc_freqs[1], bc_freqs[2], "neg"),
     list("unemployment", 2 * pi / 100, 2 * pi / 40, "pos"),
     list("unemployment", 2 * pi / 40, 2 * pi / 20, "pos"),
     list("unemployment", 2 * pi / 20, 2 * pi / 10, "pos"),
@@ -59,12 +59,13 @@ rbindlist(lapply(seq_len(nrow(grid)), function(i) {
 }))
 
 irf_df |>
-    filter(target == "vfci") |>
+    filter(target == "vfci" | (target == "unemployment" & freq_l == bc_freqs[1])) |>
     mutate(label = paste(target, ":", round(freq_l, 2), "-", round(freq_h, 2))) |>
     ggplot(aes(
         x = h,
         y = irf,
-        color = label
+        color = target,
+        group = label
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
@@ -118,8 +119,10 @@ mv_vfci_sr_irf <- vars::irf(mv_vfci_sr, impulse = "Main", n.ahead = 40) |> setDT
 mv_fevdfd <-  mv |> fevdfd()
 mv_fevdfd$vfci |>
     ggplot(aes(x = f, y = Main)) +
-    geom_vline(xintercept = 0.175, color = "red") +
-    geom_vline(xintercept = 0.3, color = "red") +
+    geom_vline(xintercept = bc_freqs[1], color = "red") + #0.175
+    geom_vline(xintercept = bc_freqs[2], color = "red") + #0.3
+    geom_vline(xintercept = 2 * pi/40, color = "blue") + #0.175
+    geom_vline(xintercept = 2*pi/20, color = "blue") +
     geom_line() +
     scale_x_continuous(limits = c(0, pi))
 
