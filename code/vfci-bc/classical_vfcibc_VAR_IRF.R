@@ -16,154 +16,92 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 target_var <- "unemployment"
 
 ## Fit the VAR
-v0 <- VAR(vfciBCdata[, -c("date", "vfci")], p = 2, type = "const") 
 v <- VAR(vfciBCdata[, -"date"], p = 2, type = "const")
 
-## Identify the shock
-mv0 <- id_fevdfd(v0, target = "unemployment", freqs = bc_freqs)
+## Grid of possible targets and frequencies to try
+grid <- expand.grid(
+    target = c("unemployment", "vfci"),
+    sign = c("neg", "pos"),
+    period_l = seq(4, 200, by = 2),
+    period_h = seq(4, 200, by = 2)
+    ) |> setDT()
 
-grid <- rbindlist(list(
-    list("unemployment", bc_freqs[1], bc_freqs[2], "neg"),
-    list("unemployment", 2 * pi / 100, 2 * pi / 40, "pos"),
-    list("unemployment", 2 * pi / 40, 2 * pi / 20, "pos"),
-    list("unemployment", 2 * pi / 20, 2 * pi / 10, "pos"),
-    list("unemployment", 2 * pi / 10, 2 * pi / 5, "pos"),
-    list("unemployment", 2 * pi / 5, 2 * pi / 2, "pos"),
-    list("vfci", bc_freqs[1], bc_freqs[2], "pos"),
-    list("vfci", 2 * pi / 100, 2 * pi / 40, "pos"),
-    list("vfci", 2 * pi / 40, 2 * pi / 20, "pos"),
-    list("vfci", 2 * pi / 20, 2 * pi / 10, "pos"),
-    list("vfci", 2 * pi / 10, 2 * pi / 5, "pos"),
-    list("vfci", 2 * pi / 5, 2 * pi / 2, "pos")
-    ))
-names(grid) <- c("target", "freq_l", "freq_h", "sign")
-grid
+grid[, diff := period_h - period_l]
+grid <- grid[diff %between% c(6, 50)] ## only keep some periods
+grid <- grid[period_l < 40 | diff > 20] ## Drop short ranges for long periods
+grid <- grid[period_l < 40 | period_l %% 10 == 0]
 
+grid[, freq_l := 2 * pi / period_h]
+grid[, freq_h := 2 * pi / period_l]
+
+
+## Actual identification of the shocks
 irf_df <-
-rbindlist(lapply(seq_len(nrow(grid)), function(i) {
-    mv <- id_fevdfd(
-        v,
-        target = grid[[i, "target"]],
-        freqs = c(grid[[i, "freq_l"]], grid[[i, "freq_h"]]),
-        sign = grid[[i, "sign"]]
-        )
-
-    irf_df <- vars::irf(mv, impulse = "Main", n.ahead = 40) |> 
-        setDT() |>
-        mutate(
+    rbindlist(lapply(seq_len(nrow(grid)), function(i) {
+        mv <- id_fevdfd(
+            v,
             target = grid[[i, "target"]],
-            freq_l = grid[[i, "freq_l"]],
-            freq_h = grid[[i, "freq_h"]],
-            sign = grid[[i, "sign"]]
-        )
-}))
+            freqs = c(grid[[i, "freq_l"]], grid[[i, "freq_h"]]),
+            sign = grid[[i, "sign"]],
+            grid_size = 2000
+            )
 
-irf_df |>
-    filter(target == "vfci" | (target == "unemployment" & freq_l == bc_freqs[1])) |>
-    mutate(label = paste(target, ":", round(freq_l, 2), "-", round(freq_h, 2))) |>
-    ggplot(aes(
-        x = h,
-        y = irf,
-        color = target,
-        group = label
-    )) +
-    geom_hline(yintercept = 0) +
-    geom_line() +
-    facet_wrap(vars(response), scales = "free_y")
+        irf_df <- vars::irf(mv, impulse = "Main", n.ahead = 40) |>
+            setDT() |>
+            cbind(grid[i, ])
+    }))
 
-irf_df |>
-    filter(target == "unemployment") |>
-    mutate(label = paste(target, ":", round(freq_l, 2), "-", round(freq_h, 2))) |>
-    ggplot(aes(
-        x = h,
-        y = irf,
-        color = label
-    )) +
-    geom_hline(yintercept = 0) +
-    geom_line() +
-    facet_wrap(vars(response), scales = "free_y")
+u_irfsign <- irf_df[target == "unemployment" & h == 12 & response == "unemployment"]
+u_irfsign[, u_irfsign := "pos"][irf <= 0, u_irfsign := "neg"]
+u_irfsign <- u_irfsign[, .(target, sign, period_l, period_h, u_irfsign)]
 
-## Two Similar ones
-irf_df |>
-    filter(freq_l == 2 * pi / 40) |>
-    mutate(label = paste(target, ":", round(freq_l, 2), "-", round(freq_h, 2))) |>
-    ggplot(aes(
-        x = h,
-        y = irf,
-        color = label
-    )) +
-    geom_hline(yintercept = 0) +
-    geom_line() +
-    facet_wrap(vars(response), scales = "free_y")
+irf_df <- merge(irf_df, u_irfsign, by = c("target", "sign", "period_l", "period_h"), all = T)
 
+## Optimal Matches
+results <- list()
+vfci_irf <- irf_df[target == "vfci", .(
+    h,
+    response,
+    vfci_sign = sign,
+     vfci_period_l = period_l,
+     vfci_period_h = period_h,
+     vfci_irf = irf
+     )]
+u_irf <- irf_df[target == "unemployment", .(
+    h,
+    response,
+    u_sign = sign,
+    u_period_l = period_l,
+    u_period_h = period_h,
+    u_irf = irf)]
 
+u_grid <- grid[target == "unemployment"]
 
+for (i in seq_len(nrow(u_grid))) {
 
+    comb_df <- merge(
+        vfci_irf,
+        u_irf[u_sign == u_grid[i, sign] & u_period_l == u_grid[i, period_l] & u_period_h == u_grid[i, period_h]],
+        by = c("h", "response")
+)
+    comb_df[, se := (u_irf - vfci_irf)^2]
 
-#####
-#####
-#####
+    summ_df <- comb_df[,
+        .(rmse = sqrt(mean(se))), 
+        by = .(u_sign, vfci_sign, u_period_h, u_period_l, vfci_period_l, vfci_period_h)]
 
+    u_summ_df <- comb_df[response == "unemployment",
+        .(u_rmse = sqrt(mean(se))),
+        by = .(u_sign, vfci_sign, u_period_h, u_period_l, vfci_period_l, vfci_period_h)]
 
-mv <- id_fevdfd(v, target = "unemployment", freqs = bc_freqs)
-mv_vfci_bc <- id_fevdfd(v, target = "vfci", freqs = bc_freqs, sign = "neg")
-mv_vfci_sr <- id_fevdfd(v, target = "vfci", freqs = c(2 * pi / 40, 2 * pi / 20), sign = "neg")
+    summ_df <- merge(summ_df, u_summ_df)
 
+    results <- c(results, list(summ_df))
 
-## Get the IRF
-mv0_irf <- vars::irf(mv0, impulse = "Main", n.ahead = 40) |> setDT()
-mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40) |> setDT()
-mv_vfci_bc_irf <- vars::irf(mv_vfci_bc, impulse = "Main", n.ahead = 40) |> setDT()
-mv_vfci_sr_irf <- vars::irf(mv_vfci_sr, impulse = "Main", n.ahead = 40) |> setDT()
+}
 
-mv_fevdfd <-  mv |> fevdfd()
-mv_fevdfd$vfci |>
-    ggplot(aes(x = f, y = Main)) +
-    geom_vline(xintercept = bc_freqs[1], color = "red") + #0.175
-    geom_vline(xintercept = bc_freqs[2], color = "red") + #0.3
-    geom_vline(xintercept = 2 * pi/40, color = "blue") + #0.175
-    geom_vline(xintercept = 2*pi/20, color = "blue") +
-    geom_line() +
-    scale_x_continuous(limits = c(0, pi))
+results_df <- rbindlist(results)
 
-## IRF Cleaning
-bca_irf_df <- fread("./data/bca_original_var_results.csv")
-bca_irf_df <- bca_irf_df |>
-    filter(model == "classical_fd") |>
-    mutate(version = "original") |>
-    rename(h = "horizon") |>
-    rename(response = "variable") |>
-    rename(irf = "varirf") |>
-    mutate(shock = "Main") |>
-    mutate(target = "u_bc")
-
-mv0_irf_df <- mv0_irf |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "bca_variables") |>
-    mutate(target = "u_bc")
-
-mv_irf_df <- mv_irf |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "vfci") |>
-    mutate(target = "u_bc")
-
-mv_vfci_bc_irf_df <- mv_vfci_bc_irf |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "vfci") |>
-    mutate(target = "vfci_bc")
-
-mv_vfci_sr_irf_df <- mv_vfci_sr_irf |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "vfci") |>
-    mutate(target = "vfci_lr")
-
-comb_df <- rbindlist(list(
-    bca_irf_df,
-    mv0_irf_df,
-    mv_irf_df,
-    mv_vfci_bc_irf_df,
-    mv_vfci_sr_irf_df
-    ), use.names = TRUE, fill = TRUE)
-
-## Save the combined DF out to disk
-fwrite(comb_df, "./data/vfciBC_classical_VAR_IRF.csv")
+## Save to Disk
+fwrite(irf_df, "./data/classical_vfcibc_VAR_IRF.csv")
+fwrite(results_df, "./data/classical_vfcibc_VAR_IRF_rmse.csv")

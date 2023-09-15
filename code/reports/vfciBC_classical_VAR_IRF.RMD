@@ -10,49 +10,220 @@ require(ggplot2)
 ```
 
 ```{r loadData, include = F}
-df <- fread(here("./data/vfciBC_classical_VAR_IRF.csv"))
+df <- fread(here("./data/classical_vfcibc_VAR_IRF.csv"))
+df[, label := paste(target, period_l, ":", period_h)]
+rmse <- fread(here("./data/classical_vfcibc_VAR_IRF_rmse.csv"))
 vfci <- fread(here("./data/vfciBC_data.csv"))
 ```
 
-## Adding VFCI to VAR
-All VARs are identified by targetting unemployment in the business cycle frequency.
+## All iterations
 
-Comparing here three VARs:
-
-  - original: 10 variables, BCA sample
-  - bca_variables: 10 variables, vfci sample
-  - vfci: 11 variables, vfci sample
-
-The original BCA paper uses data from 1955 to 2017.
-The new vfci data uses a sample from `r min(vfci$date)` to 2017.
-
-Adding in the vfci series does not change much for the 10 variables already in the VAR.
-The change in the sample does have an impact, but all of the impulse response are still similar to before.
-
-```{r figVARubc, echo = F, warning = F, fig.height = 3, out.width = "100%"}
-df[target == "u_bc"] |>
+```{r figVARubc, echo = F, warning = F, fig.height = 7, out.width = "80%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg") | (target == "unemployment" & u_irfsign == "neg")) |>
     ggplot(aes(
         x = h,
         y = irf,
-        color = version
+        color = period_l,
+        group = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_grid(rows = vars(response), cols = vars(target), scales = "free_y") +
+    scale_color_viridis_c() +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "right")
+```
+
+\newpage
+
+Showing the IRFS of targetting unemployment and VFCI at the business cycle frequencies.
+```{r}
+rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][vfci_sign == "neg" & vfci_period_l == 6 & vfci_period_h == 32]
+```
+
+```{r figBC, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 6 & period_h == 32) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
     facet_wrap(vars(response), nrow = 2, scales = "free_y") +
-    labs(x = "Horizon", y = NULL) +
     theme_bw(base_size = 8) +
-    theme(
-        legend.position = "bottom",
-        strip.background = element_blank(),
-        panel.grid.minor = element_blank()
-        )
+    theme(legend.position = "bottom")
+```
+
+Picking the VFCI Iteration that most closely matches the Main Business Cycle shock across all impulse responses (target: unemployment, 6 - 32 q).
+
+```{r}
+rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][rmse == min(rmse)]
+```
+
+```{r figMatchMBCall, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 60 & period_h == 98) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
 ```
 
 
-## Targetting VFCI Instead
+\newpage
 
-```{r figVARvfci, echo = F, warning = F, fig.height = 3, out.width = "100%"}
-df[version == "vfci"] |>
+Picking the two iterations of VFCI and Unemployment that are most closely similar across all responses.
+
+```{r}
+rmse[rmse == min(rmse)]
+```
+
+```{r figMatchUVFCI, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 32 & period_h == 40) | (target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+
+Picking the two iterations of VFCI and unemployment that are the most closely similar across all responses and have the same target period.
+
+```{r}
+rmse[u_period_l == vfci_period_l & u_period_h == vfci_period_h][rmse == min(rmse)]
+```
+
+```{r figMatchUVFCI_sameperiod, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 24 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+\newpage
+
+What does targetting the other half of the business cycle requency look like?
+
+```{r figOtherBC, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 6 & period_h == 24) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 24)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+\newpage
+
+# Targetting Unemployment IRF
+
+Picking the VFCI Iteration that most closely matches the Main Business Cycle shock for just the unemployment impulse responses (target: unemployment, 6 - 32 q).  Prefers an even longer period shock.
+
+```{r}
+rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][u_rmse == min(u_rmse)]
+```
+
+```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 170 & period_h == 200) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+
+Picking the two iterations of VFCI and Unemployment that are most closely similar for the unemployment irf.  Similar frequency as before.
+
+```{r}
+rmse[u_rmse == min(u_rmse)]
+```
+
+```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 28 & period_h == 34) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+\newpage
+
+Picking the two iterations of VFCI and unemployment that are the most closely similar for unemployment and have the same target period.  Exact same frequency as before.
+
+```{r}
+rmse[u_period_l == vfci_period_l & u_period_h == vfci_period_h][u_rmse == min(u_rmse)]
+```
+
+```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 24 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = label
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
+```
+
+\newpage
+
+# Splitting the Business Cycle frequency
+
+Hold the high period target constant at 32 quarters, let the low end vary, compare targetting VFCI or unemployment.
+The two IRFs noticeably converge at 22q for the low period.
+Note that the VFCI IRFs don't change much, but the unemployment targetting one does.
+
+```{r, echo = F, warning = F, fig.height = 8, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l >= 6 & period_h == 32) | (target == "unemployment" & u_irfsign == "neg" & period_l >= 6 & period_h == 32)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -60,12 +231,27 @@ df[version == "vfci"] |>
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
-    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
-    labs(x = "Horizon", y = NULL) +
+    facet_grid(rows = vars(response), cols = vars(period_l), scales = "free_y") +
     theme_bw(base_size = 8) +
-    theme(
-        legend.position = "bottom",
-        strip.background = element_blank(),
-        panel.grid.minor = element_blank()
-        )
+    theme(legend.position = "bottom")
+```
+
+
+\newpage
+
+Hold the low period target constant at 6 quarters, let the high end vary, compare targetting VFCI or unemployment.
+
+```{r, echo = F, warning = F, fig.height = 8, out.width = "100%"}
+df |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 6 & period_h <= 32) | (target == "unemployment" & u_irfsign == "neg" & period_l == 6 & period_h <= 32)) |>
+    ggplot(aes(
+        x = h,
+        y = irf,
+        color = target
+    )) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    facet_grid(rows = vars(response), cols = vars(period_h), scales = "free_y") +
+    theme_bw(base_size = 8) +
+    theme(legend.position = "bottom")
 ```
