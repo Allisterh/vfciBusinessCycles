@@ -5,6 +5,7 @@ source("./presentations/2023-09-20-Brown-Macro-Breakfast/figs/code/theme_pres.R"
 
 data <- fread("./data/classical_vfcibc_VAR_IRF.csv")
 
+data[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
 
 plot <-
     data[(
@@ -38,7 +39,8 @@ plot <-
             unemployment = "Unnemployment"
         )
     ) +
-    theme_pres
+    theme_pres +
+    theme(legend.position = c(0.875, 0.15))
 
 ggsave(
     "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig3_BCA_MBC.pdf",

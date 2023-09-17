@@ -9,14 +9,17 @@ data[, response := factor(response, levels = var_order, labels = names(var_order
 
 plot <-
     data[(
-        target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32
+        target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32
         ) | (
-        target == "vfci" & sign == "neg" & period_l == 22 & period_h == 32)
+        target == "vfci" & sign == "neg" & period_l == 6 & period_h == 32),
+        .(target, h, response, irf)
         ] |>
+    tidyr::pivot_wider(names_from = "target", values_from = "irf") |>
+    mutate(diff = vfci - unemployment) |>
     ggplot(aes(
         x = h,
-        y = irf,
-        color = target
+        y = diff,
+        color = "diff"
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
@@ -31,19 +34,17 @@ plot <-
     ) +
     scale_color_manual(
         values = c(
-            vfci = "steelblue",
-            unemployment = "goldenrod"
+            diff = "firebrick"
         ),
         labels = c(
-            vfci = "VFCI",
-            unemployment = "Unnemployment"
+            diff = "Difference"
         )
     ) +
-    theme_pres+
+    theme_pres +
     theme(legend.position = c(0.875, 0.15))
-plot
+
 ggsave(
-    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig5_vfci_u_same_freq.pdf",
+    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/app1_BCA_MBC_diff.pdf",
     plot,
     units = "in",
     width = 4.75,

@@ -3,20 +3,16 @@ require(ggplot2)
 require(dplyr)
 source("./presentations/2023-09-20-Brown-Macro-Breakfast/figs/code/theme_pres.R")
 
-data <- fread("./data/classical_vfcibc_VAR_IRF.csv")
+data <- fread("./data/residual-mbc-shock/irf.csv")
 
 data[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
 
 plot <-
-    data[(
-        target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32
-        ) | (
-        target == "vfci" & sign == "neg" & period_l == 22 & period_h == 32)
-        ] |>
+    data|>
     ggplot(aes(
         x = h,
         y = irf,
-        color = target
+        color = "resid"
     )) +
     geom_hline(yintercept = 0) +
     geom_line() +
@@ -31,19 +27,17 @@ plot <-
     ) +
     scale_color_manual(
         values = c(
-            vfci = "steelblue",
-            unemployment = "goldenrod"
+            resid = "mediumorchid"
         ),
         labels = c(
-            vfci = "VFCI",
-            unemployment = "Unnemployment"
+            resid = "Residual MBC"
         )
     ) +
-    theme_pres+
+    theme_pres +
     theme(legend.position = c(0.875, 0.15))
 plot
 ggsave(
-    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig5_vfci_u_same_freq.pdf",
+    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig6_resid_MBC.pdf",
     plot,
     units = "in",
     width = 4.75,

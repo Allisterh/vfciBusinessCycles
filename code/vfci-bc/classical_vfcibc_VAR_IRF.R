@@ -58,7 +58,7 @@ irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
 weights_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
     weight_df <- data.table(
         variable = rownames(mv_list[[i]]$B),
-        weight = mv_list[[i]]$B[, 1]
+        weight = mv_list[[i]]$Q[, 1]
         ) |>
         cbind(grid[i, ])
     }))
@@ -86,7 +86,7 @@ fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
 
 ## FEVD
 fevd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
-    fevd <- fevd(mv_list[[i]])
+    fevd <- fevd(mv_list[[i]], n.ahead = 40)
     fevd_df  <- rbindlist(lapply(names(fevd), function(x) {
         fevd_df <- fevd[[x]] |> setDT()
         fevd_df <- fevd_df[, .(h = .I, fevd = Main)]
@@ -112,7 +112,7 @@ vfci_irf <- irf_df[target == "vfci", .(
     vfci_sign = sign,
      vfci_period_l = period_l,
      vfci_period_h = period_h,
-     vfci_irf = irf
+     vfci_irf = irfß
      )]
 u_irf <- irf_df[target == "unemployment", .(
     h,

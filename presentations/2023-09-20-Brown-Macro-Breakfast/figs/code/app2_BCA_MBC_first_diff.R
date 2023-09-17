@@ -9,13 +9,16 @@ data[, response := factor(response, levels = var_order, labels = names(var_order
 
 plot <-
     data[(
-        target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32
+        target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32
         ) | (
-        target == "vfci" & sign == "neg" & period_l == 22 & period_h == 32)
+        target == "vfci" & sign == "neg" & period_l == 6 & period_h == 32),
+        .(target, h, response, irf)
+        ][,
+            diff1 := irf - shift(irf, 1, type = "lag"), by = .(target, response)
         ] |>
     ggplot(aes(
         x = h,
-        y = irf,
+        y = diff1,
         color = target
     )) +
     geom_hline(yintercept = 0) +
@@ -39,11 +42,11 @@ plot <-
             unemployment = "Unnemployment"
         )
     ) +
-    theme_pres+
+    theme_pres +
     theme(legend.position = c(0.875, 0.15))
 plot
 ggsave(
-    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig5_vfci_u_same_freq.pdf",
+    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/app2_BCA_MBC_first_diff.pdf",
     plot,
     units = "in",
     width = 4.75,

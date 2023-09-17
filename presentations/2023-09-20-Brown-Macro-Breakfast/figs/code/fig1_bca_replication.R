@@ -5,6 +5,7 @@ source("./presentations/2023-09-20-Brown-Macro-Breakfast/figs/code/theme_pres.R"
 
 data <- fread("./data/replicated_bca_classical_VAR_IRF.csv")
 
+data[, variable := factor(variable, levels = var_order, labels = names(var_order), ordered = TRUE)]
 
 plot <-
     data |>
@@ -45,8 +46,9 @@ plot <-
             Replication = "Replication"
         )
     ) +
-    theme_pres
-
+    theme_pres +
+    theme(legend.position = c(0.7, 0.15))
+plot
 ggsave(
     "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig1_bca_replication.pdf",
     plot,

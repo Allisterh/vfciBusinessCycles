@@ -10,5 +10,20 @@ theme_pres <-
         legend.position = "top",
         legend.title = element_blank(),
         legend.margin = margin(0, 0, -10, 0),
+        legend.text = element_text(size = 7),
         plot.margin = margin(0, 0, 0, 0)
         )
+
+var_order <- c(
+    VFCI = "vfci",
+    Unemployment = "unemployment",
+    `Fed Funds` = "interest",
+    Inflation = "inflation",
+    Output = "output",
+    Investment = "investment",
+    Consumption = "consumption",
+    `Hours Worked` = "hours_worked",
+    `Labor Share` = "labor_share",
+    TFP = "TFP",
+    Productivity = "productivity"
+)
