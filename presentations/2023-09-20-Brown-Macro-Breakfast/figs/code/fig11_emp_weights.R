@@ -3,8 +3,8 @@ require(ggplot2)
 require(dplyr)
 source("./presentations/2023-09-20-Brown-Macro-Breakfast/figs/code/theme_pres.R")
 
-resid_data <- fread("./data/residual-mbc-shock/weights.csv")
-data <- fread("./data/classical_vfcibc_weights.csv")
+resid_data <- fread("./data/residual-mbc-shock/B.csv")
+data <- fread("./data/classical_vfcibc_B.csv")
 
 data <- rbindlist(list(
     data[target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32, .(variable, weight, model = "u0632")],
@@ -17,7 +17,7 @@ data <- rbindlist(list(
 data[, model := factor(model, levels = c("u0632", "v2232", "resid", "u2232", "v0632"), ordered = TRUE)]
 data[, variable := factor(variable, levels = arrange(data[model == "u0632"], weight)$variable, ordered = TRUE)]
 
-plot <-
+plot <- 
     data|>
     ggplot(aes(
         x = variable,
@@ -33,7 +33,7 @@ plot <-
         x = NULL,
         y = "Rotation Weight"
     ) +
-    scale_x_discrete(guide = guide_axis(n.dodge = 2)) + 
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     scale_fill_manual(
         values = c(
             u0632 = "goldenrod",
@@ -57,7 +57,7 @@ plot <-
 
 
 ggsave(
-    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig7_weights.pdf",
+    "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig11_emp_weights.pdf",
     plot,
     units = "in",
     width = 4.5,
