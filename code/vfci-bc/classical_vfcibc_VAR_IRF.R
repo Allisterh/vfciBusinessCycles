@@ -35,22 +35,69 @@ grid[, freq_l := 2 * pi / period_h]
 grid[, freq_h := 2 * pi / period_l]
 
 
-## Actual identification of the shocks
-irf_df <-
-    rbindlist(lapply(seq_len(nrow(grid)), function(i) {
-        mv <- id_fevdfd(
-            v,
-            target = grid[[i, "target"]],
-            freqs = c(grid[[i, "freq_l"]], grid[[i, "freq_h"]]),
-            sign = grid[[i, "sign"]],
-            grid_size = 2000
-            )
 
-        irf_df <- vars::irf(mv, impulse = "Main", n.ahead = 40) |>
-            setDT() |>
-            cbind(grid[i, ])
+## Actual identification of the shocks, store in a big list
+mv_list <- lapply(seq_len(nrow(grid)), function(i) {
+    mv <- id_fevdfd(
+        v,
+        target = grid[[i, "target"]],
+        freqs = c(grid[[i, "freq_l"]], grid[[i, "freq_h"]]),
+        sign = grid[[i, "sign"]],
+        grid_size = 2000
+        )
+    })
+
+## IRFs
+irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    irf_df <- vars::irf(mv_list[[i]], impulse = "Main", n.ahead = 40) |>
+        setDT() |>
+        cbind(grid[i, ])
     }))
 
+## Weights
+weights_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    weight_df <- data.table(
+        variable = rownames(mv_list[[i]]$B),
+        weight = mv_list[[i]]$B[, 1]
+        ) |>
+        cbind(grid[i, ])
+    }))
+
+hist_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    hist_df <- data.table(
+        date = vfciBCdata[-(1:2), date],
+        shock = (resid(mv_list[[i]]$VAR) %*% mv_list[[i]]$B[, 1])[, 1]
+        ) |>
+        cbind(grid[i, ])
+    }))
+
+## FEVDFD
+fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    fevdfd <- fevdfd(mv_list[[i]])
+    fevdfd_df  <- rbindlist(lapply(names(fevdfd), function(x) {
+        fevdfd_df <- fevdfd[[x]] |> setDT()
+        fevdfd_df <- fevdfd_df[, .(f, fevdfd = Main)]
+        fevdfd_df[, impulse := "Main"]
+        fevdfd_df[, response := x]
+    })) |>
+        cbind(grid[i, ])
+    }))
+
+
+## FEVD
+fevd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    fevd <- fevd(mv_list[[i]])
+    fevd_df  <- rbindlist(lapply(names(fevd), function(x) {
+        fevd_df <- fevd[[x]] |> setDT()
+        fevd_df <- fevd_df[, .(h = .I, fevd = Main)]
+        fevd_df[, impulse := "Main"]
+        fevd_df[, response := x]
+    })) |>
+        cbind(grid[i, ])
+    }))
+
+
+## Determine a secondary sign variable for unemployment IRFs to line up
 u_irfsign <- irf_df[target == "unemployment" & h == 12 & response == "unemployment"]
 u_irfsign[, u_irfsign := "pos"][irf <= 0, u_irfsign := "neg"]
 u_irfsign <- u_irfsign[, .(target, sign, period_l, period_h, u_irfsign)]
@@ -104,4 +151,8 @@ results_df <- rbindlist(results)
 
 ## Save to Disk
 fwrite(irf_df, "./data/classical_vfcibc_VAR_IRF.csv")
+fwrite(weights_df, "./data/classical_vfcibc_weights.csv")
+fwrite(hist_df, "./data/classical_vfcibc_hist_shocks.csv")
+fwrite(fevdfd_df, "./data/classical_vfcibc_fevdfd.csv")
+fwrite(fevd_df, "./data/classical_vfcibc_fevd.csv")
 fwrite(results_df, "./data/classical_vfcibc_VAR_IRF_rmse.csv")

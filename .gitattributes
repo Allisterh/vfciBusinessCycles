@@ -1,3 +1,7 @@
 data-raw/bca_original_var_results/** filter=lfs diff=lfs merge=lfs -text
 data/classical_vfcibc_VAR_IRF.csv filter=lfs diff=lfs merge=lfs -text
 data/classical_vfcibc_VAR_IRF_rmse.csv filter=lfs diff=lfs merge=lfs -text
+data/classical_vfcibc_weights.csv filter=lfs diff=lfs merge=lfs -text
+data/classical_vfcibc_hist_shocks.csv filter=lfs diff=lfs merge=lfs -text
+data/classical_vfcibc_fevdfd.csv filter=lfs diff=lfs merge=lfs -text
+data/classical_vfcibc_fevd.csv filter=lfs diff=lfs merge=lfs -text
