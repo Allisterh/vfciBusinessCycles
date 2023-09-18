@@ -31,12 +31,12 @@ plot <-
     ) +
     scale_color_manual(
         values = c(
-            vfci = "steelblue",
-            unemployment = "goldenrod"
+            vfci = "lightblue",
+            unemployment = "lightgoldenrod"
         ),
         labels = c(
-            vfci = "VFCI",
-            unemployment = "Unnemployment"
+            vfci = "v2232",
+            unemployment = "u2232"
         )
     ) +
     theme_pres+

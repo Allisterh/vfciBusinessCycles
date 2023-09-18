@@ -35,8 +35,8 @@ plot <-
             unemployment = "goldenrod"
         ),
         labels = c(
-            vfci = "VFCI",
-            unemployment = "Unnemployment"
+            vfci = "v0632",
+            unemployment = "u0632"
         )
     ) +
     theme_pres +
