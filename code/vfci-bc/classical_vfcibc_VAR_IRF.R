@@ -55,6 +55,14 @@ irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
     }))
 
 ## Weights
+B_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+    B_df <- data.table(
+        variable = rownames(mv_list[[i]]$B),
+        weight = mv_list[[i]]$B[, 1]
+        ) |>
+        cbind(grid[i, ])
+    }))
+
 weights_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
     weight_df <- data.table(
         variable = rownames(mv_list[[i]]$B),
@@ -152,6 +160,7 @@ results_df <- rbindlist(results)
 ## Save to Disk
 fwrite(irf_df, "./data/classical_vfcibc_VAR_IRF.csv")
 fwrite(weights_df, "./data/classical_vfcibc_weights.csv")
+fwrite(B_df, "./data/classical_vfcibc_B.csv")
 fwrite(hist_df, "./data/classical_vfcibc_hist_shocks.csv")
 fwrite(fevdfd_df, "./data/classical_vfcibc_fevdfd.csv")
 fwrite(fevd_df, "./data/classical_vfcibc_fevd.csv")
