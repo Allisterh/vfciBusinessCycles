@@ -247,4 +247,7 @@ variables$quarter <- tidyquant::QUARTER(variables$date)
 variables <- variables %>%
   dplyr::relocate(c("date","yr","quarter","vfci","mu","gdpc1","gdppot","pcepilfe","pcecc96","fedfunds","dgs10","tb3ms","med3","tb3smffm","aaa10ym","wtisplc","baa10ym","lior3m","tedrate","vixcls")) 
 
-save(variables, file = "data-raw/variables_new.RData")
+#overwrite "data-raw/variables.RData"
+save(variables, file = "data-raw/variables.RData")
+
+
