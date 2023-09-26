@@ -11,6 +11,7 @@ theme_pres <-
         legend.title = element_blank(),
         legend.margin = margin(0, 0, -10, 0),
         legend.text = element_text(size = 7),
+        legend.key.size = unit(10, "pt"),
         plot.margin = margin(0, 0, 0, 0)
         )
 
@@ -25,5 +26,5 @@ var_order <- c(
     `Hours Worked` = "hours_worked",
     `Labor Share` = "labor_share",
     TFP = "TFP",
-    Productivity = "productivity"
+    `Labor Prod.` = "productivity"
 )

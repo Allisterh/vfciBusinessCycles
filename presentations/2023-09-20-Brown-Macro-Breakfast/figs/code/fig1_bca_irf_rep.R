@@ -28,7 +28,7 @@ plot <-
     ) +
     scale_color_manual(
         values = c(
-            classical_fd = "gray80",
+            classical_fd = "gray50",
             Replication = "firebrick"
             ),
         labels = c(
@@ -48,7 +48,7 @@ plot <-
     ) +
     theme_pres +
     theme(legend.position = c(0.7, 0.15))
-plot
+
 ggsave(
     "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig1_bca_replication.pdf",
     plot,

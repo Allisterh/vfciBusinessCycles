@@ -25,6 +25,10 @@ plot <-
             vfci = "steelblue"
         )
     ) +
+    scale_x_date(
+        breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+        labels = seq(1960, 2020, 10)
+    ) +
     theme_pres
 
 ggsave(

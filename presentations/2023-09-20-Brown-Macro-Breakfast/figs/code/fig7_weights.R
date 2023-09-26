@@ -5,6 +5,7 @@ source("./presentations/2023-09-20-Brown-Macro-Breakfast/figs/code/theme_pres.R"
 
 resid_data_v2232 <- fread("./data/residual-mbc-shock/weights.csv")
 resid_data_v0632 <- fread("./data/residual-mbc-shock/weights_v0632.csv")
+resid_data_u2232 <- fread("./data/residual-mbc-shock/weights_u2232.csv")
 iters <- fread("./data/classical_vfcibc_weights.csv")
 
 data <- rbindlist(list(
@@ -13,14 +14,15 @@ data <- rbindlist(list(
     iters[target == "vfci" & sign == "neg" & period_l == 6 & period_h == 32, .(variable, weight, model = "v0632")],
     iters[target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32, .(variable, weight, model = "u2232")],
     resid_data_v0632[, .(variable, weight, model = "u0632 - v0632")],
-    resid_data_v2232[, .(variable, weight, model = "u0632 - v2232")]
+    resid_data_v2232[, .(variable, weight, model = "u0632 - v2232")],
+    resid_data_u2232[, .(variable, weight, model = "u0632 - u2232")]
 ))
 
-data[, model := factor(model, levels = c("u0632", "u2232", "v0632",  "v2232", "u0632 - v0632", "u0632 - v2232"), ordered = TRUE)]
+data[, model := factor(model, levels = c("u0632", "u2232", "v0632",  "v2232", "u0632 - v0632", "u0632 - v2232", "u0632 - u2232"), ordered = TRUE)]
 data[, variable := factor(variable, levels = arrange(data[model == "u0632"], weight)$variable, ordered = TRUE)]
 
 plot <-
-    data|>
+    data[model %in% c("u0632", "v0632", "u0632 - u2232")] |>
     ggplot(aes(
         x = variable,
         y = weight,
@@ -38,19 +40,19 @@ plot <-
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     scale_fill_manual(
         values = c(
-            u0632 = "goldenrod",
+            u0632 = "gray50",
             u2232 = "lightgoldenrod",
             v0632 = "steelblue",
             v2232 = "lightblue",
             `u0632 - v0632` = "mediumorchid",
-            `u0632 - v2232` = "plum"
+            `u0632 - v2232` = "plum",
+            `u0632 - u2232` = "mediumorchid"
         )
     ) +
     theme_pres +
     theme(legend.position = "top") +
     theme(legend.key.size = unit(10, "pt")) +
     theme(legend.text = element_text(size = 6))
-plot
 
 ggsave(
     "./presentations/2023-09-20-Brown-Macro-Breakfast/figs/fig7_weights.pdf",
