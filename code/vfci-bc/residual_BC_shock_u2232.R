@@ -13,8 +13,8 @@ vfciBCdata <- fread("./data/vfciBC_data.csv") |>
 ## Fit the VAR
 v <- VAR(vfciBCdata[, -"date"], p = 2, type = "const")
 
-mv <- id_fevdfd(v, "unemployment", c(2 * pi / 32, 2 * pi / 22), sign = "pos")
-mv_v <- id_fevdfd(v, "vfci", c(2 * pi / 32, 2 * pi / 22), sign = "neg")
+mv <- id_fevdfd(v, "unemployment", c(2 * pi / 32, 2 * pi / 6), sign = "pos")
+mv_v <- id_fevdfd(v, "unemployment", c(2 * pi / 32, 2 * pi / 22), sign = "neg")
 
 ## Weights, project vfci onto MBC, take resid
 new_weights <- mv$Q[, 1] - mosaic::project(mv$Q[, 1], mv_v$Q[, 1])
@@ -27,7 +27,6 @@ weight_df <- data.table(
 
 ## Are the original two VARs orthogonal?
 mv$Q[, 1] %*% mv_v$Q[, 1]
-
 
 ##  Change the first shock in the new model to the residual new weights
 mv_new <- mv
@@ -70,9 +69,9 @@ fevd_df  <- rbindlist(lapply(names(fevd), function(x) {
 }))
 
 ## Save results
-fwrite(irf_df, "./data/residual-mbc-shock/irf.csv")
-fwrite(weight_df, "./data/residual-mbc-shock/weights.csv")
-fwrite(B_df, "./data/residual-mbc-shock/B.csv")
-fwrite(hist_df, "./data/residual-mbc-shock/hist_shocks.csv")
-fwrite(fevdfd_df, "./data/residual-mbc-shock/fevdfd.csv")
-fwrite(fevd_df, "./data/residual-mbc-shock/fevd.csv")
+fwrite(irf_df, "./data/residual-mbc-shock/irf_u2232.csv")
+fwrite(weight_df, "./data/residual-mbc-shock/weights_u2232.csv")
+fwrite(B_df, "./data/residual-mbc-shock/B_u2232.csv")
+fwrite(hist_df, "./data/residual-mbc-shock/hist_shocks_u2232.csv")
+fwrite(fevdfd_df, "./data/residual-mbc-shock/fevdfd_u2232.csv")
+fwrite(fevd_df, "./data/residual-mbc-shock/fevd_u2232.csv")
