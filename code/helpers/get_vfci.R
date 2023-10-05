@@ -12,9 +12,8 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
       pcs <- pca$scores # time series of principal components in princomp
     }
     else {
-      pcs <- pca$x # time series of principal components in princomp  
+      pcs <- pca$x # time series of principal components in princomp
     }
-    
     colnames(pcs) <- paste0("pc", 1:ncol(pcs))
     data_pcs <- dplyr::bind_cols(data,tibble::as_tibble(pcs),.name_repair = c("minimal"))
     x_pcs <- paste0("pc", 1:n_prcomp)
@@ -39,17 +38,33 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
   # return vfci, mu, time series, and hetreg results
   if (prcomp) {
     out <- list(
-      ts = dplyr::bind_cols(h$pc_ts,
-                            tibble::tibble(qtr = data$qtr,
-                                           vfci=log(attr(h$residuals, "std")),
-                                           mu=unname(h$fitted))),
+      ts = dplyr::mutate(
+        tibble::tibble(
+          qpcR:::cbind.na(
+            qtr = as.Date(variables$qtr),
+            vfci = log(attr(h$residuals, "std")),
+            mu = unname(h$fitted),
+            h$pc_ts
+          )
+        ),
+        qtr = tsibble::yearquarter(qtr)
+      ),
       hetreg = h,
       call = Call
     )
   }
   else {
     out <- list(
-      ts = tibble(qtr = data$qtr, vfci=log(attr(h$residuals, "std")), mu=unname(h$fitted)),
+      ts = dplyr::mutate( 
+        tibble::tibble(
+          qpcR:::cbind.na(
+            qtr = as.Date(variables$qtr),
+            vfci = log(attr(h$residuals, "std")),
+            mu = unname(h$fitted)
+          )
+        ),
+        qtr = tsibble::yearquarter(qtr)
+      ),
       hetreg=h,
       call = Call
     )
