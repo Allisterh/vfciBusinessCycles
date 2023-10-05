@@ -7,7 +7,7 @@ get_pc <- function(
     scores = TRUE,
     center = TRUE,
     scale. = TRUE,
-    match_stata = TRUE,
+    match_stata = FALSE,
     ...
 ) {
   prcomp_tidy <- function(x,...){ 

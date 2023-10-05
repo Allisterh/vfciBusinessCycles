@@ -1,4 +1,4 @@
-get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q1", date_end="2022 Q3",match_stata=TRUE, ..., gls_opt = NULL) {
+get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q1", date_end="2022 Q3",match_stata=FALSE, ..., gls_opt = NULL) {
   Call <- match.call()
   optarg <- list(...)
   data <- data %>% 
