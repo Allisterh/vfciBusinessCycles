@@ -997,11 +997,11 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "VFCI",
       "RemoteRepo": "fevdid",
       "RemoteRef": "main",
-      "RemoteSha": "85bc3a01b308ae35317743ce58fda35f5b60f029",
+      "RemoteSha": "4328662fa072af0eabe1f6701f5eb4837e548e83",
+      "RemoteHost": "api.github.com",
       "Requirements": [
         "expm",
         "ggplot2",
@@ -1010,7 +1010,7 @@
         "svars",
         "vars"
       ],
-      "Hash": "225b3bfb0173dc690769b59aba834028"
+      "Hash": "620994ba4e4aefc1b67d4dade06cc1e8"
     },
     "fontawesome": {
       "Package": "fontawesome",
