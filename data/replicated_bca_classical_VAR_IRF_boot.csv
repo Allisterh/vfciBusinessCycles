@@ -1,791 +1,801 @@
-h,median,upper,lower,variable,model,varirf,version,shock,mean
-1,-0.4229,-0.3077,-0.4975,output,classical_fd,-0.479,original,Main,
-2,-0.5873,-0.4463,-0.6911,output,classical_fd,-0.6555,original,Main,
-3,-0.6204,-0.3959,-0.7706,output,classical_fd,-0.6731,original,Main,
-4,-0.5562,-0.2488,-0.7753,output,classical_fd,-0.5956,original,Main,
-5,-0.4329,-0.054,-0.7361,output,classical_fd,-0.4743,original,Main,
-6,-0.2904,0.125,-0.6424,output,classical_fd,-0.3421,original,Main,
-7,-0.1594,0.2821,-0.5483,output,classical_fd,-0.2203,original,Main,
-8,-0.0467,0.3919,-0.4638,output,classical_fd,-0.1198,original,Main,
-9,0.0416,0.4647,-0.3767,output,classical_fd,-0.0449,original,Main,
-10,0.0922,0.5153,-0.314,output,classical_fd,0.005,original,Main,
-11,0.132,0.5372,-0.2675,output,classical_fd,0.0331,original,Main,
-12,0.1503,0.5348,-0.2392,output,classical_fd,0.0439,original,Main,
-13,0.148,0.526,-0.2278,output,classical_fd,0.0419,original,Main,
-14,0.1394,0.5003,-0.2279,output,classical_fd,0.0314,original,Main,
-15,0.1185,0.4739,-0.2224,output,classical_fd,0.0158,original,Main,
-16,0.1038,0.4525,-0.2219,output,classical_fd,-0.0023,original,Main,
-17,0.0814,0.4232,-0.2233,output,classical_fd,-0.0208,original,Main,
-18,0.0654,0.4008,-0.2339,output,classical_fd,-0.0386,original,Main,
-19,0.0531,0.373,-0.2466,output,classical_fd,-0.055,original,Main,
-20,0.038,0.3515,-0.2664,output,classical_fd,-0.0695,original,Main,
-21,0.0264,0.3405,-0.2739,output,classical_fd,-0.0822,original,Main,
-22,0.0181,0.3225,-0.2899,output,classical_fd,-0.0929,original,Main,
-23,0.0083,0.3045,-0.3011,output,classical_fd,-0.1019,original,Main,
-24,-0.0017,0.2932,-0.3145,output,classical_fd,-0.1094,original,Main,
-25,-0.0075,0.291,-0.3198,output,classical_fd,-0.1154,original,Main,
-26,-0.0184,0.2824,-0.3199,output,classical_fd,-0.1202,original,Main,
-27,-0.0263,0.2776,-0.3318,output,classical_fd,-0.1239,original,Main,
-28,-0.0367,0.2822,-0.3365,output,classical_fd,-0.1267,original,Main,
-29,-0.0397,0.2783,-0.3433,output,classical_fd,-0.1286,original,Main,
-30,-0.041,0.2808,-0.3493,output,classical_fd,-0.1297,original,Main,
-31,-0.041,0.2898,-0.3568,output,classical_fd,-0.1302,original,Main,
-32,-0.0396,0.2902,-0.3605,output,classical_fd,-0.1302,original,Main,
-33,-0.0421,0.2892,-0.3633,output,classical_fd,-0.1296,original,Main,
-34,-0.0458,0.293,-0.3692,output,classical_fd,-0.1286,original,Main,
-35,-0.0455,0.2979,-0.3747,output,classical_fd,-0.1273,original,Main,
-36,-0.0417,0.304,-0.3768,output,classical_fd,-0.1256,original,Main,
-37,-0.0421,0.3089,-0.3811,output,classical_fd,-0.1237,original,Main,
-38,-0.0404,0.3115,-0.384,output,classical_fd,-0.1217,original,Main,
-39,-0.0378,0.3198,-0.3848,output,classical_fd,-0.1195,original,Main,
-40,-0.0381,0.3235,-0.3869,output,classical_fd,-0.1172,original,Main,
-1,-1.3911,-0.9886,-1.6863,investment,classical_fd,-1.5806,original,Main,
-2,-2.0894,-1.6608,-2.4366,investment,classical_fd,-2.3222,original,Main,
-3,-2.183,-1.4699,-2.6885,investment,classical_fd,-2.3541,original,Main,
-4,-1.8638,-0.8349,-2.5884,investment,classical_fd,-1.9775,original,Main,
-5,-1.3295,-0.1302,-2.3381,investment,classical_fd,-1.429,original,Main,
-6,-0.733,0.5658,-1.9025,investment,classical_fd,-0.8554,original,Main,
-7,-0.1919,1.1396,-1.4462,investment,classical_fd,-0.3434,original,Main,
-8,0.2455,1.546,-1.0318,investment,classical_fd,0.0637,original,Main,
-9,0.5763,1.8034,-0.738,investment,classical_fd,0.3538,original,Main,
-10,0.8073,1.9127,-0.4555,investment,classical_fd,0.5339,original,Main,
-11,0.8742,1.916,-0.2588,investment,classical_fd,0.6213,original,Main,
-12,0.8693,1.8387,-0.1581,investment,classical_fd,0.6374,original,Main,
-13,0.8448,1.7563,-0.0909,investment,classical_fd,0.6032,original,Main,
-14,0.7731,1.6094,-0.0369,investment,classical_fd,0.5373,original,Main,
-15,0.6887,1.4451,-0.0511,investment,classical_fd,0.4546,original,Main,
-16,0.591,1.3128,-0.1166,investment,classical_fd,0.366,original,Main,
-17,0.4989,1.1762,-0.1683,investment,classical_fd,0.2791,original,Main,
-18,0.4151,1.064,-0.2185,investment,classical_fd,0.1986,original,Main,
-19,0.3223,0.9583,-0.2804,investment,classical_fd,0.127,original,Main,
-20,0.2489,0.8594,-0.3223,investment,classical_fd,0.0653,original,Main,
-21,0.191,0.7885,-0.3847,investment,classical_fd,0.0133,original,Main,
-22,0.1386,0.7301,-0.4177,investment,classical_fd,-0.0294,original,Main,
-23,0.0906,0.67,-0.4513,investment,classical_fd,-0.064,original,Main,
-24,0.053,0.6236,-0.4835,investment,classical_fd,-0.0913,original,Main,
-25,0.0387,0.5949,-0.5241,investment,classical_fd,-0.1124,original,Main,
-26,-0.0053,0.592,-0.5375,investment,classical_fd,-0.1281,original,Main,
-27,-0.029,0.5833,-0.5506,investment,classical_fd,-0.1392,original,Main,
-28,-0.0463,0.5682,-0.5671,investment,classical_fd,-0.1465,original,Main,
-29,-0.0584,0.5421,-0.5906,investment,classical_fd,-0.1505,original,Main,
-30,-0.0657,0.5406,-0.6089,investment,classical_fd,-0.1518,original,Main,
-31,-0.073,0.5345,-0.6219,investment,classical_fd,-0.1507,original,Main,
-32,-0.0759,0.5354,-0.6512,investment,classical_fd,-0.1478,original,Main,
-33,-0.0719,0.554,-0.6439,investment,classical_fd,-0.1433,original,Main,
-34,-0.0616,0.5633,-0.6515,investment,classical_fd,-0.1377,original,Main,
-35,-0.0551,0.5814,-0.6405,investment,classical_fd,-0.1311,original,Main,
-36,-0.0567,0.5846,-0.6463,investment,classical_fd,-0.124,original,Main,
-37,-0.0434,0.5821,-0.6369,investment,classical_fd,-0.1164,original,Main,
-38,-0.0327,0.6078,-0.6163,investment,classical_fd,-0.1087,original,Main,
-39,-0.0227,0.6111,-0.6245,investment,classical_fd,-0.101,original,Main,
-40,-0.0057,0.6315,-0.614,investment,classical_fd,-0.0934,original,Main,
-1,-0.1975,-0.1371,-0.2455,consumption,classical_fd,-0.2238,original,Main,
-2,-0.2846,-0.1846,-0.3522,consumption,classical_fd,-0.3098,original,Main,
-3,-0.3097,-0.1721,-0.4054,consumption,classical_fd,-0.3338,original,Main,
-4,-0.3001,-0.1219,-0.4297,consumption,classical_fd,-0.3247,original,Main,
-5,-0.2699,-0.0609,-0.4273,consumption,classical_fd,-0.2939,original,Main,
-6,-0.223,0.0168,-0.4131,consumption,classical_fd,-0.2516,original,Main,
-7,-0.1681,0.0818,-0.3914,consumption,classical_fd,-0.2061,original,Main,
-8,-0.1187,0.1406,-0.3605,consumption,classical_fd,-0.1631,original,Main,
-9,-0.0776,0.1871,-0.3305,consumption,classical_fd,-0.1261,original,Main,
-10,-0.039,0.2263,-0.308,consumption,classical_fd,-0.097,original,Main,
-11,-0.0116,0.2577,-0.2867,consumption,classical_fd,-0.0759,original,Main,
-12,0.0109,0.2779,-0.2715,consumption,classical_fd,-0.0624,original,Main,
-13,0.0243,0.2902,-0.2539,consumption,classical_fd,-0.0553,original,Main,
-14,0.0291,0.2936,-0.2465,consumption,classical_fd,-0.0533,original,Main,
-15,0.0302,0.2977,-0.2475,consumption,classical_fd,-0.0552,original,Main,
-16,0.0254,0.2965,-0.2457,consumption,classical_fd,-0.0597,original,Main,
-17,0.0213,0.2919,-0.2486,consumption,classical_fd,-0.0658,original,Main,
-18,0.0157,0.2809,-0.2487,consumption,classical_fd,-0.0729,original,Main,
-19,0.0115,0.2717,-0.2585,consumption,classical_fd,-0.0803,original,Main,
-20,0.0057,0.2638,-0.2697,consumption,classical_fd,-0.0876,original,Main,
-21,-0.0044,0.2591,-0.2769,consumption,classical_fd,-0.0946,original,Main,
-22,-0.0094,0.2504,-0.2858,consumption,classical_fd,-0.1011,original,Main,
-23,-0.015,0.245,-0.299,consumption,classical_fd,-0.107,original,Main,
-24,-0.0237,0.2384,-0.3086,consumption,classical_fd,-0.1123,original,Main,
-25,-0.0276,0.2382,-0.318,consumption,classical_fd,-0.1169,original,Main,
-26,-0.0341,0.2311,-0.3221,consumption,classical_fd,-0.1209,original,Main,
-27,-0.036,0.2276,-0.3233,consumption,classical_fd,-0.1242,original,Main,
-28,-0.0427,0.2248,-0.327,consumption,classical_fd,-0.127,original,Main,
-29,-0.0486,0.2205,-0.3318,consumption,classical_fd,-0.1293,original,Main,
-30,-0.0512,0.2173,-0.3364,consumption,classical_fd,-0.131,original,Main,
-31,-0.0517,0.218,-0.342,consumption,classical_fd,-0.1323,original,Main,
-32,-0.054,0.2186,-0.3473,consumption,classical_fd,-0.1331,original,Main,
-33,-0.0544,0.2192,-0.3499,consumption,classical_fd,-0.1335,original,Main,
-34,-0.0552,0.2215,-0.3544,consumption,classical_fd,-0.1335,original,Main,
-35,-0.0543,0.2239,-0.3615,consumption,classical_fd,-0.1332,original,Main,
-36,-0.0532,0.2245,-0.3662,consumption,classical_fd,-0.1326,original,Main,
-37,-0.0567,0.2261,-0.3672,consumption,classical_fd,-0.1318,original,Main,
-38,-0.0551,0.2294,-0.3778,consumption,classical_fd,-0.1307,original,Main,
-39,-0.0579,0.2378,-0.3788,consumption,classical_fd,-0.1295,original,Main,
-40,-0.0564,0.2465,-0.3819,consumption,classical_fd,-0.1281,original,Main,
-1,-0.3191,-0.2304,-0.3836,hours_worked,classical_fd,-0.3558,original,Main,
-2,-0.4781,-0.389,-0.5453,hours_worked,classical_fd,-0.5306,original,Main,
-3,-0.534,-0.4093,-0.6184,hours_worked,classical_fd,-0.5821,original,Main,
-4,-0.507,-0.3255,-0.6216,hours_worked,classical_fd,-0.5367,original,Main,
-5,-0.4214,-0.1641,-0.5956,hours_worked,classical_fd,-0.438,original,Main,
-6,-0.2978,0.0034,-0.5397,hours_worked,classical_fd,-0.3184,original,Main,
-7,-0.1739,0.1564,-0.4543,hours_worked,classical_fd,-0.2002,original,Main,
-8,-0.0597,0.27,-0.3676,hours_worked,classical_fd,-0.0964,original,Main,
-9,0.033,0.352,-0.2869,hours_worked,classical_fd,-0.0131,original,Main,
-10,0.1055,0.4065,-0.2137,hours_worked,classical_fd,0.0483,original,Main,
-11,0.151,0.4342,-0.1537,hours_worked,classical_fd,0.0895,original,Main,
-12,0.1775,0.444,-0.1014,hours_worked,classical_fd,0.1136,original,Main,
-13,0.185,0.4442,-0.067,hours_worked,classical_fd,0.1244,original,Main,
-14,0.1851,0.4251,-0.0391,hours_worked,classical_fd,0.1254,original,Main,
-15,0.1748,0.3989,-0.0303,hours_worked,classical_fd,0.1201,original,Main,
-16,0.1698,0.3744,-0.0301,hours_worked,classical_fd,0.1108,original,Main,
-17,0.1612,0.3492,-0.0296,hours_worked,classical_fd,0.0995,original,Main,
-18,0.1472,0.3274,-0.0302,hours_worked,classical_fd,0.0876,original,Main,
-19,0.1331,0.3033,-0.0391,hours_worked,classical_fd,0.0761,original,Main,
-20,0.1184,0.2821,-0.0424,hours_worked,classical_fd,0.0654,original,Main,
-21,0.1056,0.2637,-0.0544,hours_worked,classical_fd,0.0558,original,Main,
-22,0.0954,0.2499,-0.0618,hours_worked,classical_fd,0.0475,original,Main,
-23,0.0862,0.2374,-0.0691,hours_worked,classical_fd,0.0404,original,Main,
-24,0.0732,0.2286,-0.0764,hours_worked,classical_fd,0.0345,original,Main,
-25,0.0648,0.2209,-0.0834,hours_worked,classical_fd,0.0297,original,Main,
-26,0.0558,0.2162,-0.088,hours_worked,classical_fd,0.0259,original,Main,
-27,0.0465,0.2095,-0.0926,hours_worked,classical_fd,0.023,original,Main,
-28,0.0411,0.2073,-0.0958,hours_worked,classical_fd,0.021,original,Main,
-29,0.0372,0.1987,-0.1006,hours_worked,classical_fd,0.0197,original,Main,
-30,0.0373,0.1938,-0.1052,hours_worked,classical_fd,0.019,original,Main,
-31,0.0365,0.1875,-0.1122,hours_worked,classical_fd,0.019,original,Main,
-32,0.035,0.1871,-0.1105,hours_worked,classical_fd,0.0194,original,Main,
-33,0.0331,0.1885,-0.1129,hours_worked,classical_fd,0.0203,original,Main,
-34,0.0361,0.1917,-0.118,hours_worked,classical_fd,0.0216,original,Main,
-35,0.0339,0.1976,-0.1209,hours_worked,classical_fd,0.0232,original,Main,
-36,0.0351,0.2057,-0.1209,hours_worked,classical_fd,0.0249,original,Main,
-37,0.0359,0.21,-0.1216,hours_worked,classical_fd,0.0269,original,Main,
-38,0.04,0.2142,-0.1202,hours_worked,classical_fd,0.0289,original,Main,
-39,0.0429,0.22,-0.1202,hours_worked,classical_fd,0.0311,original,Main,
-40,0.0461,0.2287,-0.1198,hours_worked,classical_fd,0.0332,original,Main,
-1,0.1724,0.1908,0.1446,unemployment,classical_fd,0.1984,original,Main,
-2,0.2958,0.3261,0.2456,unemployment,classical_fd,0.3301,original,Main,
-3,0.3506,0.3944,0.2794,unemployment,classical_fd,0.3845,original,Main,
-4,0.3552,0.4164,0.2464,unemployment,classical_fd,0.3796,original,Main,
-5,0.3216,0.4119,0.1737,unemployment,classical_fd,0.3376,original,Main,
-6,0.2572,0.384,0.0846,unemployment,classical_fd,0.2765,original,Main,
-7,0.1903,0.3424,-0.0072,unemployment,classical_fd,0.21,original,Main,
-8,0.1225,0.2947,-0.0808,unemployment,classical_fd,0.1472,original,Main,
-9,0.0665,0.2442,-0.1321,unemployment,classical_fd,0.0932,original,Main,
-10,0.0198,0.1938,-0.1716,unemployment,classical_fd,0.0503,original,Main,
-11,-0.0162,0.1572,-0.1921,unemployment,classical_fd,0.0187,original,Main,
-12,-0.0379,0.1292,-0.2063,unemployment,classical_fd,-0.0027,original,Main,
-13,-0.054,0.1046,-0.2117,unemployment,classical_fd,-0.0153,original,Main,
-14,-0.0575,0.0862,-0.2074,unemployment,classical_fd,-0.0213,original,Main,
-15,-0.0564,0.0669,-0.195,unemployment,classical_fd,-0.0223,original,Main,
-16,-0.0524,0.0527,-0.1789,unemployment,classical_fd,-0.02,original,Main,
-17,-0.0474,0.0475,-0.1634,unemployment,classical_fd,-0.0156,original,Main,
-18,-0.0404,0.0469,-0.145,unemployment,classical_fd,-0.0102,original,Main,
-19,-0.0342,0.048,-0.1323,unemployment,classical_fd,-0.0043,original,Main,
-20,-0.0292,0.0506,-0.1185,unemployment,classical_fd,0.0015,original,Main,
-21,-0.0204,0.0548,-0.1066,unemployment,classical_fd,0.0068,original,Main,
-22,-0.015,0.0596,-0.0967,unemployment,classical_fd,0.0116,original,Main,
-23,-0.0076,0.0635,-0.0865,unemployment,classical_fd,0.0158,original,Main,
-24,-0.0025,0.0683,-0.0765,unemployment,classical_fd,0.0193,original,Main,
-25,0.0045,0.0726,-0.0685,unemployment,classical_fd,0.0222,original,Main,
-26,0.0077,0.0752,-0.062,unemployment,classical_fd,0.0244,original,Main,
-27,0.0117,0.078,-0.056,unemployment,classical_fd,0.0261,original,Main,
-28,0.0138,0.0797,-0.05,unemployment,classical_fd,0.0273,original,Main,
-29,0.0159,0.084,-0.0459,unemployment,classical_fd,0.028,original,Main,
-30,0.0177,0.0838,-0.0437,unemployment,classical_fd,0.0282,original,Main,
-31,0.0196,0.0851,-0.0393,unemployment,classical_fd,0.0281,original,Main,
-32,0.0224,0.0858,-0.0378,unemployment,classical_fd,0.0277,original,Main,
-33,0.0234,0.0888,-0.0371,unemployment,classical_fd,0.0269,original,Main,
-34,0.0242,0.0868,-0.0357,unemployment,classical_fd,0.0259,original,Main,
-35,0.0249,0.0883,-0.0338,unemployment,classical_fd,0.0247,original,Main,
-36,0.0244,0.0874,-0.0317,unemployment,classical_fd,0.0234,original,Main,
-37,0.0239,0.0861,-0.0323,unemployment,classical_fd,0.0219,original,Main,
-38,0.0234,0.085,-0.0316,unemployment,classical_fd,0.0204,original,Main,
-39,0.0225,0.0825,-0.032,unemployment,classical_fd,0.0188,original,Main,
-40,0.0207,0.0809,-0.0324,unemployment,classical_fd,0.0172,original,Main,
-1,0.1495,0.2986,-0.0269,labor_share,classical_fd,0.1675,original,Main,
-2,0.1085,0.216,-0.0039,labor_share,classical_fd,0.128,original,Main,
-3,0.0336,0.1506,-0.0847,labor_share,classical_fd,0.0529,original,Main,
-4,-0.0502,0.0572,-0.156,labor_share,classical_fd,-0.0371,original,Main,
-5,-0.1249,-0.0248,-0.2229,labor_share,classical_fd,-0.1166,original,Main,
-6,-0.1753,-0.0856,-0.2589,labor_share,classical_fd,-0.1747,original,Main,
-7,-0.2024,-0.1271,-0.2791,labor_share,classical_fd,-0.2079,original,Main,
-8,-0.2081,-0.1362,-0.2827,labor_share,classical_fd,-0.2188,original,Main,
-9,-0.1989,-0.1194,-0.2827,labor_share,classical_fd,-0.2117,original,Main,
-10,-0.1836,-0.089,-0.2716,labor_share,classical_fd,-0.1923,original,Main,
-11,-0.156,-0.0462,-0.2581,labor_share,classical_fd,-0.1654,original,Main,
-12,-0.1242,-0.004,-0.2392,labor_share,classical_fd,-0.1353,original,Main,
-13,-0.0892,0.0308,-0.2217,labor_share,classical_fd,-0.1053,original,Main,
-14,-0.0624,0.0645,-0.198,labor_share,classical_fd,-0.0774,original,Main,
-15,-0.0341,0.0889,-0.1747,labor_share,classical_fd,-0.053,original,Main,
-16,-0.0128,0.1101,-0.1476,labor_share,classical_fd,-0.0325,original,Main,
-17,0.0049,0.1253,-0.1238,labor_share,classical_fd,-0.016,original,Main,
-18,0.0173,0.1336,-0.1065,labor_share,classical_fd,-0.0033,original,Main,
-19,0.0255,0.1385,-0.0894,labor_share,classical_fd,0.0061,original,Main,
-20,0.0294,0.1369,-0.0779,labor_share,classical_fd,0.0127,original,Main,
-21,0.0316,0.1362,-0.0674,labor_share,classical_fd,0.0171,original,Main,
-22,0.0331,0.1325,-0.0619,labor_share,classical_fd,0.0198,original,Main,
-23,0.0347,0.1277,-0.0558,labor_share,classical_fd,0.0211,original,Main,
-24,0.0344,0.1233,-0.0512,labor_share,classical_fd,0.0215,original,Main,
-25,0.033,0.119,-0.0489,labor_share,classical_fd,0.0212,original,Main,
-26,0.032,0.1157,-0.047,labor_share,classical_fd,0.0206,original,Main,
-27,0.0295,0.1101,-0.0512,labor_share,classical_fd,0.0197,original,Main,
-28,0.0286,0.1042,-0.0503,labor_share,classical_fd,0.0188,original,Main,
-29,0.0265,0.101,-0.0544,labor_share,classical_fd,0.0178,original,Main,
-30,0.0234,0.097,-0.0517,labor_share,classical_fd,0.017,original,Main,
-31,0.0201,0.0969,-0.0537,labor_share,classical_fd,0.0163,original,Main,
-32,0.0184,0.0961,-0.0546,labor_share,classical_fd,0.0158,original,Main,
-33,0.0156,0.0953,-0.0554,labor_share,classical_fd,0.0156,original,Main,
-34,0.0137,0.0927,-0.0542,labor_share,classical_fd,0.0155,original,Main,
-35,0.012,0.0943,-0.0543,labor_share,classical_fd,0.0157,original,Main,
-36,0.012,0.0927,-0.0568,labor_share,classical_fd,0.0161,original,Main,
-37,0.0117,0.0935,-0.0579,labor_share,classical_fd,0.0166,original,Main,
-38,0.013,0.0927,-0.0585,labor_share,classical_fd,0.0173,original,Main,
-39,0.0125,0.0935,-0.0605,labor_share,classical_fd,0.0182,original,Main,
-40,0.0124,0.0947,-0.0596,labor_share,classical_fd,0.0192,original,Main,
-1,-0.0518,-0.0063,-0.1038,interest,classical_fd,-0.056,original,Main,
-2,-0.1041,-0.045,-0.1548,interest,classical_fd,-0.1055,original,Main,
-3,-0.1229,-0.0691,-0.1666,interest,classical_fd,-0.1229,original,Main,
-4,-0.1217,-0.077,-0.1589,interest,classical_fd,-0.1212,original,Main,
-5,-0.1111,-0.0729,-0.1441,interest,classical_fd,-0.1092,original,Main,
-6,-0.0936,-0.0609,-0.1259,interest,classical_fd,-0.0914,original,Main,
-7,-0.0755,-0.0425,-0.107,interest,classical_fd,-0.0715,original,Main,
-8,-0.0575,-0.0227,-0.0897,interest,classical_fd,-0.052,original,Main,
-9,-0.039,-0.0026,-0.0742,interest,classical_fd,-0.0344,original,Main,
-10,-0.0229,0.0132,-0.0632,interest,classical_fd,-0.0193,original,Main,
-11,-0.0094,0.0261,-0.0517,interest,classical_fd,-0.007,original,Main,
-12,9e-04,0.0361,-0.0421,interest,classical_fd,0.0026,original,Main,
-13,0.0079,0.0427,-0.0317,interest,classical_fd,0.0098,original,Main,
-14,0.0129,0.0475,-0.0251,interest,classical_fd,0.0149,original,Main,
-15,0.0165,0.0521,-0.0209,interest,classical_fd,0.0184,original,Main,
-16,0.0189,0.0538,-0.0154,interest,classical_fd,0.0206,original,Main,
-17,0.0207,0.0544,-0.0126,interest,classical_fd,0.0218,original,Main,
-18,0.0234,0.0547,-0.0103,interest,classical_fd,0.0222,original,Main,
-19,0.0237,0.0547,-0.0091,interest,classical_fd,0.0222,original,Main,
-20,0.0233,0.0563,-0.0097,interest,classical_fd,0.0218,original,Main,
-21,0.0235,0.0557,-0.0101,interest,classical_fd,0.0211,original,Main,
-22,0.023,0.0561,-0.0103,interest,classical_fd,0.0203,original,Main,
-23,0.0227,0.0559,-0.0092,interest,classical_fd,0.0193,original,Main,
-24,0.0226,0.0545,-0.0105,interest,classical_fd,0.0183,original,Main,
-25,0.0224,0.0537,-0.0114,interest,classical_fd,0.0173,original,Main,
-26,0.0216,0.0525,-0.0117,interest,classical_fd,0.0163,original,Main,
-27,0.0207,0.0525,-0.0122,interest,classical_fd,0.0153,original,Main,
-28,0.0198,0.0525,-0.0126,interest,classical_fd,0.0143,original,Main,
-29,0.0185,0.0523,-0.013,interest,classical_fd,0.0134,original,Main,
-30,0.0178,0.0522,-0.0133,interest,classical_fd,0.0125,original,Main,
-31,0.0176,0.0517,-0.0141,interest,classical_fd,0.0117,original,Main,
-32,0.0172,0.0511,-0.0148,interest,classical_fd,0.0109,original,Main,
-33,0.0163,0.0508,-0.0158,interest,classical_fd,0.0102,original,Main,
-34,0.0155,0.0497,-0.0168,interest,classical_fd,0.0096,original,Main,
-35,0.0148,0.0494,-0.0182,interest,classical_fd,0.009,original,Main,
-36,0.0142,0.0495,-0.018,interest,classical_fd,0.0084,original,Main,
-37,0.0135,0.0486,-0.0184,interest,classical_fd,0.0079,original,Main,
-38,0.0134,0.0491,-0.0194,interest,classical_fd,0.0075,original,Main,
-39,0.0128,0.0494,-0.0203,interest,classical_fd,0.0071,original,Main,
-40,0.0125,0.0495,-0.0206,interest,classical_fd,0.0067,original,Main,
-1,-0.0079,0.0314,-0.0465,inflation,classical_fd,-0.0034,original,Main,
-2,-0.0183,0.0114,-0.0503,inflation,classical_fd,-0.0168,original,Main,
-3,-0.0319,-0.0033,-0.0596,inflation,classical_fd,-0.0304,original,Main,
-4,-0.0352,-0.0095,-0.0614,inflation,classical_fd,-0.0334,original,Main,
-5,-0.0338,-0.0113,-0.0571,inflation,classical_fd,-0.0325,original,Main,
-6,-0.0279,-0.008,-0.0503,inflation,classical_fd,-0.0269,original,Main,
-7,-0.0211,-0.0011,-0.042,inflation,classical_fd,-0.0192,original,Main,
-8,-0.0132,0.0088,-0.035,inflation,classical_fd,-0.0103,original,Main,
-9,-0.0044,0.0184,-0.0273,inflation,classical_fd,-0.0018,original,Main,
-10,0.0046,0.0269,-0.0206,inflation,classical_fd,0.0057,original,Main,
-11,0.0111,0.0342,-0.0143,inflation,classical_fd,0.0118,original,Main,
-12,0.0163,0.0405,-0.0108,inflation,classical_fd,0.0163,original,Main,
-13,0.0203,0.0447,-0.0064,inflation,classical_fd,0.0193,original,Main,
-14,0.0223,0.0467,-0.0035,inflation,classical_fd,0.021,original,Main,
-15,0.0233,0.0476,-9e-04,inflation,classical_fd,0.0216,original,Main,
-16,0.0239,0.0473,1e-04,inflation,classical_fd,0.0214,original,Main,
-17,0.0235,0.0469,3e-04,inflation,classical_fd,0.0206,original,Main,
-18,0.0229,0.0464,4e-04,inflation,classical_fd,0.0194,original,Main,
-19,0.0221,0.0458,6e-04,inflation,classical_fd,0.0179,original,Main,
-20,0.0212,0.0445,-3e-04,inflation,classical_fd,0.0164,original,Main,
-21,0.0199,0.0433,-7e-04,inflation,classical_fd,0.0148,original,Main,
-22,0.0187,0.0417,-0.0016,inflation,classical_fd,0.0133,original,Main,
-23,0.0173,0.0407,-0.0032,inflation,classical_fd,0.0118,original,Main,
-24,0.0159,0.0391,-0.004,inflation,classical_fd,0.0104,original,Main,
-25,0.0143,0.0385,-0.0051,inflation,classical_fd,0.009,original,Main,
-26,0.0135,0.0372,-0.0062,inflation,classical_fd,0.0078,original,Main,
-27,0.0126,0.0362,-0.0075,inflation,classical_fd,0.0066,original,Main,
-28,0.0121,0.0356,-0.0085,inflation,classical_fd,0.0056,original,Main,
-29,0.0109,0.0339,-0.01,inflation,classical_fd,0.0046,original,Main,
-30,0.0098,0.0323,-0.0102,inflation,classical_fd,0.0037,original,Main,
-31,0.0091,0.0309,-0.0114,inflation,classical_fd,0.0029,original,Main,
-32,0.0082,0.0303,-0.0123,inflation,classical_fd,0.0021,original,Main,
-33,0.0073,0.0292,-0.0127,inflation,classical_fd,0.0015,original,Main,
-34,0.0062,0.0288,-0.0132,inflation,classical_fd,9e-04,original,Main,
-35,0.0054,0.0276,-0.0139,inflation,classical_fd,3e-04,original,Main,
-36,0.0047,0.0267,-0.0147,inflation,classical_fd,-1e-04,original,Main,
-37,0.0042,0.0256,-0.0149,inflation,classical_fd,-5e-04,original,Main,
-38,0.0038,0.0246,-0.0156,inflation,classical_fd,-9e-04,original,Main,
-39,0.0034,0.0244,-0.0156,inflation,classical_fd,-0.0012,original,Main,
-40,0.003,0.0239,-0.0157,inflation,classical_fd,-0.0014,original,Main,
-1,-0.1914,-0.0739,-0.2844,productivity,classical_fd,-0.2211,original,Main,
-2,-0.1376,-0.0192,-0.2474,productivity,classical_fd,-0.1555,original,Main,
-3,-0.0202,0.1316,-0.1721,productivity,classical_fd,-0.0321,original,Main,
-4,0.0896,0.2529,-0.0879,productivity,classical_fd,0.0782,original,Main,
-5,0.1717,0.3364,-0.0139,productivity,classical_fd,0.1574,original,Main,
-6,0.2224,0.3817,0.0381,productivity,classical_fd,0.2023,original,Main,
-7,0.2378,0.3854,0.0646,productivity,classical_fd,0.2161,original,Main,
-8,0.2294,0.3748,0.0735,productivity,classical_fd,0.2054,original,Main,
-9,0.2014,0.3469,0.0569,productivity,classical_fd,0.1776,original,Main,
-10,0.1696,0.3162,0.0212,productivity,classical_fd,0.1398,original,Main,
-11,0.1327,0.2766,-0.0162,productivity,classical_fd,0.0976,original,Main,
-12,0.095,0.2449,-0.0555,productivity,classical_fd,0.0553,original,Main,
-13,0.0573,0.2167,-0.0953,productivity,classical_fd,0.0158,original,Main,
-14,0.0261,0.191,-0.1286,productivity,classical_fd,-0.0192,original,Main,
-15,-0.002,0.1642,-0.1561,productivity,classical_fd,-0.0491,original,Main,
-16,-0.0281,0.1468,-0.1829,productivity,classical_fd,-0.0739,original,Main,
-17,-0.0477,0.1333,-0.2058,productivity,classical_fd,-0.0938,original,Main,
-18,-0.0606,0.1326,-0.2283,productivity,classical_fd,-0.1096,original,Main,
-19,-0.0709,0.1308,-0.2449,productivity,classical_fd,-0.122,original,Main,
-20,-0.0793,0.1322,-0.2616,productivity,classical_fd,-0.1315,original,Main,
-21,-0.0829,0.1265,-0.2819,productivity,classical_fd,-0.1388,original,Main,
-22,-0.0852,0.1327,-0.294,productivity,classical_fd,-0.1445,original,Main,
-23,-0.0876,0.1364,-0.3136,productivity,classical_fd,-0.1489,original,Main,
-24,-0.09,0.1437,-0.328,productivity,classical_fd,-0.1524,original,Main,
-25,-0.0917,0.1455,-0.3376,productivity,classical_fd,-0.1553,original,Main,
-26,-0.0925,0.1429,-0.3478,productivity,classical_fd,-0.1576,original,Main,
-27,-0.0951,0.1431,-0.3587,productivity,classical_fd,-0.1596,original,Main,
-28,-0.0967,0.1489,-0.3606,productivity,classical_fd,-0.1614,original,Main,
-29,-0.0982,0.1538,-0.3643,productivity,classical_fd,-0.1629,original,Main,
-30,-0.1004,0.1556,-0.3725,productivity,classical_fd,-0.1643,original,Main,
-31,-0.1011,0.1621,-0.3769,productivity,classical_fd,-0.1656,original,Main,
-32,-0.104,0.1625,-0.3787,productivity,classical_fd,-0.1668,original,Main,
-33,-0.1065,0.1647,-0.3825,productivity,classical_fd,-0.1679,original,Main,
-34,-0.1081,0.1692,-0.3869,productivity,classical_fd,-0.1689,original,Main,
-35,-0.1085,0.1711,-0.393,productivity,classical_fd,-0.1699,original,Main,
-36,-0.1128,0.1732,-0.3941,productivity,classical_fd,-0.1708,original,Main,
-37,-0.1138,0.173,-0.3937,productivity,classical_fd,-0.1716,original,Main,
-38,-0.115,0.1755,-0.396,productivity,classical_fd,-0.1723,original,Main,
-39,-0.1179,0.1763,-0.4015,productivity,classical_fd,-0.1729,original,Main,
-40,-0.1223,0.1773,-0.4089,productivity,classical_fd,-0.1734,original,Main,
-1,0.1116,0.2358,-0.0388,TFP,classical_fd,0.1087,original,Main,
-2,0.2036,0.3204,0.0589,TFP,classical_fd,0.2023,original,Main,
-3,0.2378,0.3562,0.0872,TFP,classical_fd,0.2295,original,Main,
-4,0.2245,0.3372,0.0847,TFP,classical_fd,0.2085,original,Main,
-5,0.1783,0.2932,0.0506,TFP,classical_fd,0.1588,original,Main,
-6,0.1302,0.2408,0.0068,TFP,classical_fd,0.1024,original,Main,
-7,0.0792,0.2003,-0.0416,TFP,classical_fd,0.0502,original,Main,
-8,0.0426,0.1702,-0.0806,TFP,classical_fd,0.0083,original,Main,
-9,0.0177,0.1508,-0.1135,TFP,classical_fd,-0.0213,original,Main,
-10,0.0024,0.14,-0.1373,TFP,classical_fd,-0.0394,original,Main,
-11,-0.0027,0.1431,-0.1534,TFP,classical_fd,-0.0482,original,Main,
-12,-7e-04,0.1536,-0.1624,TFP,classical_fd,-0.0502,original,Main,
-13,0.0073,0.1668,-0.1668,TFP,classical_fd,-0.0481,original,Main,
-14,0.0095,0.1813,-0.1717,TFP,classical_fd,-0.0439,original,Main,
-15,0.0161,0.1956,-0.1732,TFP,classical_fd,-0.0393,original,Main,
-16,0.022,0.2053,-0.1741,TFP,classical_fd,-0.0355,original,Main,
-17,0.0287,0.2185,-0.1742,TFP,classical_fd,-0.033,original,Main,
-18,0.0327,0.228,-0.1775,TFP,classical_fd,-0.0322,original,Main,
-19,0.0345,0.2313,-0.181,TFP,classical_fd,-0.033,original,Main,
-20,0.0323,0.2285,-0.1806,TFP,classical_fd,-0.0353,original,Main,
-21,0.0315,0.2275,-0.1829,TFP,classical_fd,-0.0388,original,Main,
-22,0.0286,0.2242,-0.1879,TFP,classical_fd,-0.0431,original,Main,
-23,0.0247,0.2194,-0.1912,TFP,classical_fd,-0.0481,original,Main,
-24,0.0209,0.2129,-0.1974,TFP,classical_fd,-0.0534,original,Main,
-25,0.0149,0.2071,-0.1993,TFP,classical_fd,-0.0588,original,Main,
-26,0.0064,0.2059,-0.2085,TFP,classical_fd,-0.0642,original,Main,
-27,-0.0033,0.197,-0.2146,TFP,classical_fd,-0.0694,original,Main,
-28,-0.0112,0.1936,-0.2148,TFP,classical_fd,-0.0744,original,Main,
-29,-0.016,0.1844,-0.2232,TFP,classical_fd,-0.079,original,Main,
-30,-0.0188,0.1813,-0.2303,TFP,classical_fd,-0.0832,original,Main,
-31,-0.0215,0.1791,-0.2387,TFP,classical_fd,-0.087,original,Main,
-32,-0.0295,0.1771,-0.244,TFP,classical_fd,-0.0905,original,Main,
-33,-0.0333,0.1743,-0.2504,TFP,classical_fd,-0.0935,original,Main,
-34,-0.0394,0.1743,-0.2525,TFP,classical_fd,-0.0962,original,Main,
-35,-0.0428,0.1759,-0.2548,TFP,classical_fd,-0.0984,original,Main,
-36,-0.0486,0.1725,-0.2589,TFP,classical_fd,-0.1003,original,Main,
-37,-0.0485,0.1712,-0.2672,TFP,classical_fd,-0.1019,original,Main,
-38,-0.0512,0.1693,-0.269,TFP,classical_fd,-0.1032,original,Main,
-39,-0.055,0.1644,-0.2717,TFP,classical_fd,-0.1041,original,Main,
-40,-0.0586,0.1614,-0.2757,TFP,classical_fd,-0.1048,original,Main,
-1,-0.202824076157974,-0.149554635575737,-0.250221457204845,consumption,classical_fd,-0.30715748930474,replication,Main,-0.198983392808731
-1,-0.322545172034759,-0.2478213641202,-0.37992956192282,hours_worked,classical_fd,-0.529992723754369,replication,Main,-0.311494945096203
-1,-0.00619263690719733,0.0265560453716914,-0.0414660778643265,inflation,classical_fd,-0.0174526304144563,replication,Main,-0.00672949026635834
-1,-0.055658913507816,-0.0171613560697864,-0.0992714805902126,interest,classical_fd,-0.107319547339204,replication,Main,-0.0557537430383958
-1,-1.33395374959438,-1.01872960469716,-1.62574868211522,investment,classical_fd,-2.31144032763835,replication,Main,-1.29439477931422
-1,0.136984911173467,0.253238820966455,0.00182379418665009,labor_share,classical_fd,0.124552199896732,replication,Main,0.123375142868277
-1,-0.408394578451414,-0.314823071529715,-0.486038695359922,output,classical_fd,-0.651624528130495,replication,Main,-0.393758811897966
-1,-0.186615051726229,-0.0928632379759383,-0.265424077915154,productivity,classical_fd,-0.152267542058182,replication,Main,-0.177527721164847
-1,0.127806734814966,0.230020461546505,0.0075223119806469,TFP,classical_fd,0.207153420081211,replication,Main,0.117991172473139
-1,0.173624848439151,0.190806321402197,0.151835383768617,unemployment,classical_fd,0.329397872704636,replication,Main,0.168870088218152
-10,-0.0099622992482427,0.214537305876198,-0.236140085987915,consumption,classical_fd,-0.0687998604673347,replication,Main,-0.00568202150641122
-10,0.135351727167177,0.388003795192109,-0.143454384523422,hours_worked,classical_fd,0.0972581512774429,replication,Main,0.125839270177018
-10,0.00568846519194093,0.0259214444139461,-0.0146195555677308,inflation,classical_fd,0.0124371702908841,replication,Main,0.00556044230233942
-10,-0.0177180124407866,0.0138893553676679,-0.0495200418446084,interest,classical_fd,-0.00623403416059596,replication,Main,-0.0175634989275975
-10,0.840967810686023,1.77017247308716,-0.179443419902528,investment,classical_fd,0.646212835197461,replication,Main,0.77995944786782
-10,-0.164364013357256,-0.07909431222165,-0.238471500491517,labor_share,classical_fd,-0.162577017829228,replication,Main,-0.159325086687959
-10,0.12555093979243,0.459199697262369,-0.253533422267584,output,classical_fd,0.0433981160236043,replication,Main,0.117545587836358
-10,0.150782053208545,0.287645413467908,0.0255762808075574,productivity,classical_fd,0.0986967601684296,replication,Main,0.154151530223981
-10,-0.0171284261473304,0.113679925605819,-0.13378687497328,TFP,classical_fd,-0.044604975838744,replication,Main,-0.0112836324047837
-10,-0.00210299409344492,0.153761527221202,-0.152887176104734,unemployment,classical_fd,0.0141605569246862,replication,Main,-0.00278636491373818
-11,0.0182550880669201,0.241208162175245,-0.212775111660916,consumption,classical_fd,-0.0555042841130278,replication,Main,0.017601584557782
-11,0.176584385794891,0.416016104656494,-0.101261591913468,hours_worked,classical_fd,0.120496363653987,replication,Main,0.162228617983146
-11,0.0129411533211934,0.0334190893372097,-0.00859372303811794,inflation,classical_fd,0.0169511794880581,replication,Main,0.0122590225011052
-11,-0.00458925383527784,0.0265134981986535,-0.0373161029354742,interest,classical_fd,0.00335457618618714,replication,Main,-0.00515861663192552
-11,0.886232801015189,1.75868595877509,-0.0587059197553662,investment,classical_fd,0.658128645372601,replication,Main,0.845014472125903
-11,-0.134275508438912,-0.0432303839136649,-0.217374704090621,labor_share,classical_fd,-0.132162208807313,replication,Main,-0.12792982935313
-11,0.142735284162412,0.479876490299368,-0.225503265108652,output,classical_fd,0.053320637883943,replication,Main,0.141507917633823
-11,0.106613575423155,0.247333618703127,-0.0174264810569693,productivity,classical_fd,0.056239896239455,replication,Main,0.113076887853416
-11,-0.0251199992242488,0.116004784199583,-0.145876388931094,TFP,classical_fd,-0.0464035203075496,replication,Main,-0.0185979188085823
-11,-0.0316891118230788,0.116758841047828,-0.181498657341055,unemployment,classical_fd,-0.00665565354499192,replication,Main,-0.0317405062881013
-12,0.0339094220052151,0.256585487234033,-0.196771144488664,consumption,classical_fd,-0.0486793034163072,replication,Main,0.0320942161557588
-12,0.189339675049217,0.424281590473696,-0.0663943946550212,hours_worked,classical_fd,0.130385897178893,replication,Main,0.180045348865487
-12,0.0177707395217245,0.0390956436857237,-0.00400156876918279,inflation,classical_fd,0.0199345759503448,replication,Main,0.017236783354533
-12,0.00554179558956629,0.0354055197850079,-0.0279138521628299,interest,classical_fd,0.0105038622621143,replication,Main,0.00433971728614933
-12,0.852817930286558,1.67426575812667,-0.00105012505143453,investment,classical_fd,0.620105476669448,replication,Main,0.836432478672387
-12,-0.0992898027931612,-0.00114514546821074,-0.193244718503708,labor_share,classical_fd,-0.101927477744665,replication,Main,-0.0950325768557029
-12,0.145868006847762,0.482582575390263,-0.204181444373719,output,classical_fd,0.0505145346581885,replication,Main,0.147119627439367
-12,0.0704463640850014,0.208180421730785,-0.0594885204693197,productivity,classical_fd,0.016715046071586,replication,Main,0.0727774249254181
-12,-0.0274542585920252,0.124951109806263,-0.155596746468195,TFP,classical_fd,-0.044058195931308,replication,Main,-0.0186499603800924
-12,-0.0523585149783408,0.0951517969623576,-0.191332724886825,unemployment,classical_fd,-0.0188180752223575,replication,Main,-0.0495704805443165
-13,0.0438831025031934,0.263200356294658,-0.185307209869003,consumption,classical_fd,-0.0469940133815912,replication,Main,0.0390847434054274
-13,0.188151869421726,0.41515911670852,-0.0486079149920402,hours_worked,classical_fd,0.130628109179284,replication,Main,0.183445165062509
-13,0.0211164734793594,0.0426166499373986,-0.000440846941161019,inflation,classical_fd,0.0215839095272141,replication,Main,0.0205270008932725
-13,0.0126072254934358,0.04199702528311,-0.0211076067823073,interest,classical_fd,0.015595525951685,replication,Main,0.011219965356701
-13,0.816662935205045,1.5281925235384,-0.000138951193877992,investment,classical_fd,0.55080006230941,replication,Main,0.776437278282538
-13,-0.0671740485310891,0.0382008998729409,-0.165896564320133,labor_share,classical_fd,-0.0739990734362926,replication,Main,-0.0637487414204913
-13,0.132703979816432,0.47013967719721,-0.201237096132612,output,classical_fd,0.0392166932307266,replication,Main,0.13935529577591
-13,0.0338499880837975,0.172917412140304,-0.0988382374612293,productivity,classical_fd,-0.0182615449722253,replication,Main,0.0361129572570323
-13,-0.0241414228349476,0.134117855394582,-0.158036181712199,TFP,classical_fd,-0.0397468524126561,replication,Main,-0.0141074263592867
-13,-0.0570277091937191,0.0768306962703256,-0.1925908158593,unemployment,classical_fd,-0.0242434714140758,replication,Main,-0.058122739141352
-14,0.0462282896815188,0.259805538158021,-0.185085066760147,consumption,classical_fd,-0.0491272770083934,replication,Main,0.0401327368219749
-14,0.178968544584231,0.390835800502834,-0.0386336181458786,hours_worked,classical_fd,0.124448783977182,replication,Main,0.176578043565749
-14,0.0230767824163111,0.0439687162326386,0.00159889487267099,inflation,classical_fd,0.0221482616145633,replication,Main,0.0223311462474668
-14,0.0163090562626852,0.0458835537224969,-0.0154734733401733,interest,classical_fd,0.0190244426451776,replication,Main,0.0158904804036699
-14,0.703588937422652,1.39229473421451,-0.0356738267158471,investment,classical_fd,0.465137177445797,replication,Main,0.684937254840926
-14,-0.0390411589902258,0.0682728232802046,-0.139544199911211,labor_share,classical_fd,-0.0496027882379805,replication,Main,-0.0361156002588938
-14,0.115287441836558,0.446194107657863,-0.201422171538713,output,classical_fd,0.0229257597948622,replication,Main,0.122827073650941
-14,0.00384452730967464,0.148611962605177,-0.13137919719647,productivity,classical_fd,-0.0480207975652195,replication,Main,0.00467075364409334
-14,-0.0136960158557247,0.145158086073487,-0.157704166901552,TFP,classical_fd,-0.0351163059106394,replication,Main,-0.00732108710008507
-14,-0.0610286079328742,0.0661152040712107,-0.180667019657015,unemployment,classical_fd,-0.0247663202013299,replication,Main,-0.0595233640332644
-15,0.0414854034247949,0.251740839640565,-0.187379574219709,consumption,classical_fd,-0.0538945355744262,replication,Main,0.0368164247473318
-15,0.163712694946471,0.368724109660994,-0.0432854140645399,hours_worked,classical_fd,0.114444701678868,replication,Main,0.163134726538641
-15,0.0236437134951916,0.0436393544289699,0.00255132178850277,inflation,classical_fd,0.0218862299130342,replication,Main,0.0229157341261213
-15,0.0192305680429239,0.0478353424471714,-0.0111583979833509,interest,classical_fd,0.0211569241677546,replication,Main,0.018793517591584
-15,0.584302785670106,1.2371816864687,-0.0853805251289399,investment,classical_fd,0.374156572285265,replication,Main,0.578138944429602
-15,-0.0160810042153373,0.0906792363602751,-0.115760291707895,labor_share,classical_fd,-0.0292680192696435,replication,Main,-0.0131893128462504
-15,0.0913875417870328,0.412222784232604,-0.214666189425786,output,classical_fd,0.00431673526751406,replication,Main,0.10140315378444
-15,-0.0211670901626743,0.121550024581292,-0.160394984025302,productivity,classical_fd,-0.0725561920621827,replication,Main,-0.0209787778349734
-15,-0.00406740145367431,0.157593919637498,-0.154856799202284,TFP,classical_fd,-0.031272179569639,replication,Main,-0.00014850449939108
-15,-0.0575596985965345,0.0629592669744928,-0.169498249279068,unemployment,classical_fd,-0.021982250946043,replication,Main,-0.0558447001909333
-16,0.0333671220782955,0.249358091272716,-0.188490593320278,consumption,classical_fd,-0.0603091126925987,replication,Main,0.0305647660084281
-16,0.148049584632617,0.342198793779217,-0.048159229207059,hours_worked,classical_fd,0.102567286035896,replication,Main,0.146123205193862
-16,0.0232303724651135,0.0426485517359537,0.00201458086168895,inflation,classical_fd,0.0210348120228913,replication,Main,0.0225738046675792
-16,0.0208371649193765,0.0490260450322295,-0.00903721522857991,interest,classical_fd,0.0223092072835552,replication,Main,0.0203510143380248
-16,0.463907482734544,1.08931202485177,-0.147769695915339,investment,classical_fd,0.285381895184883,replication,Main,0.468153673482299
-16,0.00100408286035881,0.107498471041626,-0.0963990199178837,labor_share,classical_fd,-0.013024111413481,replication,Main,0.00471030402446067
-16,0.0690057207434749,0.389423797440819,-0.228550506627531,output,classical_fd,-0.0147130313695497,replication,Main,0.0780659955871285
-16,-0.0422727342610023,0.101876005307839,-0.18277947947624,productivity,classical_fd,-0.0922778305645634,replication,Main,-0.0409763671306738
-16,0.00462523972572055,0.169602831011681,-0.154289455213209,TFP,classical_fd,-0.0288457420812814,replication,Main,0.00610831555788059
-16,-0.049952169113354,0.058511683347076,-0.156025471726668,unemployment,classical_fd,-0.0171819381034219,replication,Main,-0.0489110921650799
-17,0.0272629801155748,0.242300560502326,-0.195276640357717,consumption,classical_fd,-0.0675977950423748,replication,Main,0.0225709927128017
-17,0.131562749700285,0.31422721748557,-0.055864162915728,hours_worked,classical_fd,0.0901881823683009,replication,Main,0.127810736800041
-17,0.0224200180698464,0.0404085976742599,0.00199113271220469,inflation,classical_fd,0.0197946539223016,replication,Main,0.021578865980276
-17,0.0216271806516477,0.048769783643382,-0.00807061118842627,interest,classical_fd,0.0227404378179658,replication,Main,0.0209324086009489
-17,0.346244585888184,0.955660895679872,-0.206857645238154,investment,classical_fd,0.20344630303804,replication,Main,0.363222861735233
-17,0.0158547418680325,0.11634185900333,-0.0789596066052597,labor_share,classical_fd,-0.00057926435278483,replication,Main,0.0177954395702011
-17,0.047522790341818,0.366716933197509,-0.247494204440583,output,classical_fd,-0.0329260480031055,replication,Main,0.0549251466304748
-17,-0.0572613485619685,0.0895473665775544,-0.200049921769927,productivity,classical_fd,-0.107815574324843,replication,Main,-0.0559135600350914
-17,0.00926620773796513,0.177211443486003,-0.158204410597601,TFP,classical_fd,-0.028093141978246,replication,Main,0.0106604924703312
-17,-0.0411127624493475,0.0580491295873501,-0.137631444484187,unemployment,classical_fd,-0.011346472538768,replication,Main,-0.040203347769387
-18,0.0184198116688778,0.240400043058837,-0.200854087527183,consumption,classical_fd,-0.0751874027300755,replication,Main,0.0137621908574259
-18,0.109974384031466,0.285692517972195,-0.0728676119548096,hours_worked,classical_fd,0.0782028777504505,replication,Main,0.109771757750499
-18,0.0213151225303717,0.0381586528588827,0.000909546288563582,inflation,classical_fd,0.0183244720753451,replication,Main,0.0201679548709099
-18,0.0213394866378833,0.0482484596361462,-0.00736814118567572,interest,classical_fd,0.0226545173574686,replication,Main,0.0208410641066109
-18,0.250263185947045,0.830504162943021,-0.284235860106769,investment,classical_fd,0.130787111682756,replication,Main,0.268304998654617
-18,0.0267840515483865,0.120265865836806,-0.0653790247803109,labor_share,classical_fd,0.00853759825198029,replication,Main,0.0266010493305583
-18,0.0219081536997769,0.347053616827776,-0.269217159307343,output,classical_fd,-0.0496008856644911,replication,Main,0.0333265334231443
-18,-0.0678542510872291,0.0808652342513255,-0.215360565006712,productivity,classical_fd,-0.11987675160626,replication,Main,-0.0666105078424452
-18,0.0123291929669336,0.181716310324856,-0.157246699575731,TFP,classical_fd,-0.0290024904100879,replication,Main,0.0131479442420357
-18,-0.0302810161490397,0.0583698885011888,-0.120705807273995,unemployment,classical_fd,-0.00517839605078686,replication,Main,-0.0308392372478148
-19,0.00812159678119377,0.233181178701644,-0.208448777216296,consumption,classical_fd,-0.0826759960185453,replication,Main,0.00480960242608748
-19,0.0917675916304922,0.260083776945858,-0.0771483822213629,hours_worked,classical_fd,0.0671436256557206,replication,Main,0.092994404644836
-19,0.0190184826237962,0.0370142551174614,-0.000983599757943096,inflation,classical_fd,0.0167426973917394,replication,Main,0.018529602871383
-19,0.0210665869288141,0.0469404343484787,-0.00795121971834931,interest,classical_fd,0.022206851523537,replication,Main,0.0203125189952943
-19,0.151530522054383,0.738553100197184,-0.358931848630709,investment,classical_fd,0.0682960271947644,replication,Main,0.185800514534828
-19,0.0308363076493828,0.120010281894396,-0.0535779248692534,labor_share,classical_fd,0.0148710748671618,replication,Main,0.0318274009729228
-19,0.00658731980837819,0.330189250989945,-0.282672718867597,output,classical_fd,-0.0643906072484696,replication,Main,0.0140041400009511
-19,-0.0744687302669018,0.0801883738188209,-0.23127078239786,productivity,classical_fd,-0.129152061661735,replication,Main,-0.0739554430403121
-19,0.0136368489191768,0.184723772748015,-0.160862607991984,TFP,classical_fd,-0.0313911719154804,replication,Main,0.0135313844653444
-19,-0.0221424929652411,0.0615331212858165,-0.104772223861614,unemployment,classical_fd,0.000850157307918212,replication,Main,-0.021600008349576
-2,-0.278218857904337,-0.195254720388036,-0.350867759919971,consumption,classical_fd,-0.330110782368626,replication,Main,-0.269604838571944
-2,-0.480663211889081,-0.411334218297933,-0.538043699907216,hours_worked,classical_fd,-0.579037911181419,replication,Main,-0.467801142220371
-2,-0.0190313407243554,0.00529108813320836,-0.0447459388954026,inflation,classical_fd,-0.0307539358622478,replication,Main,-0.0195256838584505
-2,-0.104359733280282,-0.0595832140634565,-0.149746081508166,interest,classical_fd,-0.124256024623073,replication,Main,-0.102764194524795
-2,-2.05946987276063,-1.68851612090252,-2.36236679865947,investment,classical_fd,-2.33285466689726,replication,Main,-1.99678441659515
-2,0.10101501489081,0.189582796855122,0.00195797772350365,labor_share,classical_fd,0.0492600403329516,replication,Main,0.0937778316313045
-2,-0.572073957659086,-0.462755508365137,-0.674857421571192,output,classical_fd,-0.66641714652827,replication,Main,-0.557894320344918
-2,-0.126434152730535,-0.0296464081812153,-0.222788357960843,productivity,classical_fd,-0.0274958980989898,replication,Main,-0.123989662988831
-2,0.218387117721185,0.310479440456244,0.0968937921209772,TFP,classical_fd,0.234329037352722,replication,Main,0.204158905188681
-2,0.295601782813597,0.323232162919891,0.258581189977528,unemployment,classical_fd,0.382716051128098,replication,Main,0.287220377407399
-20,0.000721478240731779,0.226940163813824,-0.219371100229692,consumption,classical_fd,-0.0897984206048929,replication,Main,-0.00383854760315464
-20,0.0723149120667599,0.245371013280915,-0.0867481532411679,hours_worked,classical_fd,0.0572837527752605,replication,Main,0.0780093485795086
-20,0.0168380960855125,0.034830934081113,-0.00246885207459677,inflation,classical_fd,0.0151326887591775,replication,Main,0.0168044230113446
-20,0.0202885659183705,0.0456991987183354,-0.00830478963650815,interest,classical_fd,0.0215130362494822,replication,Main,0.0195204961366412
-20,0.0783598273875169,0.660971442098788,-0.420116294706169,investment,classical_fd,0.0158650820312999,replication,Main,0.116279748803516
-20,0.0352347227008827,0.116350464157146,-0.0465574761798612,labor_share,classical_fd,0.018968005767011,replication,Main,0.0342169964559055
-20,-0.00697216958564779,0.313449798735006,-0.300879873323085,output,classical_fd,-0.0771998035816202,replication,Main,-0.00275897496344535
-20,-0.0800235449175482,0.0783724817642932,-0.242909435697279,productivity,classical_fd,-0.136261172970129,replication,Main,-0.0787943995597484
-20,0.0127692500882497,0.185607911169644,-0.164350206765072,TFP,classical_fd,-0.0349855555472076,replication,Main,0.0119883506675834
-20,-0.0110306469702442,0.065500635712754,-0.0923079810706395,unemployment,classical_fd,0.00644526799899538,replication,Main,-0.0129830375579741
-21,-0.00579427738161403,0.213031907537241,-0.228466621729571,consumption,classical_fd,-0.0963925592186467,replication,Main,-0.0119134158297078
-21,0.0583865758338122,0.228461039770676,-0.0979695601900569,hours_worked,classical_fd,0.0487245069298639,replication,Main,0.0650173166068982
-21,0.0151894988503821,0.0323660262323273,-0.00308770589602665,inflation,classical_fd,0.013549644931087,replication,Main,0.0150890546309517
-21,0.0194563951120622,0.0445859269883525,-0.00923948638559475,interest,classical_fd,0.0206576419402969,replication,Main,0.0185866352479615
-21,0.0247726871412074,0.593422147305548,-0.472063752542109,investment,classical_fd,-0.0271922554010879,replication,Main,0.0591245522832335
-21,0.0331658645945456,0.109318444894077,-0.0409847269981169,labor_share,classical_fd,0.0213339487399674,replication,Main,0.0344753480392889
-21,-0.0234752724624958,0.30107233799635,-0.319849277509491,output,classical_fd,-0.0880869846891512,replication,Main,-0.0169838389353358
-21,-0.082162727075339,0.0781812880351264,-0.244954809084144,productivity,classical_fd,-0.141727649033014,replication,Main,-0.0818679714572336
-21,0.0112812998526032,0.182426358664959,-0.171198866759704,TFP,classical_fd,-0.0394802997527182,replication,Main,0.00882150413234295
-21,-0.00206990792882128,0.0692551266865492,-0.0814329672154961,unemployment,classical_fd,0.0114427959462888,replication,Main,-0.00526364783874841
-22,-0.0157660178869392,0.206544815550451,-0.241513602072159,consumption,classical_fd,-0.102369841736334,replication,Main,-0.0192805666407353
-22,0.0478452903564325,0.213803672572791,-0.108655820687079,hours_worked,classical_fd,0.0414615810082527,replication,Main,0.054000911457528
-22,0.0137919904504848,0.0301988911823712,-0.00510932108502674,inflation,classical_fd,0.0120275846234958,replication,Main,0.0134440500503769
-22,0.0182219640287949,0.0434984829173505,-0.010029722966915,interest,classical_fd,0.0197020277949961,replication,Main,0.0175915029697846
-22,-0.00690112163337081,0.542253066513053,-0.505432558183316,investment,classical_fd,-0.0618409896841674,replication,Main,0.0130454532497544
-22,0.0304593332159547,0.105309806570661,-0.0394099985942055,labor_share,classical_fd,0.0224108902057675,replication,Main,0.0332232847204403
-22,-0.0339591649032807,0.293675730667603,-0.335524458245947,output,classical_fd,-0.0971930935970738,replication,Main,-0.0288737163697896
-22,-0.0811907721956998,0.0795368517601179,-0.253220884770032,productivity,classical_fd,-0.145973878199103,replication,Main,-0.0837821819396979
-22,0.00686628362921208,0.179800986526907,-0.174879496086236,TFP,classical_fd,-0.0445784304906417,replication,Main,0.00438710457927397
-22,0.00490555931239831,0.0725556035840799,-0.0711649579083438,unemployment,classical_fd,0.0157677418535301,replication,Main,0.00144419154601713
-23,-0.0217109551640951,0.200530998002167,-0.250865989049477,consumption,classical_fd,-0.107691535993712,replication,Main,-0.0258989584207683
-23,0.0422035580696098,0.203615266956985,-0.119798864394179,hours_worked,classical_fd,0.0354323299584308,replication,Main,0.0448144274952449
-23,0.0120932725455231,0.0290868834596173,-0.00617292513221266,inflation,classical_fd,0.0105855876806732,replication,Main,0.0119020839550923
-23,0.0163430105462523,0.0430610991999886,-0.0107856904604788,interest,classical_fd,0.018690726094092,replication,Main,0.0165850927828681
-23,-0.035591354499281,0.509622235716687,-0.538118023250467,investment,classical_fd,-0.0891281381667528,replication,Main,-0.0235357814427607
-23,0.0281949558632081,0.0985309695920382,-0.0386016932169729,labor_share,classical_fd,0.0225695953504682,replication,Main,0.0309761885622225
-23,-0.0444265040448201,0.287232712890585,-0.344827939469385,output,classical_fd,-0.104693245681869,replication,Main,-0.0387215134626092
-23,-0.0822788880096056,0.0851575244814073,-0.263354334462739,productivity,classical_fd,-0.14932810109208,replication,Main,-0.0850044246511228
-23,4.28765729430146e-05,0.175952635996927,-0.179161608391502,TFP,classical_fd,-0.0500151826513829,replication,Main,-0.000956603613656908
-23,0.00867346986457879,0.0765712807691448,-0.0609582603175528,unemployment,classical_fd,0.0194026936498274,replication,Main,0.00713477012907522
-24,-0.02768754640508,0.196079739083666,-0.257547413352704,consumption,classical_fd,-0.112350969228126,replication,Main,-0.031786908065225
-24,0.0355573946950153,0.199650951475564,-0.129360794123759,hours_worked,classical_fd,0.0305466941033174,replication,Main,0.0372503143170172
-24,0.0106470251325017,0.027764696240344,-0.00701437458774141,inflation,classical_fd,0.00923285585251751,replication,Main,0.0104760703736665
-24,0.0155105640688501,0.0430982118479498,-0.0115852458174483,interest,classical_fd,0.0176563157969765,replication,Main,0.0155959298401265
-24,-0.0707796338355062,0.470718885270484,-0.5621685984745,investment,classical_fd,-0.11006717161547,replication,Main,-0.0522268354079266
-24,0.0258136832919259,0.092558838770093,-0.0373326494896471,labor_share,classical_fd,0.0221112445786721,replication,Main,0.0281408616402399
-24,-0.0459145449607902,0.286641871797001,-0.362035161192691,output,classical_fd,-0.110767162446632,replication,Main,-0.0468450051287957
-24,-0.0820690919932991,0.0877629797262674,-0.270639289938093,productivity,classical_fd,-0.152037598287742,replication,Main,-0.0858745820568482
-24,-0.00555990675165556,0.169918364361468,-0.188370513909269,TFP,classical_fd,-0.0555694104341796,replication,Main,-0.00688222762699376
-24,0.0130092562050509,0.0787290364619904,-0.0544353124062145,unemployment,classical_fd,0.0223649672387371,replication,Main,0.0118678936339446
-25,-0.035778475441909,0.190811729566561,-0.26354074599406,consumption,classical_fd,-0.116361036520669,replication,Main,-0.0369958813843626
-25,0.0298375848805415,0.200134544610337,-0.135426274976132,hours_worked,classical_fd,0.0267056021961749,replication,Main,0.0310844395644665
-25,0.00945313158358995,0.0266013690731615,-0.00780214848567549,inflation,classical_fd,0.00797251669571194,replication,Main,0.00916601936057361
-25,0.0142950188892314,0.0428950110962495,-0.0130063915817439,interest,classical_fd,0.0166229345747578,replication,Main,0.014638373811503
-25,-0.0847565834420974,0.427881795737424,-0.582011860935096,investment,classical_fd,-0.125580462417856,replication,Main,-0.0745080823792295
-25,0.0218784151017973,0.087196928976246,-0.0379126770855144,labor_share,classical_fd,0.0212741672188923,replication,Main,0.0250239985578586
-25,-0.0509921826067638,0.289153984686348,-0.375012790527772,output,classical_fd,-0.115583389388451,replication,Main,-0.0535459839069675
-25,-0.0813348909592985,0.0898368761631847,-0.276441725402101,productivity,classical_fd,-0.154283894877736,replication,Main,-0.0866243885682382
-25,-0.00991019659249087,0.163069469309165,-0.199138311542446,TFP,classical_fd,-0.0610662909810026,replication,Main,-0.0131110534682834
-25,0.0159017510455647,0.0793391021452503,-0.0479996118288104,unemployment,classical_fd,0.0246911329157705,replication,Main,0.0157370135364899
-26,-0.0415245395856274,0.190362729010575,-0.272510222945029,consumption,classical_fd,-0.119745980602355,replication,Main,-0.0415917947108797
-26,0.0267676243720816,0.202181284574471,-0.14325853920222,hours_worked,classical_fd,0.0238105490493808,replication,Main,0.0261038044830901
-26,0.00831922861943367,0.0250549100965361,-0.00864992990954111,inflation,classical_fd,0.00680426977008226,replication,Main,0.00796452851666018
-26,0.0135401408030746,0.0420754965214701,-0.0141960174007595,interest,classical_fd,0.015608682654374,replication,Main,0.0137181171480239
-26,-0.0986798299348603,0.416930765030383,-0.607248643051938,investment,classical_fd,-0.136479718951599,replication,Main,-0.0916537670704306
-26,0.0183430295352459,0.0810940322781043,-0.0385072297211485,labor_share,classical_fd,0.0202427556049503,replication,Main,0.0218465558672194
-26,-0.0557573659250029,0.28864080171917,-0.389080186147288,output,classical_fd,-0.119292819993277,replication,Main,-0.0590880702091875
-26,-0.0812842020390916,0.0950751114034019,-0.280017024021861,productivity,classical_fd,-0.156197410989392,replication,Main,-0.0873995561911489
-26,-0.0158378272741773,0.160231872289887,-0.204903223961897,TFP,classical_fd,-0.0663745601785626,replication,Main,-0.019419461715447
-26,0.0189544788746294,0.0811857326761221,-0.0440215551271345,unemployment,classical_fd,0.0264272791881281,replication,Main,0.018847242256267
-27,-0.0433874690237453,0.18566466037354,-0.276302966376434,consumption,classical_fd,-0.122536348847917,replication,Main,-0.0456427513011216
-27,0.0231570946608405,0.202910213038475,-0.151211998913609,hours_worked,classical_fd,0.0217675191957229,replication,Main,0.0221209961343241
-27,0.00693510899276343,0.0239890852935039,-0.00932599494234007,inflation,classical_fd,0.00572608248211675,replication,Main,0.00686078880860539
-27,0.0125754087356296,0.04172555631144,-0.0151146396211851,interest,classical_fd,0.0146271978690291,replication,Main,0.0128360703189378
-27,-0.107833907389906,0.421772612615799,-0.6306234862864,investment,classical_fd,-0.143468566045717,replication,Main,-0.104707687229722
-27,0.0154023723435654,0.0768184046589713,-0.0390478658527858,labor_share,classical_fd,0.0191566758690518,replication,Main,0.0187602451710742
-27,-0.0613075975083988,0.294794148171268,-0.404854230588158,output,classical_fd,-0.122027862203264,replication,Main,-0.0636879791046702
-27,-0.0806827662467327,0.0961323816402569,-0.284217859969375,productivity,classical_fd,-0.157870183849774,replication,Main,-0.0882812817508968
-27,-0.0215021867894923,0.155661712800538,-0.207249622005431,TFP,classical_fd,-0.0714008185038581,replication,Main,-0.0256377145378389
-27,0.0202707739703361,0.0828708340874454,-0.0402071135962033,unemployment,classical_fd,0.0276233844248996,replication,Main,0.0213015418829868
-28,-0.0467252492169336,0.183761633659609,-0.281658423732121,consumption,classical_fd,-0.12476612940255,replication,Main,-0.0492118696323171
-28,0.0214380465563798,0.197493174312624,-0.158193227392424,hours_worked,classical_fd,0.0204877140340552,replication,Main,0.018979369266508
-28,0.00604748058556231,0.02254217750909,-0.0104931510746489,inflation,classical_fd,0.00473516916731539,replication,Main,0.00584329111450617
-28,0.0114817990082842,0.0419637528312632,-0.0168300444608079,interest,classical_fd,0.0136886577937212,replication,Main,0.0119909313031522
-28,-0.109075869069904,0.424829838465874,-0.658828945575114,investment,classical_fd,-0.147155826878793,replication,Main,-0.114493279180561
-28,0.0129727235190246,0.0710641157165962,-0.0396362854249186,labor_share,classical_fd,0.0181193208280206,replication,Main,0.0158635682426943
-28,-0.0666025220065021,0.297782168310908,-0.413365105833813,output,classical_fd,-0.123904519119546,replication,Main,-0.0675155949069999
-28,-0.081565053363122,0.0951188360058156,-0.288742726241365,productivity,classical_fd,-0.159366139482598,replication,Main,-0.0893051255221086
-28,-0.0290031941615157,0.147936279977682,-0.214594659916596,TFP,classical_fd,-0.0760827301659333,replication,Main,-0.0316441334276786
-28,0.0225637466194731,0.0843089705900536,-0.037161246218301,unemployment,classical_fd,0.0283303910654773,replication,Main,0.0231931540869831
-29,-0.0505722902153337,0.187036014166112,-0.288601062392734,consumption,classical_fd,-0.126471252119663,replication,Main,-0.0523538388486175
-29,0.0168712370477826,0.203779076589609,-0.163638513534273,hours_worked,classical_fd,0.0198868165382852,replication,Main,0.016552388620672
-29,0.00512638369291982,0.0210626776360561,-0.0119594402821295,inflation,classical_fd,0.00382847610959211,replication,Main,0.00490145939058275
-29,0.0105657479961153,0.0423054020849765,-0.0183111387558937,interest,classical_fd,0.0128004179895514,replication,Main,0.0111807522335109
-29,-0.107040490949014,0.442056933632841,-0.681022185862712,investment,classical_fd,-0.148071998029745,replication,Main,-0.121642451804306
-29,0.0102910291251896,0.0655275614530052,-0.0405798838359625,labor_share,classical_fd,0.0172050303623617,replication,Main,0.0132159261477882
-29,-0.0732081508376889,0.304377327826589,-0.418416734827756,output,classical_fd,-0.125025533264895,replication,Main,-0.0706991469790628
-29,-0.0809922619396393,0.0991641137970897,-0.296652181099762,productivity,classical_fd,-0.160728930793641,replication,Main,-0.0904764125071435
-29,-0.0323048147084582,0.141104613196056,-0.221363374866853,TFP,classical_fd,-0.0803822979060565,replication,Main,-0.0373571012887008
-29,0.0222151220800368,0.0858660186054862,-0.0345016885149947,unemployment,classical_fd,0.0285988852496624,replication,Main,0.0246024276310285
-3,-0.296188511262845,-0.181969228803788,-0.391020793704048,consumption,classical_fd,-0.319952847074603,replication,Main,-0.284808624327827
-3,-0.529021939470789,-0.424764289733076,-0.606196960679591,hours_worked,classical_fd,-0.531262939800941,replication,Main,-0.5098318864913
-3,-0.0325219362308784,-0.00943911482059599,-0.0559048394866352,inflation,classical_fd,-0.0337427941274917,replication,Main,-0.0324958170062585
-3,-0.122283395121135,-0.082658778764117,-0.162080629728574,interest,classical_fd,-0.122084919995433,replication,Main,-0.120097371399184
-3,-2.09478385266197,-1.5136411448989,-2.58070965126946,investment,classical_fd,-1.94838972841308,replication,Main,-1.99998598079493
-3,0.0337061685347046,0.128697145463363,-0.0768594262946176,labor_share,classical_fd,-0.0401124477671642,replication,Main,0.0262803548167172
-3,-0.592628730801921,-0.40596132476587,-0.743606352553182,output,classical_fd,-0.586664144207072,replication,Main,-0.56367122933188
-3,-0.00382955636483798,0.11928651155248,-0.137302373117428,productivity,classical_fd,0.0830315066014341,replication,Main,-0.0056528873940983
-3,0.251964023337571,0.348571179526413,0.128166068529868,TFP,classical_fd,0.212469892325367,replication,Main,0.238666248276217
-3,0.347793170997779,0.387393653418364,0.28946738189887,unemployment,classical_fd,0.376744957429287,replication,Main,0.334252849433186
-30,-0.0516668758388597,0.189224508448879,-0.297057836660157,consumption,classical_fd,-0.12768884878567,replication,Main,-0.0551139925201739
-30,0.0150849693475481,0.205322998021366,-0.172566971784137,hours_worked,classical_fd,0.0198838931819892,replication,Main,0.0147397588169061
-30,0.00432075761178674,0.0202655035011325,-0.0127026258445161,inflation,classical_fd,0.00300285843486584,replication,Main,0.0040264690047057
-30,0.00983278320473603,0.0424783978389712,-0.0200298998953208,interest,classical_fd,0.0119674412996192,replication,Main,0.0104037904705178
-30,-0.107615180671492,0.462565647655459,-0.707493211116268,investment,classical_fd,-0.146684575955327,replication,Main,-0.126631964348116
-30,0.00895832872284071,0.0639550095242266,-0.0424575484004057,labor_share,classical_fd,0.0164649839896846,replication,Main,0.0108491896316177
-30,-0.0803270653977074,0.312221286652858,-0.434714185373886,output,classical_fd,-0.125483476090369,replication,Main,-0.0733327439366813
-30,-0.0813445081472247,0.103196005510732,-0.298453624997689,productivity,classical_fd,-0.161987655992724,replication,Main,-0.0917820394524136
-30,-0.0353927080053959,0.138515687416205,-0.227899511853687,TFP,classical_fd,-0.0842798829201255,replication,Main,-0.0427265483702422
-30,0.0237685784745931,0.0841607614315757,-0.0313368418504283,unemployment,classical_fd,0.0284786006068068,replication,Main,0.0255964884500529
-31,-0.0541654217437264,0.195961473198093,-0.304315252706317,consumption,classical_fd,-0.128456862822471,replication,Main,-0.0575289200805485
-31,0.0139698988187513,0.207017290990523,-0.180288619772003,hours_worked,classical_fd,0.0204005337682547,replication,Main,0.0134622322091919
-31,0.00335794984946348,0.0190856441324463,-0.0135236290790207,inflation,classical_fd,0.0022550907696787,replication,Main,0.00321150039090645
-31,0.00878427798868106,0.0426171808947787,-0.0214311998223336,interest,classical_fd,0.0111926225745525,replication,Main,0.00965888160903416
-31,-0.0963811032244926,0.467638170465466,-0.727818705758108,investment,classical_fd,-0.143410209356634,replication,Main,-0.129820032335853
-31,0.00723569620864045,0.0614292565269224,-0.0430136109513738,labor_share,classical_fd,0.015931883418532,replication,Main,0.0087766148592411
-31,-0.0775203870386683,0.317848711944717,-0.442607138565267,output,classical_fd,-0.125363217803004,replication,Main,-0.0754844184775784
-31,-0.0807785488113171,0.102146222428278,-0.299773845990826,productivity,classical_fd,-0.163160892591194,replication,Main,-0.0931990135644815
-31,-0.0395313018788394,0.135734126487508,-0.235968690745049,TFP,classical_fd,-0.0877692628620241,replication,Main,-0.0477259993964933
-31,0.0232772182934382,0.0865940639497318,-0.0310535498619228,unemployment,classical_fd,0.0280182427355565,replication,Main,0.0262305315119163
-32,-0.0565547308916242,0.19910392916788,-0.315270312727043,consumption,classical_fd,-0.128813761005687,replication,Main,-0.0596278789809253
-32,0.0181173676442008,0.213103085894288,-0.186457954413826,hours_worked,classical_fd,0.0213604736499887,replication,Main,0.0126563079464145
-32,0.00275321524006987,0.0181760953661385,-0.0141621531107861,inflation,classical_fd,0.00158180983394423,replication,Main,0.00245162833941366
-32,0.00788790692177517,0.0426234986774305,-0.0228979422342406,interest,classical_fd,0.0104770713723267,replication,Main,0.00894551646838872
-32,-0.10568586843676,0.487953384605149,-0.746599772651927,investment,classical_fd,-0.138623185731363,replication,Main,-0.131478968435906
-32,0.00610604358488059,0.0585260412136319,-0.0442622580171754,labor_share,classical_fd,0.0156236392911191,replication,Main,0.00699937088105294
-32,-0.0787438610185473,0.330592539573392,-0.455101341397178,output,classical_fd,-0.124743592653708,replication,Main,-0.0772035622475379
-32,-0.0817887598722023,0.103381476784777,-0.303237540381308,productivity,classical_fd,-0.164259490536068,replication,Main,-0.094700269415232
-32,-0.0435602076377112,0.132827305446345,-0.244530187690207,TFP,classical_fd,-0.0908537709225512,replication,Main,-0.0523457451449984
-32,0.0227695553100181,0.0870113855879765,-0.0321469570446162,unemployment,classical_fd,0.0272653505168716,replication,Main,0.0265498629362168
-33,-0.0575978390655661,0.208208033860826,-0.32175565467848,consumption,classical_fd,-0.128798221733575,replication,Main,-0.0614344961005579
-33,0.0162409807180773,0.220793766557962,-0.190873922053381,hours_worked,classical_fd,0.0226897151143376,replication,Main,0.01226952511902
-33,0.00238186435448955,0.0175425478437973,-0.0147166653907539,inflation,classical_fd,0.000979449862287027,replication,Main,0.00174351465365279
-33,0.00752071333280822,0.0426558325596654,-0.02456294451828,interest,classical_fd,0.009820383985592,replication,Main,0.00826375286848947
-33,-0.109798412369404,0.513786293832622,-0.767313106668766,investment,classical_fd,-0.132660652122717,replication,Main,-0.131821915603818
-33,0.00404206968856419,0.0565815559970352,-0.0451583492574605,labor_share,classical_fd,0.0155462952364596,replication,Main,0.00551106140714435
-33,-0.0805355742053169,0.34226585154259,-0.467491066733874,output,classical_fd,-0.123698306833878,replication,Main,-0.0785271773274857
-33,-0.0822633541895669,0.104405730434196,-0.304769563741522,productivity,classical_fd,-0.165288512236827,replication,Main,-0.0962583598487001
-33,-0.0467000197955947,0.131860320360642,-0.253874088423015,TFP,classical_fd,-0.0935434124113536,replication,Main,-0.0565873570693294
-33,0.0228449855749306,0.087999550582097,-0.0331523351978998,unemployment,classical_fd,0.0262660678092336,replication,Main,0.0265921112426045
-34,-0.05997806254278,0.211589276184358,-0.328413305374922,consumption,classical_fd,-0.128448757325774,replication,Main,-0.0629684315908764
-34,0.0167327868673029,0.229749914609059,-0.19638186227341,hours_worked,classical_fd,0.0243170400700469,replication,Main,0.0122566684272379
-34,0.00159015858212353,0.0170572473376353,-0.0154402220651959,inflation,classical_fd,0.000444202761446867,replication,Main,0.00108501620934232
-34,0.00730635263417809,0.042395958806677,-0.0258795799923754,interest,classical_fd,0.00922091516804028,replication,Main,0.00761405009229975
-34,-0.122242950272234,0.531511570269068,-0.781041611460274,investment,classical_fd,-0.125825384107157,replication,Main,-0.131023250963911
-34,0.00302053516929481,0.0563991030326352,-0.0470567779116347,labor_share,classical_fd,0.0156963975631412,replication,Main,0.00430070393467153
-34,-0.0780907466912858,0.354252432901622,-0.485977267403537,output,classical_fd,-0.122296254178093,replication,Main,-0.079484748265886
-34,-0.0816330043234785,0.10467901919372,-0.310961059616614,productivity,classical_fd,-0.166248623803945,replication,Main,-0.0978475865250673
-34,-0.0514465962428422,0.127820030346488,-0.261852520780015,TFP,classical_fd,-0.095852786212281,replication,Main,-0.0604595233404536
-34,0.0223102755178538,0.0888458898988684,-0.033930626002409,unemployment,classical_fd,0.025064800437343,replication,Main,0.0263892665293582
-35,-0.0646162140091557,0.219067605871656,-0.336905062753458,consumption,classical_fd,-0.127803277665561,replication,Main,-0.0642468215622779
-35,0.0175666272165172,0.238142647837443,-0.207308020134906,hours_worked,classical_fd,0.0261747565540794,replication,Main,0.0125769606759189
-35,0.000908581050418262,0.0165148760052216,-0.016447003769632,inflation,classical_fd,-2.79854423860622e-05,replication,Main,0.000474790322511623
-35,0.00672282813834223,0.0424117910438338,-0.026798253946031,interest,classical_fd,0.00867604756476738,replication,Main,0.00699708164942509
-35,-0.122022222292506,0.549621115309382,-0.798132515047539,investment,classical_fd,-0.118387009373444,replication,Main,-0.129233126561451
-35,0.001307967916772,0.0551716887500011,-0.0492705573768816,labor_share,classical_fd,0.0160629742048208,replication,Main,0.00335457576666505
-35,-0.0795124071073761,0.368115745145458,-0.496609613045624,output,classical_fd,-0.120601443187091,replication,Main,-0.0801017728676064
-35,-0.0851093670955456,0.104334327204752,-0.313887157963985,productivity,classical_fd,-0.167137154574101,replication,Main,-0.0994450442613107
-35,-0.05517234617629,0.127256371199806,-0.268187576746233,TFP,classical_fd,-0.0977996219676401,replication,Main,-0.0639750552760539
-35,0.021668636914724,0.0885896298695457,-0.03567372335444,unemployment,classical_fd,0.0237037895985839,replication,Main,0.0259693745772388
-36,-0.0646913546775196,0.227966181491534,-0.346193371257422,consumption,classical_fd,-0.126898626989143,replication,Main,-0.0652854162544433
-36,0.0188255242696803,0.248499226331941,-0.21203061579788,hours_worked,classical_fd,0.0281995209330961,replication,Main,0.0131921661525998
-36,0.000343685337067457,0.0162658177790061,-0.0171621526111527,inflation,classical_fd,-0.000441383131940249,replication,Main,-8.80586797714463e-05
-36,0.00597332497703566,0.0428088717335993,-0.0281316240720072,interest,classical_fd,0.00818245101415704,replication,Main,0.00641355877210102
-36,-0.116436627179437,0.567635426781279,-0.820199418338712,investment,classical_fd,-0.110582493818737,replication,Main,-0.126587067226872
-36,0.0016501989417284,0.0560481643969315,-0.0504736471780104,labor_share,classical_fd,0.0166292380584569,replication,Main,0.00265729293325725
-36,-0.0783935344255255,0.385561866868447,-0.509128997709629,output,classical_fd,-0.118672727487862,replication,Main,-0.0804021184223396
-36,-0.0875769387102187,0.104530013318775,-0.314287653587047,productivity,classical_fd,-0.16794896489213,replication,Main,-0.101030957615887
-36,-0.0570205736901291,0.127999829957599,-0.272898025530444,TFP,classical_fd,-0.09940375903759,replication,Main,-0.0671488519828743
-36,0.0209390600849248,0.0889359973457627,-0.0385574319787014,unemployment,classical_fd,0.0222226561286009,replication,Main,0.0253578306093592
-37,-0.0672698804657897,0.230329099496297,-0.353698309898449,consumption,classical_fd,-0.125770132572782,replication,Main,-0.0660993974887316
-37,0.0177144329307643,0.25955815033192,-0.221092915561677,hours_worked,classical_fd,0.0303331046545671,replication,Main,0.0140654586368535
-37,-5.62875286005524e-05,0.015842981923639,-0.0175142094497618,inflation,classical_fd,-0.000800414690081756,replication,Main,-0.000604265951347224
-37,0.00567322271036864,0.0437203121799262,-0.0294468805795546,interest,classical_fd,0.00773632251649527,replication,Main,0.0058640818945394
-37,-0.114886200103775,0.602579287557245,-0.844158850575322,investment,classical_fd,-0.102616508338828,replication,Main,-0.123211684060502
-37,0.00131759802626639,0.0564363006985409,-0.0514657638534508,labor_share,classical_fd,0.0173740868400257,replication,Main,0.00219239709525807
-37,-0.0774156294839486,0.401808473359899,-0.52666470074353,output,classical_fd,-0.116563494330988,replication,Main,-0.0804094226608021
-37,-0.0906179784211125,0.106173991126472,-0.319346608354979,productivity,classical_fd,-0.168677201495107,replication,Main,-0.102588588265552
-37,-0.0612772911877838,0.127205543418695,-0.276760734374076,TFP,classical_fd,-0.100686424211916,replication,Main,-0.0699966026208277
-37,0.0200750979388632,0.0889824337601728,-0.0400546554087201,unemployment,classical_fd,0.0206579718438274,replication,Main,0.0245782858298163
-38,-0.067404284495233,0.237417380435594,-0.361587957530848,consumption,classical_fd,-0.124451200258263,replication,Main,-0.0667038986305217
-38,0.0197459800483215,0.270103769913769,-0.230489918995229,hours_worked,classical_fd,0.0325230130945583,replication,Main,0.0151608831155473
-38,-0.00032595871719678,0.0156669145190079,-0.0183051127436731,inflation,classical_fd,-0.00110958576320951,replication,Main,-0.001074619656757
-38,0.00535111142540329,0.0444913385410401,-0.0304233675213252,interest,classical_fd,0.00733359897257834,replication,Main,0.00534902766921502
-38,-0.115094605754751,0.62265131498619,-0.856530699264874,investment,classical_fd,-0.094662081843052,replication,Main,-0.119227527244987
-38,0.000624861676249223,0.0586524865762731,-0.0530166375634237,labor_share,classical_fd,0.0182734383501641,replication,Main,0.00194266147119515
-38,-0.0803137563715455,0.416854840064433,-0.546543723606206,output,classical_fd,-0.114321418965666,replication,Main,-0.0801477656158702
-38,-0.0924953686455307,0.104138477889547,-0.317093364229057,productivity,classical_fd,-0.169313976994738,replication,Main,-0.104103912443361
-38,-0.0616636758378128,0.128105588735306,-0.283227688322958,TFP,classical_fd,-0.101669700776401,replication,Main,-0.0725340246655912
-38,0.0192889942869906,0.0893804620931186,-0.0426424693650841,unemployment,classical_fd,0.0190429037752367,replication,Main,0.0236532182180931
-39,-0.0695007490671608,0.243339139594228,-0.37081718984015,consumption,classical_fd,-0.122972982502235,replication,Main,-0.067114271491376
-39,0.0202652582130645,0.282678359742786,-0.237106188730468,hours_worked,classical_fd,0.0347229037850903,replication,Main,0.0164432473804989
-39,-0.000657668249090768,0.0153746999782572,-0.0191709036611379,inflation,classical_fd,-0.00137340254832927,replication,Main,-0.00150010307856646
-39,0.00490141909885279,0.0451690976164152,-0.0322828779571123,interest,classical_fd,0.00697013740197538,replication,Main,0.00486847336958824
-39,-0.112702037194808,0.654835545314054,-0.884107112072052,investment,classical_fd,-0.0868617522046167,replication,Main,-0.114749966641525
-39,0.000516886229216883,0.0602546224797809,-0.054754922396437,labor_share,classical_fd,0.0193014174900579,replication,Main,0.00189025509427513
-39,-0.0799050093849383,0.428259255794326,-0.563816345469416,output,classical_fd,-0.111988347538115,replication,Main,-0.0796418185267865
-39,-0.0931328934736572,0.107499155614656,-0.319404363744378,productivity,classical_fd,-0.169850983120334,replication,Main,-0.105565201126198
-39,-0.0632786221236494,0.13094726867043,-0.288793392003692,TFP,classical_fd,-0.102376115002823,replication,Main,-0.0747764702799297
-39,0.0173258895152038,0.0895104481666723,-0.0448880718365296,unemployment,classical_fd,0.0174069614937648,replication,Main,0.022604233137009
-4,-0.280757212988683,-0.138707446862209,-0.403988238591734,consumption,classical_fd,-0.288268057626642,replication,Main,-0.268148140079013
-4,-0.489611734324881,-0.340714267717529,-0.604544077964367,hours_worked,classical_fd,-0.430634832137244,replication,Main,-0.460158902717855
-4,-0.0368845568614162,-0.0147887793557707,-0.0581518865269662,inflation,classical_fd,-0.0325839413991672,replication,Main,-0.0360394642979994
-4,-0.12055496067857,-0.0851607043733734,-0.156972318187151,interest,classical_fd,-0.109586236562373,replication,Main,-0.119357125087967
-4,-1.72197041999463,-0.926625404754603,-2.43602757161232,investment,classical_fd,-1.39428057255674,replication,Main,-1.63079808169167
-4,-0.0534528969025282,0.0382219616718184,-0.154849519181847,labor_share,classical_fd,-0.118920675209332,replication,Main,-0.0560093417139014
-4,-0.511960782906854,-0.262898517228349,-0.727540065533545,output,classical_fd,-0.46359964070815,replication,Main,-0.481529029307374
-4,0.107452578241785,0.239918565720022,-0.0442189603707204,productivity,classical_fd,0.161934647885756,replication,Main,0.10029084871286
-4,0.232799471518229,0.330081301162198,0.118880487362709,TFP,classical_fd,0.162261663860474,replication,Main,0.223245059071224
-4,0.344974122811766,0.404406403699132,0.259281641726341,unemployment,classical_fd,0.333683439962541,replication,Main,0.326128400297003
-5,-0.240363755598786,-0.0740834894879015,-0.396140376869402,consumption,classical_fd,-0.245279370967166,replication,Main,-0.230251244535203
-5,-0.382936592422258,-0.185713363432861,-0.560429558568416,hours_worked,classical_fd,-0.309753398374979,replication,Main,-0.359002270489141
-5,-0.0355712586959977,-0.0157554731270706,-0.0554222841916637,inflation,classical_fd,-0.026871681134579,replication,Main,-0.0353182961716623
-5,-0.108243047440374,-0.0770815094159615,-0.141241228201793,interest,classical_fd,-0.0914036418367645,replication,Main,-0.108013009516537
-5,-1.1738702042658,-0.209541397126611,-2.06518936142684,investment,classical_fd,-0.817867018525849,replication,Main,-1.09778802302281
-5,-0.12670719688238,-0.0349848005306716,-0.216521828796178,labor_share,classical_fd,-0.176020737972304,replication,Main,-0.125637990857893
-5,-0.38599435641016,-0.101250119146172,-0.662115979476897,output,classical_fd,-0.33038731087797,replication,Main,-0.357894069935218
-5,0.188677280034301,0.320262575467137,0.0337185270106712,productivity,classical_fd,0.206316671378566,replication,Main,0.176341344041644
-5,0.18461600200847,0.287615002931764,0.0796265468863499,TFP,classical_fd,0.105451260315221,replication,Main,0.178961415299652
-5,0.298947781497058,0.391679251169884,0.189839242163395,unemployment,classical_fd,0.271803506121603,replication,Main,0.282622207381397
-6,-0.189796630526726,-0.0030274114051692,-0.372544168611464,consumption,classical_fd,-0.19921841810908,replication,Main,-0.181145825180541
-6,-0.256417808419804,-0.036477920435445,-0.480978765455482,hours_worked,classical_fd,-0.190915708660001,replication,Main,-0.23771108658211
-6,-0.029103763688394,-0.0121638878349394,-0.0481464354184658,inflation,classical_fd,-0.0188843758914276,replication,Main,-0.0296250879498641
-6,-0.0907456891111493,-0.0611192483253426,-0.122359893308189,interest,classical_fd,-0.0712538805956525,replication,Main,-0.0905543508846397
-6,-0.600505280065614,0.442349796468638,-1.6265716431316,investment,classical_fd,-0.305568203795776,replication,Main,-0.540969736334852
-6,-0.175518758838438,-0.0986090576233625,-0.250887714543972,labor_share,classical_fd,-0.208266918739446,replication,Main,-0.173806112519915
-6,-0.248110698232289,0.077285825453616,-0.567389429388454,output,classical_fd,-0.208040591309494,replication,Main,-0.224707504011054
-6,0.231875050878738,0.365302708790595,0.0833305134026001,productivity,classical_fd,0.219412145000369,replication,Main,0.219090328025771
-6,0.12693429170346,0.235470838958884,0.025472769674311,TFP,classical_fd,0.0530716751373843,replication,Main,0.125912606475361
-6,0.235510278453502,0.355784494497311,0.103234837394797,unemployment,classical_fd,0.204887828185177,replication,Main,0.220816290126506
-7,-0.134835804568057,0.0642735819673697,-0.33850641732398,consumption,classical_fd,-0.155884285664528,replication,Main,-0.12906345026345
-7,-0.129476312212782,0.11582206084303,-0.383022601560965,hours_worked,classical_fd,-0.0869732424167124,replication,Main,-0.118445539477155
-7,-0.0215364385197592,-0.00332220916888041,-0.0403402476487387,inflation,classical_fd,-0.00992744674579417,replication,Main,-0.021429140714442
-7,-0.0707894848714249,-0.0414587771875964,-0.101422066933488,interest,classical_fd,-0.0515430999602327,replication,Main,-0.0706834298751186
-7,-0.0386553857019787,0.970614961464315,-1.16165924875478,investment,classical_fd,0.0998518356977866,replication,Main,-0.0449609106033913
-7,-0.196706779398397,-0.128743152692672,-0.265255847449693,labor_share,classical_fd,-0.218150794736588,replication,Main,-0.197368001998768
-7,-0.116509021302015,0.223457077144275,-0.462900730598506,output,classical_fd,-0.107636445963304,replication,Main,-0.102533249012793
-7,0.23745048739652,0.367248495405336,0.09587003177741,productivity,classical_fd,0.208011059035914,replication,Main,0.231327913034107
-7,0.0731543604298517,0.185662388144569,-0.0279011287987312,TFP,classical_fd,0.0112851814654474,replication,Main,0.0755464719852816
-7,0.164188643499356,0.30082945567121,0.0183974704831311,unemployment,classical_fd,0.141892971590684,replication,Main,0.154105694537779
-8,-0.0842171004486349,0.122799300234906,-0.299186668367372,consumption,classical_fd,-0.118820128138493,replication,Main,-0.0801906985348088
-8,-0.0181420196550483,0.240675784306276,-0.282489086367252,hours_worked,classical_fd,-0.00397594299087819,replication,Main,-0.0145109077718508
-8,-0.0125501678887462,0.00718240077838384,-0.0318534129910649,inflation,classical_fd,-0.00127793111736644,replication,Main,-0.0119601553275919
-8,-0.0514222666540896,-0.0206694738799213,-0.0825134731191372,interest,classical_fd,-0.0337362210363416,replication,Main,-0.0509306831534486
-8,0.364566159015006,1.37222752045032,-0.740833037590726,investment,classical_fd,0.386843113688869,replication,Main,0.346400036597278
-8,-0.201450822570249,-0.132251999509958,-0.266039810171016,labor_share,classical_fd,-0.210229552963244,replication,Main,-0.199496943969143
-8,-0.00654407629131972,0.320392875014568,-0.37631548675403,output,classical_fd,-0.0331607545202981,replication,Main,-0.00264883449957609
-8,0.221101128758394,0.354114093246965,0.0903325426470231,productivity,classical_fd,0.179606544259037,replication,Main,0.219724556749052
-8,0.031296037219547,0.150780598147964,-0.0746388508395648,TFP,classical_fd,-0.0181774008786705,replication,Main,0.034731951061163
-8,0.0992347360825565,0.245571401568136,-0.0517947470464044,unemployment,classical_fd,0.0879815158264194,replication,Main,0.0914926122323686
-9,-0.041905108895091,0.177563212680144,-0.263249728740457,consumption,classical_fd,-0.089697241193196,replication,Main,-0.0384116658826445
-9,0.071589297032092,0.330400275140335,-0.206186455725892,hours_worked,classical_fd,0.056859904931035,replication,Main,0.0674572603278047
-9,-0.00313504674059206,0.0167884138812303,-0.0224709832046803,inflation,classical_fd,0.00632142666682203,replication,Main,-0.00269744247197302
-9,-0.0337574928002558,-0.00291668049193599,-0.0641138256322847,interest,classical_fd,-0.0185601894142276,replication,Main,-0.0329310581383444
-9,0.666037799197007,1.62044257670232,-0.40262453522456,investment,classical_fd,0.563012350850954,replication,Main,0.619430074733677
-9,-0.187800817249255,-0.114785033502648,-0.255500534248698,labor_share,classical_fd,-0.190016009660943,replication,Main,-0.184893677345099
-9,0.0716540629943742,0.401296037545599,-0.302786576336697,output,classical_fd,0.016074182414879,replication,Main,0.0705790192140569
-9,0.189152942024031,0.323585379863925,0.0630253558481859,productivity,classical_fd,0.141248040107642,replication,Main,0.191637390380779
-9,0.00123284159336525,0.124595112870301,-0.108003784728413,TFP,classical_fd,-0.0360809279693214,replication,Main,0.00585982581237358
-9,0.0413853108870053,0.201156127693876,-0.107657772046972,unemployment,classical_fd,0.0453460819695358,replication,Main,0.0383909117538792
+h,impulse,response,median,lower,upper,model,irf,version,mean
+1,Main,output,-0.422949213943552,-0.497545402640849,-0.307696125923344,classical_fd,-0.479022703839807,Original BCA,
+2,Main,output,-0.587261671069452,-0.691071930663852,-0.446331440868995,classical_fd,-0.655471772134727,Original BCA,
+3,Main,output,-0.62035491240022,-0.770580884183789,-0.395860991007718,classical_fd,-0.673116157677471,Original BCA,
+4,Main,output,-0.556156208410576,-0.775327593199033,-0.248751814603885,classical_fd,-0.595568715629414,Original BCA,
+5,Main,output,-0.432887180666576,-0.736094892953165,-0.0539959676758193,classical_fd,-0.474257570947953,Original BCA,
+6,Main,output,-0.290441478357032,-0.642383777391767,0.125008250175488,classical_fd,-0.342128769533606,Original BCA,
+7,Main,output,-0.159384042448042,-0.548252633592441,0.282081717214866,classical_fd,-0.220258033887869,Original BCA,
+8,Main,output,-0.046671506108902,-0.463846588864611,0.391933868569767,classical_fd,-0.119815172697827,Original BCA,
+9,Main,output,0.0415826830242225,-0.376747307475568,0.464659831784947,classical_fd,-0.0449201635743348,Original BCA,
+10,Main,output,0.0921771423788758,-0.314047673721325,0.515264643565469,classical_fd,0.00498547335491287,Original BCA,
+11,Main,output,0.132048651858319,-0.267465066536925,0.537206763712964,classical_fd,0.0331156992632864,Original BCA,
+12,Main,output,0.150289652509834,-0.239240089339341,0.53475941884586,classical_fd,0.0438893650578741,Original BCA,
+13,Main,output,0.148048279996572,-0.227828767694726,0.526021688272088,classical_fd,0.0419131829559545,Original BCA,
+14,Main,output,0.139354150950945,-0.227912169356795,0.500312325800318,classical_fd,0.031381373898431,Original BCA,
+15,Main,output,0.118483721851339,-0.222373496383869,0.47391521905761,classical_fd,0.0157687760580408,Original BCA,
+16,Main,output,0.103785827448771,-0.221860075943621,0.452513808194832,classical_fd,-0.00225904371649851,Original BCA,
+17,Main,output,0.0813506006641897,-0.223330886511822,0.423239889886046,classical_fd,-0.0208043393117077,Original BCA,
+18,Main,output,0.0653937300094693,-0.233942831860806,0.400833199518036,classical_fd,-0.0386231019319379,Original BCA,
+19,Main,output,0.0530988969200355,-0.24657465154678,0.372962226164503,classical_fd,-0.054984182190062,Original BCA,
+20,Main,output,0.0380474988286637,-0.266395763351468,0.351537648046968,classical_fd,-0.069529759209124,Original BCA,
+21,Main,output,0.0263580061275375,-0.273890272317938,0.340456503879329,classical_fd,-0.0821536986993266,Original BCA,
+22,Main,output,0.0180708086965527,-0.289881958605594,0.322476095243048,classical_fd,-0.0929046863444178,Original BCA,
+23,Main,output,0.00829572020714079,-0.301137468975895,0.304470230239258,classical_fd,-0.101915074284495,Original BCA,
+24,Main,output,-0.00168794015417135,-0.314489728069926,0.293220134772275,classical_fd,-0.109352682723336,Original BCA,
+25,Main,output,-0.0075405015890246,-0.319783587267461,0.291033041179229,classical_fd,-0.115391141274141,Original BCA,
+26,Main,output,-0.0183723481692885,-0.319883905044516,0.282425616445558,classical_fd,-0.120193941664782,Original BCA,
+27,Main,output,-0.0263382301015069,-0.331811554629759,0.277591671417869,classical_fd,-0.123907778790644,Original BCA,
+28,Main,output,-0.0366678559556219,-0.336458049285849,0.282190734016821,classical_fd,-0.126661548028477,Original BCA,
+29,Main,output,-0.0396641711644394,-0.343304056981594,0.278317419307666,classical_fd,-0.128568285589707,Original BCA,
+30,Main,output,-0.0410125757352128,-0.349335984200068,0.280833878912154,classical_fd,-0.129728204946326,Original BCA,
+31,Main,output,-0.0409890700074972,-0.356802920696641,0.289766699321302,classical_fd,-0.13023170820219,Original BCA,
+32,Main,output,-0.0396488350725251,-0.360475321288101,0.290176822772195,classical_fd,-0.13016180153063,Original BCA,
+33,Main,output,-0.0421133048193247,-0.363291693762663,0.289228489098721,classical_fd,-0.129595723080548,Original BCA,
+34,Main,output,-0.0457970428909508,-0.369152830746373,0.292998413962144,classical_fd,-0.128605824355117,Original BCA,
+35,Main,output,-0.0455252588676439,-0.374681024324129,0.297866335443033,classical_fd,-0.127259865390316,Original BCA,
+36,Main,output,-0.0416745244667871,-0.376788089995397,0.304017324470532,classical_fd,-0.125620923832858,Original BCA,
+37,Main,output,-0.0420932741918451,-0.381136598744449,0.308853229451598,classical_fd,-0.123747107962808,Original BCA,
+38,Main,output,-0.0403730319267225,-0.383988576598286,0.311523866167352,classical_fd,-0.121691227268084,Original BCA,
+39,Main,output,-0.0377707373234321,-0.384764421978189,0.319759813021823,classical_fd,-0.119500528187341,Original BCA,
+40,Main,output,-0.0381149977561471,-0.386934260291417,0.323453836299033,classical_fd,-0.11721655792021,Original BCA,
+1,Main,investment,-1.39109725738555,-1.68631852559888,-0.988640838898978,classical_fd,-1.5805509112566,Original BCA,
+2,Main,investment,-2.08936824384711,-2.43664043471919,-1.66082998516562,classical_fd,-2.32223566202578,Original BCA,
+3,Main,investment,-2.18295940163633,-2.6885038364402,-1.46994693426751,classical_fd,-2.35409906996496,Original BCA,
+4,Main,investment,-1.86380704601702,-2.58842938618233,-0.83486833140356,classical_fd,-1.97748667566868,Original BCA,
+5,Main,investment,-1.32953899119975,-2.3381023357766,-0.13015290688896,classical_fd,-1.42902127513678,Original BCA,
+6,Main,investment,-0.732977654113705,-1.90250663923749,0.565801544799637,classical_fd,-0.855419903091662,Original BCA,
+7,Main,investment,-0.191922453725549,-1.44615249974283,1.13963353490563,classical_fd,-0.343405007777147,Original BCA,
+8,Main,investment,0.245499260888867,-1.03178169476019,1.5459774499252,classical_fd,0.0637213857611423,Original BCA,
+9,Main,investment,0.576331441436868,-0.737985357305935,1.80338320553269,classical_fd,0.353801422991421,Original BCA,
+10,Main,investment,0.807267259020014,-0.455531175155784,1.91273620270351,classical_fd,0.533863487057589,Original BCA,
+11,Main,investment,0.874243820994003,-0.258832247369522,1.91595942874193,classical_fd,0.62127592674613,Original BCA,
+12,Main,investment,0.869263244558989,-0.158096427002465,1.83874900941518,classical_fd,0.637356600393073,Original BCA,
+13,Main,investment,0.844849851252438,-0.0908549883102547,1.75634869947659,classical_fd,0.603201045813998,Original BCA,
+14,Main,investment,0.773078104909077,-0.0369165930909279,1.6094140189387,classical_fd,0.537318147074575,Original BCA,
+15,Main,investment,0.688688146858924,-0.0511202647955062,1.44508954988972,classical_fd,0.454565153146747,Original BCA,
+16,Main,investment,0.590993032126842,-0.116552375642398,1.31275639729147,classical_fd,0.365972628434555,Original BCA,
+17,Main,investment,0.498883708526472,-0.168269040820842,1.17624439303985,classical_fd,0.279093103489237,Original BCA,
+18,Main,investment,0.415134628897421,-0.218536035485455,1.06401030011523,classical_fd,0.198610399928659,Original BCA,
+19,Main,investment,0.322262939191657,-0.280384096762238,0.958254639750987,classical_fd,0.127022062335953,Original BCA,
+20,Main,investment,0.248923798202403,-0.322348242576573,0.859394798201381,classical_fd,0.0652813026349331,Original BCA,
+21,Main,investment,0.191025498841527,-0.384702190479727,0.788453135361314,classical_fd,0.0133378554709386,Original BCA,
+22,Main,investment,0.138592937372324,-0.417653948307541,0.730094117672145,classical_fd,-0.0294435332388424,Original BCA,
+23,Main,investment,0.0906230110867607,-0.451340868411094,0.670014577902381,classical_fd,-0.0639839392486172,Original BCA,
+24,Main,investment,0.0529942653686042,-0.483476028878586,0.623619844962124,classical_fd,-0.0912936547792661,Original BCA,
+25,Main,investment,0.0386777715031546,-0.524102580689944,0.594889456711038,classical_fd,-0.112355906956309,Original BCA,
+26,Main,investment,-0.00526570658874172,-0.53748562371355,0.591950423543302,classical_fd,-0.128068348870473,Original BCA,
+27,Main,investment,-0.028957575863516,-0.550550442164578,0.583313580595208,classical_fd,-0.139222520559616,Original BCA,
+28,Main,investment,-0.0463318623120318,-0.567118106319173,0.568246060644463,classical_fd,-0.146505559470294,Original BCA,
+29,Main,investment,-0.0584046449976965,-0.590568955594878,0.542053117664832,classical_fd,-0.150512765979357,Original BCA,
+30,Main,investment,-0.0657268023215417,-0.608878599902252,0.540628545456247,classical_fd,-0.151763521000784,Original BCA,
+31,Main,investment,-0.0730406679654308,-0.621882350691181,0.534498122873308,classical_fd,-0.150716194512255,Original BCA,
+32,Main,investment,-0.0759298166981269,-0.651172405546551,0.535433091922926,classical_fd,-0.147779989495461,Original BCA,
+33,Main,investment,-0.0719209238501162,-0.643892925455623,0.554022885060799,classical_fd,-0.143323198457397,Original BCA,
+34,Main,investment,-0.0616222112404535,-0.651523101046054,0.563283423411694,classical_fd,-0.13767824547058,Original BCA,
+35,Main,investment,-0.0550755883218962,-0.640474455556828,0.581353138631943,classical_fd,-0.131144307036438,Original BCA,
+36,Main,investment,-0.0566536572236566,-0.646318548237617,0.584617118534834,classical_fd,-0.123988404019179,Original BCA,
+37,Main,investment,-0.0434333381403857,-0.636933260172666,0.582062340778485,classical_fd,-0.116445764279624,Original BCA,
+38,Main,investment,-0.0326807400218526,-0.61628935738123,0.607774609883533,classical_fd,-0.108720070363296,Original BCA,
+39,Main,investment,-0.0227317103873356,-0.624507567318502,0.6111133098258,classical_fd,-0.100983996999209,Original BCA,
+40,Main,investment,-0.00566152394884831,-0.613983667710073,0.63150764197276,classical_fd,-0.0933802511249358,Original BCA,
+1,Main,consumption,-0.197456399783096,-0.245451261680501,-0.137142742391852,classical_fd,-0.223830155864779,Original BCA,
+2,Main,consumption,-0.284619884249782,-0.352156857332625,-0.184609241550923,classical_fd,-0.309839719938502,Original BCA,
+3,Main,consumption,-0.309699598870122,-0.405393674318596,-0.172079520205441,classical_fd,-0.333767692491119,Original BCA,
+4,Main,consumption,-0.300050994168356,-0.429687426495204,-0.121933338744319,classical_fd,-0.324653183096697,Original BCA,
+5,Main,consumption,-0.269850794707783,-0.427287522822369,-0.0608908636225434,classical_fd,-0.293875064939619,Original BCA,
+6,Main,consumption,-0.222987667524999,-0.413095469748965,0.0167543293393238,classical_fd,-0.251625119960634,Original BCA,
+7,Main,consumption,-0.168125882635314,-0.391420210212037,0.0817831822276465,classical_fd,-0.206091056046585,Original BCA,
+8,Main,consumption,-0.118651345272523,-0.360485867322212,0.140594374423471,classical_fd,-0.163070165191526,Original BCA,
+9,Main,consumption,-0.0776041146956218,-0.330452346651788,0.187076820111037,classical_fd,-0.126127146405455,Original BCA,
+10,Main,consumption,-0.038991780929133,-0.308010295319425,0.226275978019002,classical_fd,-0.0969690842350432,Original BCA,
+11,Main,consumption,-0.0115964814425705,-0.286662917556527,0.257660672930327,classical_fd,-0.0759200976420943,Original BCA,
+12,Main,consumption,0.0109092258578223,-0.271540360698979,0.277924120409084,classical_fd,-0.0623950532176815,Original BCA,
+13,Main,consumption,0.0243009747712808,-0.253869367453545,0.290223082812901,classical_fd,-0.0552960830879679,Original BCA,
+14,Main,consumption,0.0291406187510648,-0.246545977087121,0.293568668667501,classical_fd,-0.0533190315752509,Original BCA,
+15,Main,consumption,0.0302160109598413,-0.24752302195779,0.297663980577788,classical_fd,-0.055162628897764,Original BCA,
+16,Main,consumption,0.0253512312443551,-0.245677828184266,0.296493423215414,classical_fd,-0.0596559852689522,Original BCA,
+17,Main,consumption,0.0212954421046886,-0.248630484502217,0.291866201451974,classical_fd,-0.0658209279645981,Original BCA,
+18,Main,consumption,0.0157081457503539,-0.248680411093761,0.280855277178736,classical_fd,-0.0728887665388432,Original BCA,
+19,Main,consumption,0.0115330237234756,-0.258480784457028,0.271666110890404,classical_fd,-0.0802879677122065,Original BCA,
+20,Main,consumption,0.00574436369187771,-0.269734364344889,0.263777699698491,classical_fd,-0.0876163074724753,Original BCA,
+21,Main,consumption,-0.00443427739484151,-0.276851768413286,0.259113902731534,classical_fd,-0.0946071560701622,Original BCA,
+22,Main,consumption,-0.00942460969697054,-0.285827880054626,0.250438807208616,classical_fd,-0.101096271479918,Original BCA,
+23,Main,consumption,-0.0149898836705176,-0.29895244037078,0.245036352971336,classical_fd,-0.106992677879741,Original BCA,
+24,Main,consumption,-0.0236794758824641,-0.308633467022682,0.238388378760671,classical_fd,-0.112255188108195,Original BCA,
+25,Main,consumption,-0.02755949031495,-0.317995698847068,0.23816250993941,classical_fd,-0.116874756383034,Original BCA,
+26,Main,consumption,-0.0340654967513471,-0.32213269437377,0.231145496415872,classical_fd,-0.120862050375428,Original BCA,
+27,Main,consumption,-0.0360213559455397,-0.323316458398752,0.227564290020288,classical_fd,-0.124239252935412,Original BCA,
+28,Main,consumption,-0.0427272582393464,-0.327029674428377,0.224771900556587,classical_fd,-0.12703501836852,Original BCA,
+29,Main,consumption,-0.0485771579691783,-0.331769389868561,0.22045319201299,classical_fd,-0.129281597918914,Original BCA,
+30,Main,consumption,-0.0512248046945256,-0.336448501767,0.21733534329534,classical_fd,-0.131013327767084,Original BCA,
+31,Main,consumption,-0.0517368144185302,-0.342041836915701,0.21798201980213,classical_fd,-0.132265877881793,Original BCA,
+32,Main,consumption,-0.0539607114623255,-0.347267478866637,0.218570562338504,classical_fd,-0.133075853281863,Original BCA,
+33,Main,consumption,-0.0544019447642908,-0.349934446321965,0.219215898368158,classical_fd,-0.133480500132149,Original BCA,
+34,Main,consumption,-0.0551879880261835,-0.354363651053105,0.221471074264292,classical_fd,-0.13351739038379,Original BCA,
+35,Main,consumption,-0.054344418030106,-0.361513704949889,0.223870462215914,classical_fd,-0.133224041413788,Original BCA,
+36,Main,consumption,-0.053190323641939,-0.366204833401938,0.224532368131927,classical_fd,-0.132637477058451,Original BCA,
+37,Main,consumption,-0.0567405444725493,-0.367248266022645,0.22606762714733,classical_fd,-0.131793761175044,Original BCA,
+38,Main,consumption,-0.0550714083240651,-0.377759907356992,0.229401937629381,classical_fd,-0.13072754210047,Original BCA,
+39,Main,consumption,-0.0579200453500811,-0.378817725250351,0.237769368507679,classical_fd,-0.129471642824971,Original BCA,
+40,Main,consumption,-0.0564001642925281,-0.381888994579282,0.24651997378328,classical_fd,-0.128056722643612,Original BCA,
+1,Main,hours_worked,-0.319128449896824,-0.383572824782115,-0.230373850027144,classical_fd,-0.355818092099126,Original BCA,
+2,Main,hours_worked,-0.478078864083494,-0.545271713702912,-0.389039108667554,classical_fd,-0.530628473716584,Original BCA,
+3,Main,hours_worked,-0.534039648377737,-0.618414651217445,-0.409269404056818,classical_fd,-0.582146826725175,Original BCA,
+4,Main,hours_worked,-0.506975074523205,-0.621638365015653,-0.32545242349881,classical_fd,-0.536696387123754,Original BCA,
+5,Main,hours_worked,-0.421415614155275,-0.595555295933568,-0.164064453231784,classical_fd,-0.437985999095142,Original BCA,
+6,Main,hours_worked,-0.297758493475637,-0.539672808284446,0.00335151322404137,classical_fd,-0.318386967004125,Original BCA,
+7,Main,hours_worked,-0.173876927263637,-0.454340004737,0.156396358306343,classical_fd,-0.200224588524775,Original BCA,
+8,Main,hours_worked,-0.0596721749617871,-0.367594101041019,0.270048968266603,classical_fd,-0.0964150122828535,Original BCA,
+9,Main,hours_worked,0.0329684975267256,-0.286895934055354,0.351989668508267,classical_fd,-0.0131288129230319,Original BCA,
+10,Main,hours_worked,0.105529367738932,-0.213696291570134,0.406464992266556,classical_fd,0.0482966471963332,Original BCA,
+11,Main,hours_worked,0.151048417462413,-0.153692809222763,0.434174845986768,classical_fd,0.0894704515355053,Original BCA,
+12,Main,hours_worked,0.177472354136297,-0.101351553589807,0.444001871647661,classical_fd,0.113575629599045,Original BCA,
+13,Main,hours_worked,0.185038950633045,-0.066999228955333,0.444176447867448,classical_fd,0.124350532394189,Original BCA,
+14,Main,hours_worked,0.185142652169944,-0.0390929714958686,0.425145065661106,classical_fd,0.12544522845373,Original BCA,
+15,Main,hours_worked,0.174768735803744,-0.0302559994068145,0.398855406245133,classical_fd,0.120052676450538,Original BCA,
+16,Main,hours_worked,0.169806974730838,-0.0301413284895658,0.374382748830903,classical_fd,0.110751652656081,Original BCA,
+17,Main,hours_worked,0.161171698055694,-0.0296270688504398,0.349153620772071,classical_fd,0.0994864330134032,Original BCA,
+18,Main,hours_worked,0.147162386670335,-0.030188762512999,0.327397727185153,classical_fd,0.0876289358124596,Original BCA,
+19,Main,hours_worked,0.133083425376033,-0.0391065486418626,0.303314616264355,classical_fd,0.0760795103948401,Original BCA,
+20,Main,hours_worked,0.118383128992573,-0.0424487186176836,0.282083918854465,classical_fd,0.0653777587725751,Original BCA,
+21,Main,hours_worked,0.10564908240243,-0.0544058935680164,0.263662142122433,classical_fd,0.0558053758679694,Original BCA,
+22,Main,hours_worked,0.0953692172183425,-0.0617977563076296,0.24989621013857,classical_fd,0.0474720685623212,Original BCA,
+23,Main,hours_worked,0.086158258557115,-0.0690715565424968,0.237363873516386,classical_fd,0.0403815512262391,Original BCA,
+24,Main,hours_worked,0.0731551793559337,-0.0764125986730538,0.228552546387636,classical_fd,0.034478515075329,Original BCA,
+25,Main,hours_worked,0.0647719655388359,-0.0833900108765937,0.220852365358989,classical_fd,0.0296794804981879,Original BCA,
+26,Main,hours_worked,0.0557679450739893,-0.0880322887076423,0.216193308888379,classical_fd,0.0258912283051531,Original BCA,
+27,Main,hours_worked,0.0464853458951673,-0.0925828140324806,0.20947274554308,classical_fd,0.0230204501470078,Original BCA,
+28,Main,hours_worked,0.0411002331124642,-0.0958349442399129,0.207296337450703,classical_fd,0.0209777556648561,Original BCA,
+29,Main,hours_worked,0.0371695522409041,-0.100550511213302,0.19873710768253,classical_fd,0.0196784752894675,Original BCA,
+30,Main,hours_worked,0.0373159275939628,-0.105242751251789,0.193833406949745,classical_fd,0.0190419851897646,Original BCA,
+31,Main,hours_worked,0.036527231424548,-0.112230466355963,0.187523160858697,classical_fd,0.018990653199718,Original BCA,
+32,Main,hours_worked,0.0350320571630703,-0.110489620699138,0.187055158339553,classical_fd,0.019449009237695,Original BCA,
+33,Main,hours_worked,0.0331235093894181,-0.112891930210695,0.188457736957322,classical_fd,0.0203433889124282,Original BCA,
+34,Main,hours_worked,0.03605186451281,-0.118010474102491,0.191736914561272,classical_fd,0.0216020712836932,Original BCA,
+35,Main,hours_worked,0.0339301843435582,-0.120929966147522,0.19764834153344,classical_fd,0.0231558063328268,Original BCA,
+36,Main,hours_worked,0.0350500312907495,-0.12088368319022,0.205650971972461,classical_fd,0.0249385770101834,Original BCA,
+37,Main,hours_worked,0.0358806311292198,-0.121558764333223,0.210046995312886,classical_fd,0.0268884390298769,Original BCA,
+38,Main,hours_worked,0.0399898556294673,-0.1201963880595,0.214227392070402,classical_fd,0.0289483076817335,Original BCA,
+39,Main,hours_worked,0.0429361394546968,-0.120232813018948,0.219979413105248,classical_fd,0.0310665989853516,Original BCA,
+40,Main,hours_worked,0.0460747540273174,-0.119849016390925,0.228716463101553,classical_fd,0.0331976718542042,Original BCA,
+1,Main,unemployment,0.172439748667665,0.144605535321532,0.19082195314499,classical_fd,0.198435725641575,Original BCA,
+2,Main,unemployment,0.295754938513981,0.24556231155941,0.32614035000614,classical_fd,0.33011722613991,Original BCA,
+3,Main,unemployment,0.350635826414579,0.279384784811631,0.394414945228849,classical_fd,0.384483060477829,Original BCA,
+4,Main,unemployment,0.355207470565187,0.246426256383334,0.416386518390023,classical_fd,0.37964381125357,Original BCA,
+5,Main,unemployment,0.32155282217911,0.17366489283246,0.411850796677382,classical_fd,0.337608771901055,Original BCA,
+6,Main,unemployment,0.257156886717435,0.0845557737422913,0.38403529814731,classical_fd,0.276481690506327,Original BCA,
+7,Main,unemployment,0.190274812794437,-0.00720339416716219,0.342437700708367,classical_fd,0.210018875490217,Original BCA,
+8,Main,unemployment,0.12246932198359,-0.0807875800664713,0.294673821323439,classical_fd,0.147181145645026,Original BCA,
+9,Main,unemployment,0.0664606836598877,-0.132105578951966,0.244189976513058,classical_fd,0.0931777754364696,Original BCA,
+10,Main,unemployment,0.0197734471307683,-0.171622798695222,0.19380020146324,classical_fd,0.0502575926711827,Original BCA,
+11,Main,unemployment,-0.0162036456758541,-0.192052365841693,0.157195726812427,classical_fd,0.0186547441488917,Original BCA,
+12,Main,unemployment,-0.0378977238583283,-0.206343903119535,0.129200622172203,classical_fd,-0.00265745176073754,Original BCA,
+13,Main,unemployment,-0.0540373799964319,-0.211661182186199,0.104613160920881,classical_fd,-0.0153495856870796,Original BCA,
+14,Main,unemployment,-0.0574792574440322,-0.207358551000573,0.0861696354141258,classical_fd,-0.0213042890849799,Original BCA,
+15,Main,unemployment,-0.0564393587266212,-0.194965588510276,0.066927870267589,classical_fd,-0.0223320117342397,Original BCA,
+16,Main,unemployment,-0.0524008596670653,-0.178864928970417,0.0526978753430729,classical_fd,-0.0200131729180142,Original BCA,
+17,Main,unemployment,-0.047367829450558,-0.163436860487602,0.0474539155822637,classical_fd,-0.0156302070857734,Original BCA,
+18,Main,unemployment,-0.0403718428831873,-0.144986923238024,0.0469297543854407,classical_fd,-0.0101611421903584,Original BCA,
+19,Main,unemployment,-0.0342469511453405,-0.132310176374149,0.0480259204493429,classical_fd,-0.00430900489694734,Original BCA,
+20,Main,unemployment,-0.0291794621850878,-0.118450771849421,0.0506473180080726,classical_fd,0.00145135095496872,Original BCA,
+21,Main,unemployment,-0.0203709023671798,-0.106615214951066,0.0547640596672447,classical_fd,0.00682204855548476,Original BCA,
+22,Main,unemployment,-0.0150236572241037,-0.0967467907865839,0.0595699056725637,classical_fd,0.0116344513238797,Original BCA,
+23,Main,unemployment,-0.00763298519069233,-0.0864903406574862,0.0634738061204419,classical_fd,0.0158089791493631,Original BCA,
+24,Main,unemployment,-0.0024944319470433,-0.0764550909348667,0.068252225787824,classical_fd,0.0193238226744436,Original BCA,
+25,Main,unemployment,0.00452838004902707,-0.0684794194967004,0.072603521683686,classical_fd,0.0221922209237075,Original BCA,
+26,Main,unemployment,0.00770861100701069,-0.0620216689951245,0.0752471511509898,classical_fd,0.0244470394699135,Original BCA,
+27,Main,unemployment,0.0116676259292674,-0.0560407910282809,0.0779846722974516,classical_fd,0.026131036503251,Original BCA,
+28,Main,unemployment,0.0138465497345924,-0.0499953408483533,0.079666764690188,classical_fd,0.0272912120160773,Original BCA,
+29,Main,unemployment,0.0159022012187048,-0.045916102330236,0.0840394271088546,classical_fd,0.0279758507564343,Original BCA,
+30,Main,unemployment,0.0177045111865866,-0.0436619214197419,0.0838449403701732,classical_fd,0.0282331707378766,Original BCA,
+31,Main,unemployment,0.0196411192617774,-0.0392994893643807,0.0851385505041689,classical_fd,0.0281108001176478,Original BCA,
+32,Main,unemployment,0.0224412079222909,-0.0378003904456538,0.0858192085060921,classical_fd,0.0276555799496311,Original BCA,
+33,Main,unemployment,0.023435112050209,-0.0370716821883234,0.0888075030064606,classical_fd,0.0269134082465378,Original BCA,
+34,Main,unemployment,0.0241924129201086,-0.0357330253708269,0.0868322636006479,classical_fd,0.0259289974907509,Original BCA,
+35,Main,unemployment,0.024927457943501,-0.0338101611319728,0.0882559926071407,classical_fd,0.0247455190268932,Original BCA,
+36,Main,unemployment,0.0244442640229082,-0.0317416444152005,0.0874261600125758,classical_fd,0.023404164253542,Original BCA,
+37,Main,unemployment,0.0238985813435373,-0.0322880084675021,0.0860823975211848,classical_fd,0.0219436762567126,Original BCA,
+38,Main,unemployment,0.023399726575704,-0.0316185496306851,0.0849900255151017,classical_fd,0.0203999077154393,Original BCA,
+39,Main,unemployment,0.022546404878005,-0.0319655718572272,0.0825034791826793,classical_fd,0.0188054508478363,Original BCA,
+40,Main,unemployment,0.0206969288058717,-0.0323738810272056,0.0809324368765326,classical_fd,0.0171893697940757,Original BCA,
+1,Main,labor_share,0.149491325593487,-0.0268806474534238,0.298574932636636,classical_fd,0.167501135559278,Original BCA,
+2,Main,labor_share,0.108481920831803,-0.00387633847955368,0.215985420200912,classical_fd,0.128041574612028,Original BCA,
+3,Main,labor_share,0.0335855376461737,-0.0847292663452256,0.150558215315721,classical_fd,0.0529323730512192,Original BCA,
+4,Main,labor_share,-0.0501744963559658,-0.15595147751274,0.0572106013706663,classical_fd,-0.0370601289771658,Original BCA,
+5,Main,labor_share,-0.124905088360869,-0.222909232642506,-0.0248496875544286,classical_fd,-0.116586071874464,Original BCA,
+6,Main,labor_share,-0.175304993981006,-0.25889092239165,-0.0855847494763658,classical_fd,-0.174651968434235,Original BCA,
+7,Main,labor_share,-0.202364306657329,-0.27912353014091,-0.127067363841777,classical_fd,-0.207905876456585,Original BCA,
+8,Main,labor_share,-0.208126140432199,-0.282672932002145,-0.136213979785806,classical_fd,-0.218786179056773,Original BCA,
+9,Main,labor_share,-0.198913270195048,-0.282738084949113,-0.119370649377309,classical_fd,-0.211747326345277,Original BCA,
+10,Main,labor_share,-0.183605887310075,-0.271560547580251,-0.0890498602803367,classical_fd,-0.192264692916732,Original BCA,
+11,Main,labor_share,-0.156045770438492,-0.258132066081525,-0.04617541680526,classical_fd,-0.165375493293733,Original BCA,
+12,Main,labor_share,-0.124227497461939,-0.239210284662219,-0.0040170901781623,classical_fd,-0.135329712190982,Original BCA,
+13,Main,labor_share,-0.0891907598755051,-0.221679079031071,0.0307616558697984,classical_fd,-0.105294794194339,Original BCA,
+14,Main,labor_share,-0.0624122556771326,-0.197962148183525,0.0644622385916985,classical_fd,-0.0774199551769997,Original BCA,
+15,Main,labor_share,-0.0340801294691522,-0.174743115694289,0.08887631776626,classical_fd,-0.0529577567621812,Original BCA,
+16,Main,labor_share,-0.0128033820403516,-0.14757593357539,0.110108047065738,classical_fd,-0.0324657106492367,Original BCA,
+17,Main,labor_share,0.00487345745729335,-0.123774592315383,0.125279097642961,classical_fd,-0.0159995067849177,Original BCA,
+18,Main,labor_share,0.0172914454040105,-0.106482959551491,0.133554071595243,classical_fd,-0.00329065969127506,Original BCA,
+19,Main,labor_share,0.0255244117250403,-0.0894373823079847,0.138540875055859,classical_fd,0.00611245389685858,Original BCA,
+20,Main,labor_share,0.0293773099326566,-0.0778745695766577,0.136901565514739,classical_fd,0.0127389204262266,Original BCA,
+21,Main,labor_share,0.0315972034012785,-0.0673746810291696,0.136231033912894,classical_fd,0.0171237920749991,Original BCA,
+22,Main,labor_share,0.0331022619361105,-0.0618953674496092,0.132522333025776,classical_fd,0.0197641013566295,Original BCA,
+23,Main,labor_share,0.0347409837168002,-0.0558481933197316,0.127749331954426,classical_fd,0.0210960420317839,Original BCA,
+24,Main,labor_share,0.0344249732231981,-0.0512387227557853,0.123255050277493,classical_fd,0.0214867788808237,Original BCA,
+25,Main,labor_share,0.0329891819883203,-0.0488676975460161,0.118963892433771,classical_fd,0.0212355934474127,Original BCA,
+26,Main,labor_share,0.0319884604531269,-0.0470199367436884,0.115675724364433,classical_fd,0.0205801956028546,Original BCA,
+27,Main,labor_share,0.029456984671338,-0.0511818527328472,0.110054746587235,classical_fd,0.0197052927511315,Original BCA,
+28,Main,labor_share,0.028646745398735,-0.0503143308215175,0.104156617391608,classical_fd,0.0187515278233444,Original BCA,
+29,Main,labor_share,0.026528084363817,-0.0544044381547711,0.100988983120161,classical_fd,0.0178237222241311,Original BCA,
+30,Main,labor_share,0.0234427880325657,-0.0517488408419728,0.097010048521806,classical_fd,0.0169979373138241,Original BCA,
+31,Main,labor_share,0.0200773394468387,-0.0537199987205916,0.0969070827716701,classical_fd,0.0163272479355973,Original BCA,
+32,Main,labor_share,0.0183556245474475,-0.0546401029374953,0.0961326834978149,classical_fd,0.0158463359582762,Original BCA,
+33,Main,labor_share,0.0155571367236315,-0.0553752239671541,0.0952702358595494,classical_fd,0.015575110266228,Original BCA,
+34,Main,labor_share,0.013725705587008,-0.0542343901321113,0.0927160431942171,classical_fd,0.0155215804747404,Original BCA,
+35,Main,labor_share,0.0120245548664602,-0.0543135854186596,0.0942547908132178,classical_fd,0.0156841885637305,Original BCA,
+36,Main,labor_share,0.0120103785768784,-0.0567556514103832,0.0926646322514952,classical_fd,0.0160537592206002,Original BCA,
+37,Main,labor_share,0.0116886481844681,-0.0579471012979319,0.0935459371309882,classical_fd,0.0166151821548489,Original BCA,
+38,Main,labor_share,0.0130063706285622,-0.0585317942696847,0.0926641058539655,classical_fd,0.0173488972455558,Original BCA,
+39,Main,labor_share,0.0125006034997568,-0.0604837381060534,0.0934609789932192,classical_fd,0.0182322205134719,Original BCA,
+40,Main,labor_share,0.0123712340546,-0.0595815003938989,0.0946919028191009,classical_fd,0.0192405265438826,Original BCA,
+1,Main,interest,-0.0518418454079733,-0.103798952997104,-0.00626122100943516,classical_fd,-0.0560213454412518,Original BCA,
+2,Main,interest,-0.10410257688299,-0.154791625489626,-0.0449873151178342,classical_fd,-0.105538916772441,Original BCA,
+3,Main,interest,-0.122911519379712,-0.16663344909841,-0.0691033321709667,classical_fd,-0.122934652941078,Original BCA,
+4,Main,interest,-0.121692948985248,-0.158944349303655,-0.0770251864890443,classical_fd,-0.12123391155429,Original BCA,
+5,Main,interest,-0.111075274699023,-0.144118206311314,-0.0729376052829623,classical_fd,-0.109189605207086,Original BCA,
+6,Main,interest,-0.0935607849161833,-0.125855132195462,-0.0609147264026235,classical_fd,-0.0913790671024468,Original BCA,
+7,Main,interest,-0.0755400983620568,-0.107034968675987,-0.0424660192414063,classical_fd,-0.0715208718978193,Original BCA,
+8,Main,interest,-0.0575460649183582,-0.0897035333346886,-0.0227304509334112,classical_fd,-0.0520193645539557,Original BCA,
+9,Main,interest,-0.0390016423365705,-0.0742479635226377,-0.00262739769497221,classical_fd,-0.0343501927578016,Original BCA,
+10,Main,interest,-0.022853029419495,-0.0632335394502632,0.0131937929630042,classical_fd,-0.0192526099851969,Original BCA,
+11,Main,interest,-0.00936966956213756,-0.0516554318746963,0.0260964873803751,classical_fd,-0.00695951224250057,Original BCA,
+12,Main,interest,0.000871918794915265,-0.042101332629198,0.0361260741215367,classical_fd,0.00262882393552965,Original BCA,
+13,Main,interest,0.00793863338125196,-0.031688822371749,0.0426694301122366,classical_fd,0.00979970232018637,Original BCA,
+14,Main,interest,0.0128777081077758,-0.025085841141281,0.0474993945626999,classical_fd,0.0149261788926115,Original BCA,
+15,Main,interest,0.0165400987967162,-0.0208558517351765,0.0520990345271805,classical_fd,0.0183966180067278,Original BCA,
+16,Main,interest,0.0189454621274177,-0.0153671385184059,0.0538090181815556,classical_fd,0.0205727535483428,Original BCA,
+17,Main,interest,0.0206883902502281,-0.0126262081354783,0.0543528155372306,classical_fd,0.0217678040213306,Original BCA,
+18,Main,interest,0.0233662558842656,-0.0103165042245739,0.0546849878535132,classical_fd,0.0222390985656099,Original BCA,
+19,Main,interest,0.0236771868688098,-0.00911394141754851,0.0547023335259081,classical_fd,0.0221895825366234,Original BCA,
+20,Main,interest,0.0233118622264069,-0.00967275295060775,0.056346498475963,classical_fd,0.0217742882425047,Original BCA,
+21,Main,interest,0.023508568200859,-0.0101198714574014,0.055716654476768,classical_fd,0.0211088044242576,Original BCA,
+22,Main,interest,0.0230248797135552,-0.0102869581957165,0.056135245506144,classical_fd,0.0202779052313647,Original BCA,
+23,Main,interest,0.0227105435743473,-0.00920488701353696,0.0558980398584406,classical_fd,0.0193432594966752,Original BCA,
+24,Main,interest,0.022641783534186,-0.0105471331066762,0.0545314879557445,classical_fd,0.0183497496297962,Original BCA,
+25,Main,interest,0.0223641394832842,-0.0114259345595308,0.0537427854093734,classical_fd,0.0173303079244137,Original BCA,
+26,Main,interest,0.0216273671384931,-0.0117085939554168,0.0525003898054094,classical_fd,0.0163094100763781,Original BCA,
+27,Main,interest,0.0206878517904261,-0.0122211378809091,0.0525256416541213,classical_fd,0.015305471782049,Original BCA,
+28,Main,interest,0.0198352133992592,-0.01261219266192,0.0524904326714405,classical_fd,0.0143324225550518,Original BCA,
+29,Main,interest,0.0185233083983294,-0.0130347180042534,0.0523186550056711,classical_fd,0.0134007091710987,Original BCA,
+30,Main,interest,0.0177786660115302,-0.0133323651867631,0.0521792174439125,classical_fd,0.0125179357727579,Original BCA,
+31,Main,interest,0.0175542221021036,-0.0141179955335941,0.0517414151057639,classical_fd,0.0116892946101556,Original BCA,
+32,Main,interest,0.0171795049393125,-0.0148167583486472,0.0511232777150717,classical_fd,0.0109178915044608,Original BCA,
+33,Main,interest,0.016287125603762,-0.0157882674948892,0.0508035413855132,classical_fd,0.0102050286630573,Original BCA,
+34,Main,interest,0.0154771970024646,-0.0168155920207986,0.0496800703293578,classical_fd,0.00955047645238017,Original BCA,
+35,Main,interest,0.0147822411520386,-0.0181728059495322,0.0494299155382069,classical_fd,0.00895274478292831,Original BCA,
+36,Main,interest,0.0141717007465803,-0.0180219997356185,0.0495146971244318,classical_fd,0.00840935234862882,Original BCA,
+37,Main,interest,0.0134971202517459,-0.0184117325815492,0.0486426949759733,classical_fd,0.00791708604619248,Original BCA,
+38,Main,interest,0.013379857526762,-0.0193801842982308,0.0491300444924861,classical_fd,0.00747224144464075,Original BCA,
+39,Main,interest,0.0127932499616793,-0.0202540158488695,0.0493588387711347,classical_fd,0.00707083641224164,Original BCA,
+40,Main,interest,0.0125347468991256,-0.0206452060395733,0.0494571483067376,classical_fd,0.00670879256298737,Original BCA,
+1,Main,inflation,-0.00787279440983732,-0.046469262898803,0.0313800030474792,classical_fd,-0.00344608758953386,Original BCA,
+2,Main,inflation,-0.0182853459772394,-0.0503341443696326,0.0114465633980267,classical_fd,-0.0167708265245569,Original BCA,
+3,Main,inflation,-0.0319158578965786,-0.0595553252808586,-0.00328746068796408,classical_fd,-0.030361694213321,Original BCA,
+4,Main,inflation,-0.0352274451638562,-0.0613816620983098,-0.00946605051869108,classical_fd,-0.0333925656077721,Original BCA,
+5,Main,inflation,-0.0337662755388559,-0.0570920243713501,-0.0113064669445841,classical_fd,-0.0324758967237647,Original BCA,
+6,Main,inflation,-0.0278994595380585,-0.0503198236845116,-0.00799846693292834,classical_fd,-0.0269476617892933,Original BCA,
+7,Main,inflation,-0.0210860073758063,-0.0419946228260351,-0.0010515255502091,classical_fd,-0.0191501893874885,Original BCA,
+8,Main,inflation,-0.0132451556307872,-0.0350486273863525,0.00877916406375483,classical_fd,-0.0103370645571767,Original BCA,
+9,Main,inflation,-0.00439849785898756,-0.0273044199460598,0.0183690030941701,classical_fd,-0.0017952172331381,Original BCA,
+10,Main,inflation,0.00463152837161638,-0.0206292731472712,0.0268975658861606,classical_fd,0.00573803469065889,Original BCA,
+11,Main,inflation,0.0110986318525169,-0.0143349212268973,0.0341579575893247,classical_fd,0.0118211659330585,Original BCA,
+12,Main,inflation,0.016260463099886,-0.0108204930953223,0.0404957148643199,classical_fd,0.0163304282515018,Original BCA,
+13,Main,inflation,0.0203414938173254,-0.00637486061098886,0.0447028902929038,classical_fd,0.0193290945935907,Original BCA,
+14,Main,inflation,0.0223169998977977,-0.00348064671622874,0.0466631371517777,classical_fd,0.0210073685920155,Original BCA,
+15,Main,inflation,0.02332878078528,-0.000926613123048698,0.0475565450058077,classical_fd,0.0216087003828018,Original BCA,
+16,Main,inflation,0.0239422308017206,0.000100995972237939,0.0472977051517436,classical_fd,0.0213875014361716,Original BCA,
+17,Main,inflation,0.0235278415913547,0.000267212704329699,0.0469456967989416,classical_fd,0.020577706698279,Original BCA,
+18,Main,inflation,0.0229194201122826,0.000406585759215127,0.0464292325947153,classical_fd,0.0193779693047391,Original BCA,
+19,Main,inflation,0.0221099746610296,0.000580893855389773,0.0457558837483811,classical_fd,0.0179458085997707,Original BCA,
+20,Main,inflation,0.0212019568796766,-0.000296077216784578,0.0444638930504241,classical_fd,0.0163990600199649,Original BCA,
+21,Main,inflation,0.0198864643141929,-0.000726955942881397,0.0432526062876903,classical_fd,0.0148208852567283,Original BCA,
+22,Main,inflation,0.0186911140801465,-0.00161243707836492,0.0417143863281666,classical_fd,0.0132665359501966,Original BCA,
+23,Main,inflation,0.01730556087359,-0.00316742004016764,0.0407101497165996,classical_fd,0.0117702185553986,Original BCA,
+24,Main,inflation,0.0158961376446418,-0.00401695272449993,0.0391026730473932,classical_fd,0.010351260054849,Original BCA,
+25,Main,inflation,0.0143475683098629,-0.00507746205391588,0.0384770637210354,classical_fd,0.00901912114341338,Original BCA,
+26,Main,inflation,0.0135239046822254,-0.00619678446353543,0.0371556739683071,classical_fd,0.00777717502191331,Original BCA,
+27,Main,inflation,0.012576104293734,-0.00753080202187477,0.0361673897680983,classical_fd,0.00662534289917863,Original BCA,
+28,Main,inflation,0.0120535495689426,-0.00854131931009541,0.0355550461175895,classical_fd,0.00556178824170026,Original BCA,
+29,Main,inflation,0.0108518786483866,-0.00996165526240163,0.0338595976387028,classical_fd,0.00458389883075868,Original BCA,
+30,Main,inflation,0.00981936562914319,-0.0102249485634747,0.0323445693268098,classical_fd,0.00368877649129025,Original BCA,
+31,Main,inflation,0.00907970519928965,-0.011383242061943,0.0309232800736375,classical_fd,0.00287341861320161,Original BCA,
+32,Main,inflation,0.00824626673083554,-0.0123494354225943,0.0302579500183553,classical_fd,0.0021347324807734,Original BCA,
+33,Main,inflation,0.00727920911375184,-0.0127406683712256,0.0292306064908487,classical_fd,0.00146948027585861,Original BCA,
+34,Main,inflation,0.00616616980956794,-0.0131992492506093,0.0288373072270303,classical_fd,0.000874215725446241,Original BCA,
+35,Main,inflation,0.00541551580446219,-0.0138585483006121,0.02762998024912,classical_fd,0.000345244556625983,Original BCA,
+36,Main,inflation,0.00465960088927658,-0.0146624456144123,0.0266837300160664,classical_fd,-0.000121379369030328,Original BCA,
+37,Main,inflation,0.00424205064849008,-0.014948307832233,0.0256260769738272,classical_fd,-0.000529823208481904,Original BCA,
+38,Main,inflation,0.00376395842227902,-0.0156390392305372,0.0245838646906976,classical_fd,-0.000884417423889923,Original BCA,
+39,Main,inflation,0.00340503963288672,-0.0156182135046748,0.0243773350346051,classical_fd,-0.00118958164409105,Original BCA,
+40,Main,inflation,0.00300281267748632,-0.015706583861332,0.023885645303395,classical_fd,-0.00144974435364585,Original BCA,
+1,Main,productivity,-0.191438105934552,-0.284401700003566,-0.0739493854672632,classical_fd,-0.221126349217624,Original BCA,
+2,Main,productivity,-0.13763711140788,-0.247367779354286,-0.019214855684903,classical_fd,-0.155546280315744,Original BCA,
+3,Main,productivity,-0.0201861723746724,-0.172114364691099,0.131551691015958,classical_fd,-0.0321020076885084,Original BCA,
+4,Main,productivity,0.0895841518725669,-0.0878686782130556,0.252919572510693,classical_fd,0.0782455796102074,Original BCA,
+5,Main,productivity,0.17173696704535,-0.0139473144812755,0.336449052802317,classical_fd,0.157372042112882,Original BCA,
+6,Main,productivity,0.222378007050125,0.0380567947036753,0.381675124436955,classical_fd,0.202323681616512,Original BCA,
+7,Main,productivity,0.237831516480479,0.0645695746265872,0.385431636849579,classical_fd,0.216113712065172,Original BCA,
+8,Main,productivity,0.229401691696087,0.0735136440443966,0.374822570788329,classical_fd,0.205422881833274,Original BCA,
+9,Main,productivity,0.201413449835034,0.056890184779323,0.346903336054139,classical_fd,0.177644248937633,Original BCA,
+10,Main,productivity,0.169564862617799,0.0212242601586717,0.316228141025707,classical_fd,0.139779206644339,Original BCA,
+11,Main,productivity,0.132715789554322,-0.0161910783232276,0.276594493137568,classical_fd,0.0975654922822367,Original BCA,
+12,Main,productivity,0.0950394150439207,-0.0554862245878528,0.244872168045827,classical_fd,0.0552929645302764,Original BCA,
+13,Main,productivity,0.057338176883133,-0.0952956907412503,0.216710314241506,classical_fd,0.0158154333330169,Original BCA,
+14,Main,productivity,0.026078121611344,-0.128594842346384,0.191025044850103,classical_fd,-0.019225891016917,Original BCA,
+15,Main,productivity,-0.00202692372631145,-0.156081082048499,0.164220813622614,classical_fd,-0.0491344865581338,Original BCA,
+16,Main,productivity,-0.0280840260772172,-0.182889786622507,0.146776651916277,classical_fd,-0.0738771350686478,Original BCA,
+17,Main,productivity,-0.0477012123646245,-0.205811583945141,0.133315375708825,classical_fd,-0.0938404079973099,Original BCA,
+18,Main,productivity,-0.06059849776488,-0.228260217815796,0.132648536122998,classical_fd,-0.109634786159752,Original BCA,
+19,Main,productivity,-0.0709363871482113,-0.244880084060167,0.130753029121123,classical_fd,-0.12195266244476,Original BCA,
+20,Main,productivity,-0.0792635389314783,-0.261589101765972,0.132156343322596,classical_fd,-0.131473950385941,Original BCA,
+21,Main,productivity,-0.0828772729550214,-0.281945005114562,0.126498563871464,classical_fd,-0.138811124579816,Original BCA,
+22,Main,productivity,-0.0852335580147638,-0.293959836584991,0.132686608579003,classical_fd,-0.144483461257519,Original BCA,
+23,Main,productivity,-0.0876220325538812,-0.313564604849103,0.136421761315845,classical_fd,-0.148911291134821,Original BCA,
+24,Main,productivity,-0.0899715290482417,-0.327986070183023,0.143711866981629,classical_fd,-0.152422418135182,Original BCA,
+25,Main,productivity,-0.091742374536474,-0.337614956545408,0.145503022279201,classical_fd,-0.155264802304416,Original BCA,
+26,Main,productivity,-0.0924790587837263,-0.347770951131234,0.142937355240055,classical_fd,-0.157621368617706,Original BCA,
+27,Main,productivity,-0.0950655003707267,-0.35865538630757,0.143072724789042,classical_fd,-0.159624363187111,Original BCA,
+28,Main,productivity,-0.0967414690009259,-0.360621638706536,0.148879930427368,classical_fd,-0.161367866119452,Original BCA,
+29,Main,productivity,-0.0981985440085341,-0.364298526700892,0.153786595895691,classical_fd,-0.162917920944468,Original BCA,
+30,Main,productivity,-0.100391892249912,-0.372455287739673,0.155575280373718,classical_fd,-0.164320279874347,Original BCA,
+31,Main,productivity,-0.101100902989941,-0.37694219344486,0.162057855802167,classical_fd,-0.165606064092794,Original BCA,
+32,Main,productivity,-0.10403929466763,-0.378722884318558,0.162532233672656,classical_fd,-0.166795762768837,Original BCA,
+33,Main,productivity,-0.106452022290819,-0.382506547911535,0.164726117515239,classical_fd,-0.167902006012915,Original BCA,
+34,Main,productivity,-0.108131401033129,-0.386903186359889,0.169242781000868,classical_fd,-0.168931493895544,Original BCA,
+35,Main,productivity,-0.108462893650026,-0.393037645456998,0.171086710091785,classical_fd,-0.16988638232503,Original BCA,
+36,Main,productivity,-0.11275173389618,-0.394118684728672,0.17323881873966,classical_fd,-0.17076534083132,Original BCA,
+37,Main,productivity,-0.113820046210556,-0.393694333592394,0.173017204674097,classical_fd,-0.17156442116673,Original BCA,
+38,Main,productivity,-0.114984838963787,-0.395959430797676,0.17546046908591,classical_fd,-0.172277815565166,Original BCA,
+39,Main,productivity,-0.117893466406213,-0.401538995439502,0.176277119649022,classical_fd,-0.172898540918394,Original BCA,
+40,Main,productivity,-0.122303243867247,-0.40894025161015,0.177337261912731,classical_fd,-0.173419058376937,Original BCA,
+1,Main,TFP,0.111572114218795,-0.0387825321313077,0.235849039540519,classical_fd,0.108697656012308,Original BCA,
+2,Main,TFP,0.203559584484098,0.0588531587985021,0.320446273028301,classical_fd,0.20227039573955,Original BCA,
+3,Main,TFP,0.237835784543483,0.08719402368727,0.356176548080098,classical_fd,0.229531055370936,Original BCA,
+4,Main,TFP,0.224462377198199,0.084676760497931,0.337211727615578,classical_fd,0.208497157629908,Original BCA,
+5,Main,TFP,0.178326611684617,0.0505522787415965,0.293197254915407,classical_fd,0.158813527549178,Original BCA,
+6,Main,TFP,0.130225268672365,0.00680361823300239,0.240848318716028,classical_fd,0.102391884583379,Original BCA,
+7,Main,TFP,0.0792261040737891,-0.0416267233278168,0.200278544684137,classical_fd,0.0501521022041184,Original BCA,
+8,Main,TFP,0.042603024896269,-0.0805863668872062,0.170198935233234,classical_fd,0.0083311282044696,Original BCA,
+9,Main,TFP,0.0177152198287135,-0.113537923763982,0.150753520709333,classical_fd,-0.021295752491403,Original BCA,
+10,Main,TFP,0.00240927982289842,-0.137299913443198,0.140039455987197,classical_fd,-0.0394292551890626,Original BCA,
+11,Main,TFP,-0.00271554034147028,-0.153369693060544,0.143127330402173,classical_fd,-0.0482007353145288,Original BCA,
+12,Main,TFP,-0.000726427825206222,-0.162407900800087,0.153602825457869,classical_fd,-0.0502258578329001,Original BCA,
+13,Main,TFP,0.00727256529441771,-0.166823213669436,0.166830252573665,classical_fd,-0.0480629073073214,Original BCA,
+14,Main,TFP,0.00949224504032123,-0.171660832074065,0.1813277339225,classical_fd,-0.0438777662329339,Original BCA,
+15,Main,TFP,0.0161471058645149,-0.173209057538099,0.195644976855262,classical_fd,-0.0393149283432668,Original BCA,
+16,Main,TFP,0.021995336773748,-0.17407614296238,0.205315564590957,classical_fd,-0.0354840560579776,Original BCA,
+17,Main,TFP,0.0287360563901951,-0.174186222241513,0.218471322920047,classical_fd,-0.0330243895134984,Original BCA,
+18,Main,TFP,0.0326804559916085,-0.177487533045785,0.227974097883184,classical_fd,-0.0322017785350139,Original BCA,
+19,Main,TFP,0.0344767750834705,-0.181010345195048,0.23131655418366,classical_fd,-0.0330142635853597,Original BCA,
+20,Main,TFP,0.032302383800302,-0.180598768727814,0.228500258035266,classical_fd,-0.0352883692418388,Original BCA,
+21,Main,TFP,0.031529873830568,-0.182869643955457,0.227480318341005,classical_fd,-0.0387582746866128,Original BCA,
+22,Main,TFP,0.0286053553441808,-0.187918925591117,0.224154480625113,classical_fd,-0.0431249050683451,Original BCA,
+23,Main,TFP,0.0246952059827196,-0.191194835275824,0.219418489544563,classical_fd,-0.0480960316906392,Original BCA,
+24,Main,TFP,0.0209035936396538,-0.197444129988323,0.212939425468007,classical_fd,-0.0534102704007441,Original BCA,
+25,Main,TFP,0.014868732354182,-0.199277536573286,0.207107248278095,classical_fd,-0.0588487158378215,Original BCA,
+26,Main,TFP,0.00641961025615394,-0.208496859394156,0.205869811253062,classical_fd,-0.0642378841470489,Original BCA,
+27,Main,TFP,-0.00331617845938163,-0.214610238714942,0.196950526788006,classical_fd,-0.0694471725553438,Original BCA,
+28,Main,TFP,-0.0111835460388548,-0.214809312847088,0.193564600701468,classical_fd,-0.0743833568966417,Original BCA,
+29,Main,TFP,-0.015973832961364,-0.223237430755086,0.184427752502926,classical_fd,-0.0789839446325488,Original BCA,
+30,Main,TFP,-0.018805128410736,-0.230311108030276,0.181265770975742,classical_fd,-0.0832105666079422,Original BCA,
+31,Main,TFP,-0.0215422234831564,-0.238727843834576,0.179149240060123,classical_fd,-0.0870430817561451,Original BCA,
+32,Main,TFP,-0.0294807195353724,-0.243978493528973,0.177144545054446,classical_fd,-0.0904746939757858,Original BCA,
+33,Main,TFP,-0.0333266060179588,-0.250377473848408,0.174255459709756,classical_fd,-0.0935081305624055,Original BCA,
+34,Main,TFP,-0.0394240194043034,-0.252497387906182,0.1742767520183,classical_fd,-0.0961527842706064,Original BCA,
+35,Main,TFP,-0.0427675162409105,-0.254758415579523,0.175916847255138,classical_fd,-0.0984226509252962,Original BCA,
+36,Main,TFP,-0.0486242538434417,-0.258947890403641,0.172489191823342,classical_fd,-0.100334876813708,Original BCA,
+37,Main,TFP,-0.0484991244369205,-0.267193799755774,0.17115178663454,classical_fd,-0.101908744228383,Original BCA,
+38,Main,TFP,-0.051231120868052,-0.268966047364199,0.16933610827088,classical_fd,-0.103164953611959,Original BCA,
+39,Main,TFP,-0.0550289227281077,-0.271674992919761,0.164409745778527,classical_fd,-0.104125095754238,Original BCA,
+40,Main,TFP,-0.0585913895327709,-0.275710419999014,0.161350844855189,classical_fd,-0.104811240539068,Original BCA,
+1,Main,consumption,-0.202302760619457,-0.24579395664457,-0.144055656867426,classical_fd,-0.223058502701749,Replication,-0.195058855153385
+1,Main,hours_worked,-0.323276820077568,-0.384795616731719,-0.242694135432077,classical_fd,-0.356899510874311,Replication,-0.308904442080444
+1,Main,inflation,-0.00713205449352146,-0.0432716708721996,0.0288782754462728,classical_fd,-0.00386821975082284,Replication,-0.00678788233788049
+1,Main,interest,-0.0535881956326682,-0.100722090602509,-0.010527037059682,classical_fd,-0.0576635701195484,Replication,-0.0531831133501464
+1,Main,investment,-1.37297291904632,-1.62944819993191,-1.00488899714793,classical_fd,-1.56734409817002,Replication,-1.29952456547178
+1,Main,labor_share,0.1349925009569,-0.0053879018620859,0.263396582159845,classical_fd,0.161149282915542,Replication,0.126685276499422
+1,Main,output,-0.412434142912115,-0.491033055402613,-0.300082055069058,classical_fd,-0.475326182787212,Replication,-0.392673618598973
+1,Main,productivity,-0.183910692862603,-0.274589486562303,-0.0797470740937028,classical_fd,-0.21718658124683,Replication,-0.175387356003658
+1,Main,TFP,0.126264189296394,-0.0080745856843597,0.240360869843342,classical_fd,0.114698919287076,Replication,0.116845977454209
+1,Main,unemployment,0.172607009245745,0.15130138187683,0.190006827146154,classical_fd,0.198053515971367,Replication,0.166730151365053
+10,Main,consumption,-0.0196911585505607,-0.265392749566111,0.226585597540906,classical_fd,-0.0896972411931635,Replication,-0.0177068087957588
+10,Main,hours_worked,0.113483020012479,-0.168585337184306,0.395840723249821,classical_fd,0.0568599049310316,Replication,0.113521360160295
+10,Main,inflation,0.00511856704635156,-0.017129052726451,0.0281466786223764,classical_fd,0.00632142666681888,Replication,0.00575144676231355
+10,Main,interest,-0.0194173185683244,-0.0542155240746171,0.0157180352910355,classical_fd,-0.0185601894142322,Replication,-0.018085065200096
+10,Main,investment,0.78887374268906,-0.330248321240566,1.85331551291804,classical_fd,0.563012350851027,Replication,0.738221468817807
+10,Main,labor_share,-0.169771249691744,-0.252286116264251,-0.0850051638364129,classical_fd,-0.190016009660951,Replication,-0.166000862698425
+10,Main,output,0.109381163888472,-0.277340807128756,0.502980051600567,classical_fd,0.0160741824149108,Replication,0.105846306698512
+10,Main,productivity,0.146404383127057,0.0115655428683932,0.293554167304202,classical_fd,0.141248040107683,Replication,0.151981693971006
+10,Main,TFP,-0.018872151057999,-0.142229003211565,0.118157995845608,classical_fd,-0.0360809279693033,Replication,-0.0118291277543448
+10,Main,unemployment,0.00694857575969683,-0.165098628613469,0.169807754242197,classical_fd,0.0453460819695266,Replication,0.00201486519347474
+11,Main,consumption,0.00137692706268835,-0.244748609133981,0.250744547407457,classical_fd,-0.0687998604673009,Replication,0.00462399398078856
+11,Main,hours_worked,0.159131856398814,-0.119958134998723,0.425898011682388,classical_fd,0.0972581512774482,Replication,0.150514594280754
+11,Main,inflation,0.0122990459686019,-0.0109302299486738,0.0355676411649642,classical_fd,0.0124371702908814,Replication,0.012379430455284
+11,Main,interest,-0.00661294569118998,-0.0418228017337521,0.0280561383400566,classical_fd,-0.00623403416059996,Replication,-0.00615919163876479
+11,Main,investment,0.855695107784214,-0.138357469234043,1.83405818727247,classical_fd,0.646212835197559,Replication,0.806217267251788
+11,Main,labor_share,-0.13851609841459,-0.235684501602819,-0.0441332943408478,classical_fd,-0.16257701782924,Replication,-0.135331031912197
+11,Main,output,0.136012396601352,-0.240235864640245,0.509810018163999,classical_fd,0.0433981160236467,Replication,0.13002847352224
+11,Main,productivity,0.107784892224016,-0.0263831155648317,0.247120779915013,classical_fd,0.0986967601684725,Replication,0.111087188634708
+11,Main,TFP,-0.0258845105043288,-0.15617864434921,0.121123588430544,classical_fd,-0.044604975838728,Replication,-0.0185707136856567
+11,Main,unemployment,-0.0275605815412285,-0.186222417769065,0.130829814615971,classical_fd,0.0141605569246735,Replication,-0.0267048530843292
+12,Main,consumption,0.0147354429526503,-0.225950658219267,0.263529544058174,classical_fd,-0.0555042841129921,Replication,0.0184735274255043
+12,Main,hours_worked,0.18073814926812,-0.0773810935113789,0.42631086040044,classical_fd,0.120496363654001,Replication,0.169548592653942
+12,Main,inflation,0.0174598450222365,-0.00568375211722159,0.0408930249177072,classical_fd,0.0169511794880562,Replication,0.0173632276371864
+12,Main,interest,0.0033897285703816,-0.0321000303957816,0.0372612138959245,classical_fd,0.00335457618618409,Replication,0.0030115871370728
+12,Main,investment,0.843296429079056,-0.0791141913804796,1.73741851404345,classical_fd,0.658128645372727,Replication,0.802627951035163
+12,Main,labor_share,-0.105576564548622,-0.214046586845725,-0.00295762027224186,classical_fd,-0.132162208807328,Replication,-0.102768983443683
+12,Main,output,0.146351775872968,-0.210211659336019,0.510903132203629,classical_fd,0.0533206378839949,Replication,0.13628305890456
+12,Main,productivity,0.0703265513565695,-0.0679170972914829,0.2022080665241,classical_fd,0.0562398962394978,Replication,0.0707255520845591
+12,Main,TFP,-0.0257943233688596,-0.163810942322872,0.130045717720629,classical_fd,-0.0464035203075358,Replication,-0.0183076526777069
+12,Main,unemployment,-0.0500781504562644,-0.197786747027763,0.101364466344382,classical_fd,-0.00665565354500876,Replication,-0.0445787698546505
+13,Main,consumption,0.0215124295825061,-0.208978155324892,0.266367568524597,classical_fd,-0.04867930341627,Replication,0.02515481012787
+13,Main,hours_worked,0.188264931619112,-0.0537019912196491,0.417957049044682,classical_fd,0.130385897178917,Replication,0.174746087094885
+13,Main,inflation,0.0208181454136637,-0.00213218636960426,0.0446572737517626,classical_fd,0.0199345759503438,Replication,0.0207299956551612
+13,Main,interest,0.00956748054980455,-0.0243182715182406,0.0427475077538352,classical_fd,0.0105038622621123,Replication,0.00973844524571794
+13,Main,investment,0.778080444853306,-0.0480864436261526,1.62044017762596,classical_fd,0.620105476669597,Replication,0.749625536104702
+13,Main,labor_share,-0.072886811166246,-0.184939720193298,0.0365004529247745,classical_fd,-0.101927477744681,Replication,-0.0715169817543363
+13,Main,output,0.137080442492232,-0.214344653515686,0.495592457727819,classical_fd,0.0505145346582498,Replication,0.129621935954188
+13,Main,productivity,0.033512618051448,-0.106286311381066,0.166429947525766,classical_fd,0.0167150460716273,Replication,0.0338093026642593
+13,Main,TFP,-0.0229565104398877,-0.168874740343598,0.141260764752725,classical_fd,-0.0440581959312963,Replication,-0.0136805633615641
+13,Main,unemployment,-0.0565367518748702,-0.195387242174966,0.083776012743275,classical_fd,-0.0188180752223785,Replication,-0.0534765914858492
+14,Main,consumption,0.0254599560760019,-0.203791451399371,0.269631168572826,classical_fd,-0.0469940133815526,Replication,0.0262246765025671
+14,Main,hours_worked,0.180624678320827,-0.0407920459321787,0.392582396448126,classical_fd,0.130628109179317,Replication,0.170176892414353
+14,Main,inflation,0.0224088386173017,0.000482436709614842,0.0465993042501339,classical_fd,0.021583909527214,Replication,0.0226681921794687
+14,Main,interest,0.0136035249836401,-0.0186515706165569,0.0462907238836494,classical_fd,0.0155955259516842,Replication,0.0144327369201963
+14,Main,investment,0.673819114965484,-0.0642873101202687,1.41187517087273,classical_fd,0.550800062309575,Replication,0.666791385376399
+14,Main,labor_share,-0.0438728305025883,-0.158451307700556,0.0687515454358469,classical_fd,-0.0739990734363085,Replication,-0.0436693446906532
+14,Main,output,0.125240528539698,-0.213496172077286,0.4732890042966,classical_fd,0.0392166932307955,Replication,0.114626681439358
+14,Main,productivity,0.00652180168032011,-0.140352154364068,0.13371434273123,classical_fd,-0.0182615449721872,Replication,0.00194732904239505
+14,Main,TFP,-0.0133776628402796,-0.171601948626941,0.156246815035983,classical_fd,-0.0397468524126458,Replication,-0.00700109606852966
+14,Main,unemployment,-0.0594827789436567,-0.183670314184972,0.0681144088125077,classical_fd,-0.0242434714141003,Replication,-0.0555141117285858
+15,Main,consumption,0.0216969144439577,-0.203512808982552,0.265105509106112,classical_fd,-0.0491272770083538,Replication,0.0232284186345491
+15,Main,hours_worked,0.163933420092176,-0.0318797869893038,0.363737396812161,classical_fd,0.124448783977221,Replication,0.159408490272936
+15,Main,inflation,0.0230270119120946,0.00178117897781936,0.0470805313379876,classical_fd,0.0221482616145642,Replication,0.0234322875322018
+15,Main,interest,0.0174378557486934,-0.0133546106443647,0.0489296455144218,classical_fd,0.0190244426451779,Replication,0.0175228581457325
+15,Main,investment,0.58742442034017,-0.0911835166327811,1.24904145169205,classical_fd,0.465137177445971,Replication,0.569824006723787
+15,Main,labor_share,-0.0198736704946035,-0.129992223796017,0.0916701988851021,classical_fd,-0.049602788237995,Replication,-0.0203210950487748
+15,Main,output,0.102496933070127,-0.222154540400852,0.439856283745414,classical_fd,0.0229257597949367,Replication,0.095081181483604
+15,Main,productivity,-0.0193978184163749,-0.166625440882946,0.114471990554988,classical_fd,-0.0480207975651855,Replication,-0.024279278617858
+15,Main,TFP,-0.00534346858135403,-0.172595951808703,0.173812387753766,classical_fd,-0.0351163059106299,Replication,-7.04950357101337e-05
+15,Main,unemployment,-0.0539116185075806,-0.170061625238969,0.0619968917941028,classical_fd,-0.0247663202013574,Replication,-0.0527237702753138
+16,Main,consumption,0.0122057319852927,-0.204027646808581,0.250889646963113,classical_fd,-0.0538945355743865,Replication,0.0175396484348848
+16,Main,hours_worked,0.148520901134288,-0.0379592291873074,0.338251496502134,classical_fd,0.114444701678912,Replication,0.145300211217594
+16,Main,inflation,0.0229021499553729,0.00273529372377996,0.046979040629954,classical_fd,0.021886229913036,Replication,0.0233010310008117
+16,Main,interest,0.0188158757560835,-0.0112274734862246,0.0502872885912258,classical_fd,0.0211569241677561,Replication,0.0194049750437564
+16,Main,investment,0.47096009068689,-0.170916682629604,1.11000616097779,classical_fd,0.37415657228544,Replication,0.47020824301114
+16,Main,labor_share,-0.00121715915603385,-0.106721024327816,0.103796797701937,classical_fd,-0.029268019269655,Replication,-0.00181767042287714
+16,Main,output,0.076650686878749,-0.240556809793976,0.402081955243754,classical_fd,0.00431673526759126,Replication,0.0738446129787872
+16,Main,productivity,-0.0423715521561901,-0.190723307587267,0.0967586402508893,classical_fd,-0.0725561920621531,Replication,-0.0450086450395796
+16,Main,TFP,0.00134321520612792,-0.171801681033245,0.18554200059657,classical_fd,-0.0312721795696296,Replication,0.00586872451123393
+16,Main,unemployment,-0.044918579870292,-0.15629157642,0.0614537536667149,classical_fd,-0.0219822509460721,Replication,-0.0468656044824773
+17,Main,consumption,0.00545298101236178,-0.213918648863298,0.241844340871975,classical_fd,-0.0603091126925587,Replication,0.0102811672315011
+17,Main,hours_worked,0.132825587403899,-0.0465866094299051,0.318827605743745,classical_fd,0.102567286035943,Replication,0.129961805888966
+17,Main,inflation,0.0220683853203842,0.00256075795286691,0.0451725059013167,classical_fd,0.021034812022894,Replication,0.0225339239520037
+17,Main,interest,0.0194349455560285,-0.00925155001104687,0.0509589601457932,classical_fd,0.0223092072835576,Replication,0.0204155789458359
+17,Main,investment,0.375868667031152,-0.225462729722466,0.989200752257464,classical_fd,0.285381895185052,Replication,0.375542090434979
+17,Main,labor_share,0.0153894347680676,-0.0906908164848025,0.114586949423636,classical_fd,-0.0130241114134894,Replication,0.0120314448446064
+17,Main,output,0.0549501680881994,-0.257526310929446,0.380946302082152,classical_fd,-0.0147130313694709,Replication,0.0528872557273571
+17,Main,productivity,-0.0567001712725852,-0.206689628237865,0.0844356912814935,classical_fd,-0.0922778305645388,Replication,-0.0608262505664813
+17,Main,TFP,0.00295797142078338,-0.170267487967256,0.197143561099602,classical_fd,-0.0288457420812715,Replication,0.0100864559556329
+17,Main,unemployment,-0.0380525639165754,-0.137888814242719,0.0571358128448095,classical_fd,-0.0171819381034521,Replication,-0.0393419715934392
+18,Main,consumption,-0.000787398266008575,-0.216499430591613,0.232337026560799,classical_fd,-0.0675977950423354,Replication,0.00230464648742436
+18,Main,hours_worked,0.117781322700083,-0.0567212010264334,0.291230894709033,classical_fd,0.090188182368349,Replication,0.114819029471993
+18,Main,inflation,0.0205740920103847,0.00186710004307082,0.0435865257043259,classical_fd,0.0197946539223051,Replication,0.0213541978613227
+18,Main,interest,0.0203154761131623,-0.00786967457870787,0.0507474407405876,classical_fd,0.0227404378179691,Replication,0.0208225410042503
+18,Main,investment,0.304639557669466,-0.297485305946817,0.864177015513449,classical_fd,0.203446303038197,Replication,0.290194692658404
+18,Main,labor_share,0.0250514095775063,-0.0785511648277685,0.12347474298331,classical_fd,-0.000579264352789296,Replication,0.0217385815453611
+18,Main,output,0.0327676758437192,-0.271329407490508,0.349655423271571,classical_fd,-0.0329260480030276,Replication,0.0334183896674646
+18,Main,productivity,-0.0726196985143771,-0.225853417814227,0.0767459055398494,classical_fd,-0.107815574324823,Replication,-0.0725397074676434
+18,Main,TFP,0.0056112201809946,-0.170538864773567,0.198926342392356,classical_fd,-0.0280931419782352,Replication,0.0122719603430005
+18,Main,unemployment,-0.031072125697179,-0.121023218530589,0.0558963729178699,classical_fd,-0.0113464725387983,Replication,-0.0311880239075519
+19,Main,consumption,-0.00709937877671739,-0.221213742750073,0.218886927217679,classical_fd,-0.0751874027300371,Replication,-0.00579080923479048
+19,Main,hours_worked,0.102109781646263,-0.0634529361549201,0.272078924853166,classical_fd,0.0782028777504971,Replication,0.100733334889933
+19,Main,inflation,0.019212196214619,0.000711368273481396,0.0416240928937582,classical_fd,0.0183244720753492,Replication,0.0199380251846034
+19,Main,interest,0.0202056962902565,-0.00794439796938005,0.0501045354472309,classical_fd,0.0226545173574726,Replication,0.0208269566130006
+19,Main,investment,0.240723355165988,-0.353730251046838,0.78708718093598,classical_fd,0.1307871116829,Replication,0.216092002825276
+19,Main,labor_share,0.0315735299065613,-0.066330993595046,0.121148325088736,classical_fd,0.00853759825197968,Replication,0.0279774403652517
+19,Main,output,0.0143332183070007,-0.290171174314947,0.323979231384398,classical_fd,-0.0496008856644154,Replication,0.016054280910296
+19,Main,productivity,-0.0838860048386402,-0.240026517189538,0.0775677475236397,classical_fd,-0.119876751606245,Replication,-0.0810153921845114
+19,Main,TFP,0.00465623032602792,-0.17338139033647,0.200616483917804,classical_fd,-0.0290024904100757,Replication,0.0124226684981088
+19,Main,unemployment,-0.0219201152490597,-0.105573865132376,0.0588086978116788,classical_fd,-0.0051783960508163,Replication,-0.0231076156178003
+2,Main,consumption,-0.281638650689716,-0.351799362444204,-0.188205146045607,classical_fd,-0.307157489304713,Replication,-0.267593989546239
+2,Main,hours_worked,-0.484189603358172,-0.542093070115152,-0.406253307303023,classical_fd,-0.529992723754386,Replication,-0.467144983568352
+2,Main,inflation,-0.0188109732393907,-0.0468280773248378,0.00949842079821191,classical_fd,-0.017452630414459,Replication,-0.0185829053138806
+2,Main,interest,-0.102523733174681,-0.151125649480911,-0.0531967509798464,classical_fd,-0.107319547339209,Replication,-0.0996088446766833
+2,Main,investment,-2.07737291958936,-2.39022259222404,-1.65958905537747,classical_fd,-2.31144032763838,Replication,-1.9955448975596
+2,Main,labor_share,0.112386484164888,0.00210919787534654,0.198462162259168,classical_fd,0.124552199896728,Replication,0.101896695425522
+2,Main,output,-0.583471709189752,-0.683422567264967,-0.442476151714364,classical_fd,-0.651624528130489,Replication,-0.558000694429255
+2,Main,productivity,-0.13263942374033,-0.237134328796163,-0.0234763449760084,classical_fd,-0.152267542058184,Replication,-0.127433582632776
+2,Main,TFP,0.215141151049038,0.0728019759364843,0.319297588353667,classical_fd,0.207153420081217,Replication,0.199644702330251
+2,Main,unemployment,0.295925692206108,0.255797515008926,0.32408792450309,classical_fd,0.329397872704632,Replication,0.284746085977624
+20,Main,consumption,-0.0185521309309559,-0.226108588672318,0.211728104666999,classical_fd,-0.0826759960185093,Replication,-0.013618884871754
+20,Main,hours_worked,0.0897246244881841,-0.0731594286862093,0.256388095539893,classical_fd,0.0671436256557657,Replication,0.088139907676942
+20,Main,inflation,0.0173671094366553,-0.000453119430711739,0.0392617284726027,classical_fd,0.0167426973917439,Replication,0.0184156830893665
+20,Main,interest,0.0204159986387383,-0.00850525251586832,0.0499632457031013,classical_fd,0.0222068515235415,Replication,0.0205718703352377
+20,Main,investment,0.174923409296243,-0.427281059802375,0.703784332107779,classical_fd,0.0682960271948886,Replication,0.153475866331859
+20,Main,labor_share,0.0338437226586823,-0.0534081214829064,0.119692478137978,classical_fd,0.0148710748671649,Replication,0.0314593445271174
+20,Main,output,-0.00275728582949705,-0.307042616546057,0.3137376025703,classical_fd,-0.064390607248398,Replication,0.000989154533275247
+20,Main,productivity,-0.0906661705569538,-0.247995032383122,0.0777682988848116,classical_fd,-0.129152061661723,Replication,-0.0870693599757708
+20,Main,TFP,0.00408620695103643,-0.176491504762701,0.201946976494347,classical_fd,-0.0313911719154667,Replication,0.0107372275079961
+20,Main,unemployment,-0.0161782042964607,-0.0933595244624165,0.0607017119456995,classical_fd,0.000850157307890736,Replication,-0.0155330350639405
+21,Main,consumption,-0.026753693958087,-0.235964806231392,0.20853726675484,classical_fd,-0.0897984206048587,Replication,-0.0209581590747617
+21,Main,hours_worked,0.0779113826216847,-0.0832124305317943,0.237831723136676,classical_fd,0.0572837527753028,Replication,0.0771790924000414
+21,Main,inflation,0.015974987091395,-0.00182447175870952,0.0372141376784945,classical_fd,0.0151326887591823,Replication,0.016876030162269
+21,Main,interest,0.0200211549227579,-0.00953800367992469,0.0499614687985179,classical_fd,0.0215130362494871,Replication,0.0201536463768806
+21,Main,investment,0.114466343015363,-0.445129513777655,0.650737949059181,classical_fd,0.0158650820314058,Replication,0.101556871402298
+21,Main,labor_share,0.0340254185842682,-0.0464193634728225,0.117110821360807,classical_fd,0.0189680057670172,Replication,0.032855281661351
+21,Main,output,-0.0131091413435149,-0.324797605598279,0.3034899637287,classical_fd,-0.0771998035815529,Replication,-0.0118528819050695
+21,Main,productivity,-0.0964578652505073,-0.261150383643211,0.078866299214886,classical_fd,-0.136261172970121,Replication,-0.0914062212713129
+21,Main,TFP,0.00204628511903625,-0.179311664210028,0.199980773483888,classical_fd,-0.0349855555471925,Replication,0.0075243425441297
+21,Main,unemployment,-0.00966820228523917,-0.0818849009940173,0.0635233270757837,classical_fd,0.00644526799897006,Replication,-0.00869133356606083
+22,Main,consumption,-0.0345577714664375,-0.244919301002953,0.204543726639741,classical_fd,-0.0963925592186145,Replication,-0.0277051687402061
+22,Main,hours_worked,0.0687432108728018,-0.0891453255473644,0.233752450221818,classical_fd,0.0487245069299028,Replication,0.0678079033307359
+22,Main,inflation,0.0144183409473685,-0.00318678762979925,0.0350362600673166,classical_fd,0.0135496449310921,Replication,0.0153746527219448
+22,Main,interest,0.019110908022643,-0.0107057834396643,0.0491622390317447,classical_fd,0.020657641940302,Replication,0.0196337722728536
+22,Main,investment,0.0699023981494704,-0.474098449089645,0.608764783882597,classical_fd,-0.0271922554010007,Replication,0.0590218335957341
+22,Main,labor_share,0.0326924883750274,-0.0396770804550274,0.112590895826368,classical_fd,0.0213339487399762,Replication,0.032750123118137
+22,Main,output,-0.0198029806243644,-0.340010700999829,0.280522140134324,classical_fd,-0.0880869846890888,Replication,-0.0226961022109342
+22,Main,productivity,-0.0996840595617824,-0.271280197531155,0.082511852495797,classical_fd,-0.141727649033008,Replication,-0.0945933868532393
+22,Main,TFP,0.000928506923406942,-0.18761574545248,0.197119381417359,classical_fd,-0.0394802997527015,Replication,0.00313292517054881
+22,Main,unemployment,-0.00393144428690156,-0.073715056601625,0.0668046679891763,classical_fd,0.0114427959462663,Replication,-0.00266687699980512
+23,Main,consumption,-0.0417440203267326,-0.255357650140537,0.197399839842036,classical_fd,-0.102369841736304,Replication,-0.0338336676605179
+23,Main,hours_worked,0.0616348204600791,-0.0962844779515587,0.229407002318788,classical_fd,0.0414615810082875,Replication,0.0598858891143599
+23,Main,inflation,0.0128627781715124,-0.00460293033690511,0.0333895178832181,classical_fd,0.0120275846235008,Replication,0.0139419947792373
+23,Main,interest,0.018265990676211,-0.011656846710271,0.0489176576513472,classical_fd,0.0197020277950013,Replication,0.0190493939506507
+23,Main,investment,0.0261801226281763,-0.505409528959741,0.578369145499003,classical_fd,-0.061840989684099,Replication,0.024393636947153
+23,Main,labor_share,0.0303614909762034,-0.038348946548692,0.103674615493883,classical_fd,0.0224108902057779,Replication,0.031624451254013
+23,Main,output,-0.0321763402270284,-0.354273642183179,0.276525386443644,classical_fd,-0.0971930935970153,Replication,-0.0318242498305154
+23,Main,productivity,-0.0998595306638765,-0.279652589256445,0.0827731387523317,classical_fd,-0.145973878199099,Replication,-0.0970603712086055
+23,Main,TFP,-0.00302497261661991,-0.197287511931771,0.192327252989068,classical_fd,-0.0445784304906237,Replication,-0.00209612899583756
+23,Main,unemployment,-0.00107978356734956,-0.064414138300068,0.070985805662941,classical_fd,0.0157677418535103,Replication,0.00254603962262876
+24,Main,consumption,-0.0471838223541881,-0.265342207792027,0.194590481297501,classical_fd,-0.107691535993684,Replication,-0.0393624755625713
+24,Main,hours_worked,0.0536440923588957,-0.103621217772968,0.215996152259187,classical_fd,0.0354323299584622,Replication,0.0532354246670258
+24,Main,inflation,0.0110957776252069,-0.00587392979630531,0.0320929478612726,classical_fd,0.0105855876806782,Replication,0.0125912440002136
+24,Main,interest,0.0178351613275342,-0.0128428160112775,0.0490206123360715,classical_fd,0.0186907260940972,Replication,0.0184219398104192
+24,Main,investment,-0.0172566728876992,-0.53716667332653,0.543297829065216,classical_fd,-0.0891281381667008,Replication,-0.00374095614710012
+24,Main,labor_share,0.0286887257529943,-0.0384435467044688,0.0971364202305036,classical_fd,0.0225695953504799,Replication,0.0298536291876538
+24,Main,output,-0.0400009839521291,-0.371972237810441,0.273665756202888,classical_fd,-0.104693245681815,Replication,-0.0395220534634088
+24,Main,productivity,-0.101507871860277,-0.287883054558009,0.0862119621834242,classical_fd,-0.149328101092077,Replication,-0.099112992031145
+24,Main,TFP,-0.00997421329306201,-0.204728050204977,0.185970054618108,classical_fd,-0.050015182651364,Replication,-0.00785901602667653
+24,Main,unemployment,0.00467560314539598,-0.0595315978017122,0.0720710207984456,classical_fd,0.0194026936498105,Replication,0.00700267677086139
+25,Main,consumption,-0.0512571316564093,-0.271133986372311,0.193155871001,classical_fd,-0.112350969228099,Replication,-0.0443322255526368
+25,Main,hours_worked,0.0497900017824135,-0.106466791677972,0.208936100746843,classical_fd,0.0305466941033451,Replication,0.0476796377506172
+25,Main,inflation,0.00990783933505845,-0.00685070469734969,0.0303468553966259,classical_fd,0.00923285585252235,Replication,0.0113247077813335
+25,Main,interest,0.0173001389464892,-0.0141821193684331,0.0484843857968798,classical_fd,0.0176563157969818,Replication,0.0177635811957377
+25,Main,investment,-0.0247018491680214,-0.54270607958007,0.527979515831175,classical_fd,-0.110067171615431,Replication,-0.0266086627152542
+25,Main,labor_share,0.0278161448778433,-0.0393350460428967,0.0934887693778376,classical_fd,0.0221112445786839,Replication,0.0277182246236609
+25,Main,output,-0.0394694911014034,-0.383305606303588,0.270398986557113,classical_fd,-0.110767162446582,Replication,-0.0460417990547153
+25,Main,productivity,-0.10149614403308,-0.295890282363803,0.0890734226719525,classical_fd,-0.152037598287739,Replication,-0.100955075712479
+25,Main,TFP,-0.0174884313645885,-0.20916534784432,0.182518010728245,classical_fd,-0.0555694104341598,Replication,-0.0139029387708622
+25,Main,unemployment,0.00873843769043119,-0.0528732532804269,0.0745850137079009,classical_fd,0.0223649672387233,Replication,0.0107793522312346
+26,Main,consumption,-0.0532877092712573,-0.278778057509601,0.187344732194072,classical_fd,-0.116361036520645,Replication,-0.0487900855525177
+26,Main,hours_worked,0.0432523410659879,-0.113677110106295,0.208072777288016,classical_fd,0.0267056021961997,Replication,0.0430627816327043
+26,Main,inflation,0.00890489226514403,-0.00769946063219223,0.0281916493512366,classical_fd,0.00797251669571661,Replication,0.0101387888974608
+26,Main,interest,0.0166157215388238,-0.0152449289145107,0.0479629846418867,classical_fd,0.016622934574763,Replication,0.0170817189132209
+26,Main,investment,-0.0341624806285129,-0.580250417896013,0.515749360850674,classical_fd,-0.125580462417828,Replication,-0.0452035816694405
+26,Main,labor_share,0.0257112824559608,-0.0393530901541017,0.0872583606514384,classical_fd,0.0212741672189043,Replication,0.0254195287653837
+26,Main,output,-0.0482330400884348,-0.39906827258163,0.275422295001445,classical_fd,-0.115583389388405,Replication,-0.0515886793334609
+26,Main,productivity,-0.103744295527857,-0.299766301781424,0.0927349130340879,classical_fd,-0.154283894877733,Replication,-0.102712048996725
+26,Main,TFP,-0.0230569098437917,-0.21563116967857,0.174923395675822,classical_fd,-0.0610662909809826,Replication,-0.020029181430697
+26,Main,unemployment,0.0145047710838866,-0.0482288183358656,0.0753266466198146,classical_fd,0.0246911329157591,Replication,0.0139553104309461
+27,Main,consumption,-0.0569544246071853,-0.289849835900323,0.186390766751458,classical_fd,-0.119745980602333,Replication,-0.0527808920797928
+27,Main,hours_worked,0.0416654929553056,-0.121777743014552,0.207211080317721,classical_fd,0.0238105490494022,Replication,0.0392580874353647
+27,Main,inflation,0.00806780253670644,-0.00868509626994177,0.0269157982052767,classical_fd,0.00680426977008669,Replication,0.00902739859323354
+27,Main,interest,0.0157395361646096,-0.0154820512425598,0.0477659360091054,classical_fd,0.0156086826543792,Replication,0.0163818122296426
+27,Main,investment,-0.0519464926910977,-0.603058350490605,0.506134193218594,classical_fd,-0.136479718951578,Replication,-0.06029074962332
+27,Main,labor_share,0.0245197938005977,-0.0400512817144435,0.0829517418283705,classical_fd,0.0202427556049619,Replication,0.0230966171850856
+27,Main,output,-0.0561380429599309,-0.417033122012388,0.286766883030105,classical_fd,-0.119292819993233,Replication,-0.0563187867804919
+27,Main,productivity,-0.104070489069752,-0.311118576918552,0.0975530292386406,classical_fd,-0.156197410989389,Replication,-0.104453009844606
+27,Main,TFP,-0.0280254822086353,-0.224356066415131,0.168339964056623,classical_fd,-0.0663745601785421,Replication,-0.0260893159436082
+27,Main,unemployment,0.0159892897872501,-0.0444140091343029,0.0767951575446588,classical_fd,0.026427279188119,Replication,0.0166027401111534
+28,Main,consumption,-0.0594077712001351,-0.300324019644694,0.186367207822221,classical_fd,-0.122536348847896,Replication,-0.0563429813890639
+28,Main,hours_worked,0.036623015352236,-0.128646303500477,0.21087002284898,classical_fd,0.0217675191957422,Replication,0.0361676502248778
+28,Main,inflation,0.00690658650219127,-0.00914763132004891,0.0254798495544199,classical_fd,0.00572608248212092,Replication,0.00798414151330596
+28,Main,interest,0.0149967925581696,-0.0158578437896654,0.0472990874837112,classical_fd,0.0146271978690344,Replication,0.015668960851487
+28,Main,investment,-0.0732394894453175,-0.620198565241657,0.489154262210581,classical_fd,-0.143468566045702,Replication,-0.0724375041766291
+28,Main,labor_share,0.0215609608022538,-0.0401593512653329,0.07955267536409,classical_fd,0.0191566758690625,Replication,0.0208422213044894
+28,Main,output,-0.0594767189515517,-0.428094603383387,0.286140814654897,classical_fd,-0.122027862203222,Replication,-0.0603445754033944
+28,Main,productivity,-0.104060042660555,-0.315645928256529,0.101381383395672,classical_fd,-0.15787018384977,Replication,-0.106209347864704
+28,Main,TFP,-0.0326531001206997,-0.23368280530576,0.160316783259266,classical_fd,-0.0714008185038378,Replication,-0.0319777792138002
+28,Main,unemployment,0.0176145693161979,-0.0409540602404334,0.0775439225966671,classical_fd,0.0276233844248924,Replication,0.0187825856039197
+29,Main,consumption,-0.0614483653832409,-0.308674602442634,0.186244812365148,classical_fd,-0.124766129402529,Replication,-0.0595071285718323
+29,Main,hours_worked,0.0342355315404955,-0.135323155817835,0.213254067063614,classical_fd,0.0204877140340731,Replication,0.0337179846796853
+29,Main,inflation,0.00571570068436852,-0.0099799435827281,0.0245125175413761,classical_fd,0.00473516916731928,Replication,0.00700348056769497
+29,Main,interest,0.0141019737959642,-0.0172109555747448,0.0473165302744071,classical_fd,0.0136886577937264,Replication,0.0149486144228253
+29,Main,investment,-0.0751158996582606,-0.646955398511836,0.485687225711261,classical_fd,-0.147155826878779,Replication,-0.0820563033246532
+29,Main,labor_share,0.0200972287356353,-0.0408246856872269,0.0782907923168706,classical_fd,0.0181193208280307,Replication,0.0187162109504701
+29,Main,output,-0.0622447001741472,-0.435017244904361,0.290292007073406,classical_fd,-0.123904519119505,Replication,-0.0637438057658376
+29,Main,productivity,-0.103659309307209,-0.32242659424975,0.104324744620546,classical_fd,-0.159366139482594,Replication,-0.107989251638457
+29,Main,TFP,-0.0375037785256199,-0.240972809167588,0.156701104408636,classical_fd,-0.076082730165913,Replication,-0.037623196720463
+29,Main,unemployment,0.0187009593867432,-0.0378835228202779,0.0793643378624782,classical_fd,0.0283303910654719,Replication,0.0205440774590471
+3,Main,consumption,-0.302596507969325,-0.393173415315167,-0.180609785412145,classical_fd,-0.3301107823686,Replication,-0.285115611092142
+3,Main,hours_worked,-0.535854523346296,-0.607827532138965,-0.417698503535953,classical_fd,-0.579037911181429,Replication,-0.511560292308481
+3,Main,inflation,-0.0303646511175966,-0.0572285742655809,-0.00586899258217077,classical_fd,-0.0307539358622537,Replication,-0.0309051781427885
+3,Main,interest,-0.119808374086458,-0.163072042934095,-0.0764835299338918,classical_fd,-0.124256024623077,Replication,-0.117143669301059
+3,Main,investment,-2.1297644709172,-2.59380206153677,-1.49250292866377,classical_fd,-2.33285466689722,Replication,-2.01189660915975
+3,Main,labor_share,0.0419971439883803,-0.0690225012929551,0.140792999211335,classical_fd,0.0492600403329386,Replication,0.0348066454135456
+3,Main,output,-0.603753061287377,-0.748583309796502,-0.39737488526162,classical_fd,-0.666417146528252,Replication,-0.567621702762245
+3,Main,productivity,-0.01435008932136,-0.154522127769753,0.125343277481817,classical_fd,-0.0274958980989738,Replication,-0.0130383194488978
+3,Main,TFP,0.246382158498786,0.101771622511284,0.355135791651726,classical_fd,0.234329037352724,Replication,0.232026820916613
+3,Main,unemployment,0.349843694452585,0.281791611730555,0.390816155989635,classical_fd,0.382716051128091,Replication,0.332678086240735
+30,Main,consumption,-0.0592707845080471,-0.318876903455706,0.185916110873307,classical_fd,-0.126471252119643,Replication,-0.0622972942698281
+30,Main,hours_worked,0.0314067664223843,-0.142899197625223,0.217012030380688,classical_fd,0.0198868165383017,Replication,0.0318538867389302
+30,Main,inflation,0.00475772703549492,-0.0107663838036567,0.0237291670480032,classical_fd,0.00382847610959574,Replication,0.00608121383335024
+30,Main,interest,0.0130386141607349,-0.0181924215014458,0.046901344145967,classical_fd,0.0128004179895567,Replication,0.0142267354891518
+30,Main,investment,-0.0980962371641712,-0.661016382807068,0.479035342140557,classical_fd,-0.148071998029732,Replication,-0.0894482107184622
+30,Main,labor_share,0.0185062685914962,-0.0422425440426118,0.0768151940835976,classical_fd,0.0172050303623711,Replication,0.0167561343568617
+30,Main,output,-0.0644727369235577,-0.445565152351827,0.301083307286164,classical_fd,-0.125025533264855,Replication,-0.0665692413116029
+30,Main,productivity,-0.105282425284992,-0.326656513548592,0.106071100410205,classical_fd,-0.160728930793636,Replication,-0.109788182022412
+30,Main,TFP,-0.0427657115360248,-0.250188435733451,0.151707686059708,classical_fd,-0.0803822979060365,Replication,-0.0429800017970122
+30,Main,unemployment,0.019814503142824,-0.0357687284667648,0.0814319485104085,classical_fd,0.0285988852496582,Replication,0.0219263123421801
+31,Main,consumption,-0.060584498058968,-0.327469168102835,0.189464865235434,classical_fd,-0.12768884878565,Replication,-0.064732213737392
+31,Main,hours_worked,0.0297010876352088,-0.148302567486897,0.220340244640415,classical_fd,0.0198838931820052,Replication,0.0305322944928562
+31,Main,inflation,0.00412086480089,-0.0115119676913639,0.0226340937257678,classical_fd,0.00300285843486918,Replication,0.00521449136098538
+31,Main,interest,0.0123562704204197,-0.0194568791981194,0.0463343148691521,classical_fd,0.0119674412996247,Replication,0.0135096591712275
+31,Main,investment,-0.102968933368374,-0.669594060149916,0.47413220499617,classical_fd,-0.146684575955312,Replication,-0.0948407991699153
+31,Main,labor_share,0.0161127313750096,-0.0441371735942533,0.0757255105203344,classical_fd,0.0164649839896929,Replication,0.0149849424924073
+31,Main,output,-0.0667732561541167,-0.458183694034231,0.305546495711915,classical_fd,-0.125483476090328,Replication,-0.06885743457066
+31,Main,productivity,-0.107354037049206,-0.328708934640837,0.113395439229671,classical_fd,-0.161987655992719,Replication,-0.111595865110929
+31,Main,TFP,-0.0501343650310002,-0.257135669023607,0.150867633496141,classical_fd,-0.084279882920106,Replication,-0.048021207192921
+31,Main,unemployment,0.020869035386096,-0.0349598814775962,0.0826081144009184,classical_fd,0.0284786006068036,Replication,0.0229606857767346
+32,Main,consumption,-0.0621640475632843,-0.33446636644933,0.193075715324512,classical_fd,-0.12845686282245,Replication,-0.0668271848892232
+32,Main,hours_worked,0.0273771183729322,-0.154210879811007,0.223221109410851,classical_fd,0.0204005337682707,Replication,0.0297170824413511
+32,Main,inflation,0.00365823912924326,-0.0121981201454846,0.0221950224211551,classical_fd,0.00225509076968177,Replication,0.00440158997729561
+32,Main,interest,0.0114821528222754,-0.0205987077805638,0.0460682013247074,classical_fd,0.011192622574558,Replication,0.0128038218692021
+32,Main,investment,-0.103844602797011,-0.686229667927389,0.495326683122703,classical_fd,-0.143410209356615,Replication,-0.0984177473973611
+32,Main,labor_share,0.013292781089561,-0.0445202604320226,0.0736329613238933,classical_fd,0.0159318834185394,Replication,0.0134162666071876
+32,Main,output,-0.0698961254776155,-0.465580952361432,0.313277648907527,classical_fd,-0.125363217802963,Replication,-0.0706357939487889
+32,Main,productivity,-0.108709469715439,-0.336980203622631,0.113728644131735,classical_fd,-0.163160892591188,Replication,-0.113400534128644
+32,Main,TFP,-0.054010732489127,-0.265369930799108,0.148303571256014,classical_fd,-0.0877692628620055,Replication,-0.0527326668192342
+32,Main,unemployment,0.0227046599854236,-0.0327796281247572,0.0825906968911628,classical_fd,0.0280182427355538,Replication,0.0236734003406896
+33,Main,consumption,-0.0617766551590068,-0.345211056688438,0.198738948662386,classical_fd,-0.128813761005665,Replication,-0.0685956780295006
+33,Main,hours_worked,0.0288780758560774,-0.162512837126761,0.230088671896318,classical_fd,0.0213604736500051,Replication,0.0293751631775579
+33,Main,inflation,0.00314570573316621,-0.013176568703145,0.021588925487484,classical_fd,0.00158180983394707,Replication,0.0036415820958703
+33,Main,interest,0.0106674809524928,-0.0222806740128203,0.047049598241206,classical_fd,0.0104770713723323,Replication,0.0121154655469896
+33,Main,investment,-0.0980234684050162,-0.708942455734709,0.518559865485878,classical_fd,-0.138623185731337,Replication,-0.100339736442013
+33,Main,labor_share,0.0120862611396546,-0.0464829687764523,0.0720648888292204,classical_fd,0.0156236392911261,Replication,0.0120577874400433
+33,Main,output,-0.0732633509570302,-0.474265659443488,0.319651271497148,classical_fd,-0.124743592653665,Replication,-0.0719277090232216
+33,Main,productivity,-0.108905489467401,-0.343984027517286,0.112714885359284,classical_fd,-0.164259490536061,Replication,-0.115191174739738
+33,Main,TFP,-0.0563315313816115,-0.272144004492699,0.144538076840369,classical_fd,-0.0908537709225326,Replication,-0.0571088215211747
+33,Main,unemployment,0.0223569320736604,-0.0333848697258558,0.0815922905866367,classical_fd,0.0272653505168693,Replication,0.0240876203698009
+34,Main,consumption,-0.0647548841015789,-0.356852732247312,0.20217728757892,classical_fd,-0.128798221733552,Replication,-0.0700505894270204
+34,Main,hours_worked,0.0272417217449237,-0.168108510574941,0.234255313185569,classical_fd,0.0226897151143549,Replication,0.0294739118711022
+34,Main,inflation,0.00272024820315022,-0.0142059104782219,0.020955034013087,classical_fd,0.000979449862289634,Replication,0.00293399869154692
+34,Main,interest,0.0103078781438341,-0.0238973152351826,0.0476119212339285,classical_fd,0.00982038398559769,Replication,0.0114503772117173
+34,Main,investment,-0.0942519975648342,-0.721690405685594,0.550778157014835,classical_fd,-0.132660652122685,Replication,-0.10075764333537
+34,Main,labor_share,0.0099783577230099,-0.0478977533152229,0.0706015996160455,classical_fd,0.015546295236466,Replication,0.0109132151451082
+34,Main,output,-0.0692538258340632,-0.486053365028169,0.330124155223458,classical_fd,-0.123698306833835,Replication,-0.0727558782740728
+34,Main,productivity,-0.11218351262094,-0.350837519412066,0.110050702550574,classical_fd,-0.165288512236819,Replication,-0.116958435729983
+34,Main,TFP,-0.0595217101273891,-0.282180092032636,0.144955020661548,classical_fd,-0.0935434124113352,Replication,-0.0611497284234097
+34,Main,unemployment,0.0233877129343982,-0.0341573521398316,0.081916985913993,classical_fd,0.0262660678092313,Replication,0.0242250925266539
+35,Main,consumption,-0.066767878558682,-0.366026742472587,0.205107460295236,classical_fd,-0.12844875732575,Replication,-0.0712050935778471
+35,Main,hours_worked,0.0280066510559564,-0.17240547269796,0.242421537463277,classical_fd,0.0243170400700654,Replication,0.02997972959858
+35,Main,inflation,0.00206828125389073,-0.0148324655921571,0.0200347505472571,classical_fd,0.000444202761449232,Replication,0.00227853586870953
+35,Main,interest,0.00987950194010643,-0.0250215652491057,0.0476051407544659,classical_fd,0.00922091516804607,Replication,0.0108136893390515
+35,Main,investment,-0.0928350835151136,-0.740662970460763,0.567585436487044,classical_fd,-0.125825384107117,Replication,-0.0998196464568469
+35,Main,labor_share,0.00948615932216856,-0.0491308080092833,0.0687939903436412,classical_fd,0.0156963975631473,Replication,0.00998334712044834
+35,Main,output,-0.0702791986329112,-0.500378433550669,0.344854872518776,classical_fd,-0.122296254178049,Replication,-0.0731441636346403
+35,Main,productivity,-0.113591493395264,-0.357535950779179,0.106773482201033,classical_fd,-0.166248623803937,Replication,-0.118694735741874
+35,Main,TFP,-0.0617246323894235,-0.287221374250909,0.139347339124872,classical_fd,-0.0958527862122631,Replication,-0.0648590938852499
+35,Main,unemployment,0.0229509162055742,-0.0336067972934192,0.0814076908050945,classical_fd,0.0250648004373408,Replication,0.0241072149640613
+36,Main,consumption,-0.0680058692595852,-0.374836349055304,0.21213127077294,classical_fd,-0.127803277665536,Replication,-0.0720731267615781
+36,Main,hours_worked,0.0296016935384062,-0.177980392764376,0.252151244380191,classical_fd,0.0261747565540993,Replication,0.0308574830223373
+36,Main,inflation,0.0014901533134742,-0.0154039816739677,0.0193222646330962,classical_fd,-2.79854423839172e-05,Replication,0.00167483003989723
+36,Main,interest,0.00964391099258684,-0.026716283420337,0.0474985891852439,classical_fd,0.00867604756477325,Replication,0.0102097471964455
+36,Main,investment,-0.0933799680005704,-0.758377090712724,0.59848139768744,classical_fd,-0.118387009373395,Replication,-0.0976739756863396
+36,Main,labor_share,0.0096209814914609,-0.0498517722189768,0.0703735693630921,classical_fd,0.0160629742048266,Replication,0.00926656546789593
+36,Main,output,-0.0705135571427932,-0.514498940599432,0.357073254901372,classical_fd,-0.120601443187043,Replication,-0.0731183515237075
+36,Main,productivity,-0.112761800889427,-0.363057852146452,0.110549222634515,classical_fd,-0.167137154574093,Replication,-0.120393951868769
+36,Main,TFP,-0.0631450507368635,-0.293842721269746,0.137610354479577,classical_fd,-0.0977996219676225,Replication,-0.068243027082111
+36,Main,unemployment,0.0234131964736721,-0.0351059345145609,0.0809375434225371,classical_fd,0.0237037895985813,Replication,0.0237556263606263
+37,Main,consumption,-0.0688789187015509,-0.382997236158592,0.21907399394436,classical_fd,-0.126898626989117,Replication,-0.0726695708740821
+37,Main,hours_worked,0.0311338946252708,-0.186815650014594,0.264364155665613,classical_fd,0.0281995209331175,Replication,0.0320705542809427
+37,Main,inflation,0.00107274375777017,-0.0161254203934782,0.0187514660781134,classical_fd,-0.000441383131938272,Replication,0.0011223038185507
+37,Main,interest,0.00912354112187566,-0.0280898392469384,0.0480712510526051,classical_fd,0.00818245101416313,Replication,0.00964203802904295
+37,Main,investment,-0.0908363692194576,-0.776143963773483,0.622460177806443,classical_fd,-0.110582493818681,Replication,-0.0944688504693905
+37,Main,labor_share,0.00968580292111941,-0.0511851309889548,0.0708982673214041,classical_fd,0.0166292380584627,Replication,0.00875904000698438
+37,Main,output,-0.068625850525637,-0.523222970850079,0.368132975966622,classical_fd,-0.118672727487812,Replication,-0.072706175131888
+37,Main,productivity,-0.113427186855368,-0.36909275408318,0.11048063459082,classical_fd,-0.167948964892121,Replication,-0.122050948991191
+37,Main,TFP,-0.0663557700378188,-0.299495088709755,0.137688095011781,classical_fd,-0.0994037590375724,Replication,-0.0713092719586745
+37,Main,unemployment,0.0219663261801945,-0.0358258302033397,0.0816277946046169,classical_fd,0.0222226561285979,Replication,0.0231924232467788
+38,Main,consumption,-0.0687737697605408,-0.392159028422031,0.223330183900994,classical_fd,-0.125770132572755,Replication,-0.0730102160213895
+38,Main,hours_worked,0.0338355617044003,-0.193771078828304,0.272910649119385,classical_fd,0.0303331046545906,Replication,0.0335812728553456
+38,Main,inflation,0.000539368420897745,-0.0169628261967481,0.0182253666136776,classical_fd,-0.00080041469007993,Replication,0.000620075901555621
+38,Main,interest,0.00866038704869312,-0.0293725834312482,0.0489107896619884,classical_fd,0.00773632251650148,Replication,0.00911317278438081
+38,Main,investment,-0.0801679815731271,-0.801835900257782,0.654308281808254,classical_fd,-0.102616508338762,Replication,-0.0903508289056287
+38,Main,labor_share,0.00997422229236801,-0.0524080636391685,0.0710379499948337,classical_fd,0.0173740868400318,Replication,0.00845481099239692
+38,Main,output,-0.0694950145972986,-0.537198551411984,0.373463893268129,classical_fd,-0.116563494330935,Replication,-0.0719368899143607
+38,Main,productivity,-0.11634097353027,-0.366985011100858,0.105106214647645,classical_fd,-0.168677201495098,Replication,-0.12366110589189
+38,Main,TFP,-0.0666308690342488,-0.30652877724115,0.139346025732352,classical_fd,-0.100686424211898,Replication,-0.0740667334921656
+38,Main,unemployment,0.0213387570813966,-0.0374127992917733,0.0812740763206372,classical_fd,0.0206579718438237,Replication,0.0224401166968405
+39,Main,consumption,-0.0658864882463269,-0.39823068972871,0.226633328397699,classical_fd,-0.124451200258234,Replication,-0.0731115744997855
+39,Main,hours_worked,0.0338060209255708,-0.201093805971548,0.285142281719057,classical_fd,0.0325230130945838,Replication,0.0353515534540265
+39,Main,inflation,0.000129065521193325,-0.0178693508175207,0.0180098882080428,classical_fd,-0.00110958576320783,Replication,0.000166922284095303
+39,Main,interest,0.00840450254574687,-0.0308028939240692,0.0493991958578045,classical_fd,0.00733359897258471,Replication,0.00862491005846629
+39,Main,investment,-0.0729043164921982,-0.828881020572317,0.677863986320407,classical_fd,-0.0946620818429783,Replication,-0.0854624450539245
+39,Main,labor_share,0.00995629252189716,-0.0545885685066074,0.0716748789751361,classical_fd,0.0182734383501706,Replication,0.00834585752326393
+39,Main,output,-0.0679662844160427,-0.554698551611103,0.382936228421653,classical_fd,-0.114321418965611,Replication,-0.0708406198354126
+39,Main,productivity,-0.117190791502603,-0.369193979490673,0.103729742900842,classical_fd,-0.169313976994728,Replication,-0.12521992063592
+39,Main,TFP,-0.0680488058202232,-0.312801958478945,0.140012311198197,classical_fd,-0.101669700776384,Replication,-0.0765251727139704
+39,Main,unemployment,0.0207711087164423,-0.0378195730119125,0.081584183559728,classical_fd,0.0190429037752324,Replication,0.0215214247012505
+4,Main,consumption,-0.290876702041143,-0.410775439608545,-0.138970675123443,classical_fd,-0.319952847074578,Replication,-0.270460517949585
+4,Main,hours_worked,-0.494253889928799,-0.608395991490474,-0.335387385993935,classical_fd,-0.531262939800944,Replication,-0.46468788877957
+4,Main,inflation,-0.0340013168390041,-0.0566385206581683,-0.012509846670799,classical_fd,-0.0337427941274955,Replication,-0.0343571924470126
+4,Main,interest,-0.118139866904906,-0.1570454829335,-0.0802724413027225,classical_fd,-0.122084919995436,Replication,-0.11668032464498
+4,Main,investment,-1.77954990659337,-2.44840233234897,-0.863394119972114,classical_fd,-1.94838972841303,Replication,-1.65535012184442
+4,Main,labor_share,-0.0468795659201356,-0.156122231584033,0.0474073339329944,classical_fd,-0.0401124477671685,Replication,-0.048203308733128
+4,Main,output,-0.531127505683285,-0.738484446258441,-0.257128940525918,classical_fd,-0.586664144207052,Replication,-0.488770899393783
+4,Main,productivity,0.0941621383211234,-0.0622160567280436,0.243168567377663,classical_fd,0.0830315066014554,Replication,0.0914590269884537
+4,Main,TFP,0.22783574917957,0.0906202460955429,0.331638320018769,classical_fd,0.212469892325372,Replication,0.21626405639462
+4,Main,unemployment,0.349011089633122,0.2547520916605,0.408207840322754,classical_fd,0.376744957429279,Replication,0.32588003620373
+40,Main,consumption,-0.0675629120068614,-0.404294632660622,0.231123255270809,classical_fd,-0.122972982502203,Replication,-0.0729906063107004
+40,Main,hours_worked,0.0363142403947641,-0.210942367482404,0.295900147712191,classical_fd,0.0347229037851178,Replication,0.0373436153260493
+40,Main,inflation,-0.000227437561382673,-0.0185479979040256,0.0175535519944713,classical_fd,-0.00137340254832772,Replication,-0.000238723803977186
+40,Main,interest,0.00812685140964022,-0.0323047569373424,0.0501547403532142,classical_fd,0.00697013740198192,Replication,0.0081782127018191
+40,Main,investment,-0.0681916587362433,-0.855929169486636,0.706649043740136,classical_fd,-0.0868617522045344,Replication,-0.0799397098755151
+40,Main,labor_share,0.00965628447498677,-0.0559027032163175,0.0731245301801235,classical_fd,0.0193014174900649,Replication,0.00842220636014289
+40,Main,output,-0.0665871833024331,-0.570888816124724,0.400460516770003,classical_fd,-0.111988347538057,Replication,-0.0694476237807098
+40,Main,productivity,-0.117039327976586,-0.368997941103553,0.105491630151178,classical_fd,-0.169850983120324,Replication,-0.126722728648123
+40,Main,TFP,-0.0691738057208454,-0.31778493744966,0.142296155287232,classical_fd,-0.102376115002805,Replication,-0.0786949936361848
+40,Main,unemployment,0.0196644930495719,-0.0397146883570829,0.0826287077468317,classical_fd,0.01740696149376,Replication,0.0204589748885043
+5,Main,consumption,-0.256505010899836,-0.407672815411187,-0.0725932233356503,classical_fd,-0.288268057626615,Replication,-0.234605503107734
+5,Main,hours_worked,-0.402631381391154,-0.564239061475083,-0.181379620211445,classical_fd,-0.43063483213725,Replication,-0.366127029232842
+5,Main,inflation,-0.0335329363576181,-0.0545910294668939,-0.0135058953062099,classical_fd,-0.032583941399171,Replication,-0.0337079857706236
+5,Main,interest,-0.103863307909779,-0.141693095715211,-0.0729348495044305,classical_fd,-0.109586236562376,Replication,-0.105700875669586
+5,Main,investment,-1.23202585298822,-2.12471585590982,-0.156704639408706,classical_fd,-1.39428057255669,Replication,-1.12989292524064
+5,Main,labor_share,-0.122157189102214,-0.217955301139024,-0.0358893182576086,classical_fd,-0.118920675209333,Replication,-0.120603302036417
+5,Main,output,-0.402996585970381,-0.682768964963396,-0.0773921111650583,classical_fd,-0.463599640708131,Replication,-0.366934122991459
+5,Main,productivity,0.172391970428489,0.0121666259704577,0.330347101520334,classical_fd,0.161934647885782,Replication,0.168381917706603
+5,Main,TFP,0.180290642827355,0.0552395473766727,0.28794165361275,classical_fd,0.162261663860482,Replication,0.172847108917338
+5,Main,unemployment,0.307766909417673,0.1839177779408,0.397161379451781,classical_fd,0.333683439962533,Replication,0.283574927184567
+6,Main,consumption,-0.20241137189219,-0.383263924271922,0.00209381003208729,classical_fd,-0.245279370967138,Replication,-0.187291372400684
+6,Main,hours_worked,-0.273948596388388,-0.489310271259247,-0.0114032478035248,classical_fd,-0.309753398374989,Replication,-0.246895841432294
+6,Main,inflation,-0.0282872992637659,-0.0473546124438343,-0.00933920207751021,classical_fd,-0.0268716811345825,Replication,-0.0283746671095522
+6,Main,interest,-0.0882259455373169,-0.120800959441302,-0.0573459858156202,classical_fd,-0.0914036418367682,Replication,-0.0886916553572178
+6,Main,investment,-0.657403349692731,-1.67788599116501,0.510524660924475,classical_fd,-0.817867018525813,Replication,-0.578442979172029
+6,Main,labor_share,-0.175392175640426,-0.251171052511687,-0.0961645132879949,classical_fd,-0.176020737972301,Replication,-0.171959233584404
+6,Main,output,-0.257769606525027,-0.587870809607789,0.0972290688000138,classical_fd,-0.330387310877954,Replication,-0.234858587290665
+6,Main,productivity,0.212850674493715,0.0544891114195706,0.364785695467819,classical_fd,0.206316671378595,Replication,0.212626964139372
+6,Main,TFP,0.124356768266166,0.00851059493411518,0.233179235326653,classical_fd,0.105451260315234,Replication,0.120932098901866
+6,Main,unemployment,0.244022150126319,0.0976963367643696,0.364505375981167,classical_fd,0.271803506121596,Replication,0.222836853210661
+7,Main,consumption,-0.146585656105968,-0.351985696349609,0.0759726268667445,classical_fd,-0.199218418109051,Replication,-0.136902154654243
+7,Main,hours_worked,-0.14857788958087,-0.393421831830472,0.141577281919853,classical_fd,-0.190915708660014,Replication,-0.129180341001658
+7,Main,inflation,-0.0205729666773087,-0.0398596414808507,-0.00117090079066938,classical_fd,-0.018884375891431,Replication,-0.0205141746460398
+7,Main,interest,-0.0704385339983198,-0.101157374463819,-0.0385689564208832,classical_fd,-0.0712538805956568,Replication,-0.0693653850450457
+7,Main,investment,-0.138331972802718,-1.25456623264743,1.09395425929553,classical_fd,-0.305568203795746,Replication,-0.0854429770534591
+7,Main,labor_share,-0.201308932156605,-0.271349444006072,-0.126172529179886,classical_fd,-0.208266918739443,Replication,-0.198546275442964
+7,Main,output,-0.134458298123928,-0.494161239782429,0.260784629372612,classical_fd,-0.208040591309479,Replication,-0.113311837049963
+7,Main,productivity,0.229878330886518,0.072824929535393,0.378891016775048,classical_fd,0.219412145000401,Replication,0.22651592884466
+7,Main,TFP,0.0709396063423167,-0.0419363524290865,0.184054973419222,classical_fd,0.0530716751374011,Replication,0.0719073095032589
+7,Main,unemployment,0.174165198287053,0.00900530382300053,0.316497895529419,classical_fd,0.204887828185171,Replication,0.157017511016792
+8,Main,consumption,-0.0933636819015042,-0.314303819158941,0.140953668071598,classical_fd,-0.155884285664499,Replication,-0.0895895134039172
+8,Main,hours_worked,-0.0413992038064701,-0.303523541350804,0.265714054002769,classical_fd,-0.0869732424167266,Replication,-0.0262928880411347
+8,Main,inflation,-0.0118681698651161,-0.030985839961098,0.00864403836517917,classical_fd,-0.00992744674579769,Replication,-0.011372368232897
+8,Main,interest,-0.0511620680586297,-0.0818685179457101,-0.0181610156686032,classical_fd,-0.0515430999602375,Replication,-0.0502298735004054
+8,Main,investment,0.291085381844092,-0.898119440920616,1.51751239065544,classical_fd,0.0998518356978207,Replication,0.304106391955967
+8,Main,labor_share,-0.205219740036141,-0.273509468880573,-0.13461809567287,classical_fd,-0.218150794736587,Replication,-0.203137755368813
+8,Main,output,-0.0303908052365906,-0.410645054597743,0.380514714252835,classical_fd,-0.107636445963287,Replication,-0.0139033308578239
+8,Main,productivity,0.218228960363314,0.0683270541721413,0.36078939790383,classical_fd,0.20801105903595,Replication,0.216191613861278
+8,Main,TFP,0.0293290562543403,-0.0849121967559012,0.15002306776082,classical_fd,0.0112851814654665,Replication,0.0323059104219263
+8,Main,unemployment,0.108063929615469,-0.0662212515637906,0.264028389561463,classical_fd,0.141892971590678,Replication,0.0951841493704294
+9,Main,consumption,-0.0534173676464927,-0.283761187369203,0.187890790399624,classical_fd,-0.118820128138462,Replication,-0.0492252425290011
+9,Main,hours_worked,0.0502469142758689,-0.231214652006606,0.351194020204394,classical_fd,-0.00397594299088827,Replication,0.0551303634171237
+9,Main,inflation,-0.00297299555723874,-0.0233306500749808,0.0193171428545126,classical_fd,-0.00127793111736991,Replication,-0.00234654928683127
+9,Main,interest,-0.0341714086719423,-0.067316820636543,-0.000420144610090658,classical_fd,-0.0337362210363465,Replication,-0.0328656401631918
+9,Main,investment,0.606365803490875,-0.599131488639366,1.76031597539761,classical_fd,0.386843113688917,Replication,0.57665232301822
+9,Main,labor_share,-0.19609989036374,-0.262811403316127,-0.114932423918624,classical_fd,-0.210229552963247,Replication,-0.190353034126014
+9,Main,output,0.0506803775963168,-0.335345498348441,0.457713671649104,classical_fd,-0.033160754520275,Replication,0.0589953682117077
+9,Main,productivity,0.187497305508657,0.0460108963669906,0.329594807616327,classical_fd,0.179606544259075,Replication,0.188983956013084
+9,Main,TFP,-0.00153888045556316,-0.118916430203039,0.127481193444074,classical_fd,-0.0181774008786513,Replication,0.00449344296546917
+9,Main,unemployment,0.0525155085147343,-0.122097651051096,0.211158299127878,classical_fd,0.087981515826413,Replication,0.0427237168466689

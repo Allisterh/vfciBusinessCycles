@@ -15,7 +15,10 @@ require(ggplot2)
 # Replication of the Bootstrapped VARs
 
 ```{r loadData, include = F}
-comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF_boot.csv"))
+comb_df <- fread(here("./data/replicated_bca_classical_VAR_IRF_boot.csv")) |>
+    mutate(
+        response = factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"), ordered = T)
+    )
 ```
 
 Using a resampled bootstrap method (drawing from VAR errors with replacement), the bootstrapped IRFs look very close to the original BCA IRFs.
@@ -25,15 +28,15 @@ Implementing this makes the replicated IRFs almost exact to the original BCA IRF
 
 ```{r figBootResBA, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap, Bias adjusted", fig.height = 3, out.width = "100%"}
 comb_df |>
-    filter(model == "classical_fd" & version %in% c('original', 'replication')) |>
     ggplot(aes(
         x = h,
         color = version,
         fill = version
     )) +
+    geom_hline(yintercept = 0) +
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     scale_x_continuous(limits = c(0, 20)) +
