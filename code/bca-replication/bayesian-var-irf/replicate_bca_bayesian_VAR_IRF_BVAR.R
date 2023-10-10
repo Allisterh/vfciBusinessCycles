@@ -56,52 +56,52 @@ irf_dftd32 <- tidy(irf(mbvtd32, conf_bands = c(0.16))) |> setDT()
 irf_df <-
     irf_df[impulse == "output", .(
         response,
-        horizon = time,
+        h = time,
         value,
         quantile,
         model = "Replication, Frequency Domain"
     )] |>
-    dcast(response + horizon + model ~ quantile) |>
+    dcast(response + h + model ~ quantile) |>
     setnames(
         old = c("response", "16", "50", "84"),
-        new = c("variable", "lower", "median", "upper")
+        new = c("response", "pctl_16", "median", "pctl_84")
     )
 
 
 irf_dftd4 <-
     irf_dftd4[impulse == "output", .(
         response,
-        horizon = time,
+        h = time,
         value,
         quantile,
         model = "Replication, Time Domain, Horizon 4"
     )] |>
-    dcast(response + horizon + model ~ quantile) |>
+    dcast(response + h + model ~ quantile) |>
     setnames(
         old = c("response", "16", "50", "84"),
-        new = c("variable", "lower", "median", "upper")
+        new = c("response", "pctl_16", "median", "pctl_84")
     )
 
 irf_dftd32 <-
     irf_dftd32[impulse == "output", .(
         response,
-        horizon = time,
+        h = time,
         value,
         quantile,
         model = "Replication, Time Domain, Horizon 32"
     )] |>
-    dcast(response + horizon + model ~ quantile) |>
+    dcast(response + h + model ~ quantile) |>
     setnames(
         old = c("response", "16", "50", "84"),
-        new = c("variable", "lower", "median", "upper")
+        new = c("response", "pctl_16", "median", "pctl_84")
     )
 
 bca_irf_df <- bca_irf_df[, .(
-    variable,
-    horizon,
-    lower = pctl_16,
+    response,
+    h,
+    pctl_16,
     median,
-    upper = pctl_84,
+    pctl_84,
     model
     )]
 
@@ -111,7 +111,7 @@ df <- rbindlist(list(
     irf_df,
     irf_dftd4,
     irf_dftd32
-    ), use.names = TRUE)
+    ), use.names = TRUE, fill = TRUE)
 
 ## Save it out to disk
 fwrite(df, "./data/replicated_bca_bayesian_VAR_IRF.csv")

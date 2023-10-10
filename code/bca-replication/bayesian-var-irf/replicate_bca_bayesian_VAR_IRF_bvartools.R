@@ -28,7 +28,7 @@ priors  <- bca_mn_priors(data, lags = 2, 0.2, 0.5, 2, 10^5)
 v <- bvartools::gen_var(data, p = 2, deterministic = "const")
 
 ## Fit Replication
-## BCA uses 49000 for burnin, but 1000 much faster and very close
+## BCA uses 49000 for burnin, but 5000 much faster and very close
 bv_rep <- estimate_bvartools(v, priors, burnin = 5000)
 
 mbv_rep_fd <- id_fevdfd(bv_rep, tv, bc_freqs, 1000)
@@ -50,8 +50,8 @@ irf_df_rep_td632[, version := "replication"][, model := "bayesian_td632"]
 ## Read in original IRF df (for comparison later)
 bca_irf_df <- fread("./data/bca_original_var_results.csv")[, .(
         model,
-        variable,
-        h = horizon,
+        response,
+        h,
         median,
         lower = pctl_16,
         upper = pctl_84,
@@ -60,10 +60,10 @@ bca_irf_df <- fread("./data/bca_original_var_results.csv")[, .(
 
 ## Combind data.frames
 df <- rbindlist(list(
-    irf_df_rep_fd[shock == "Main"],
-    irf_df_rep_td4[shock == "Main"],
-    irf_df_rep_td32[shock == "Main"],
-    irf_df_rep_td632[shock == "Main"],
+    irf_df_rep_fd[impulse == "Main"],
+    irf_df_rep_td4[impulse == "Main"],
+    irf_df_rep_td32[impulse == "Main"],
+    irf_df_rep_td632[impulse == "Main"],
     bca_irf_df
     ), use.names = TRUE, fill = TRUE)
 

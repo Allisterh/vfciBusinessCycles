@@ -13,20 +13,20 @@ var_names <- tibble(
         ),
     variable = 1:10)
 
-impulse_names <- c("Main", paste0("Orth_", 2:10))
+impulse_names <- var_names$varnames
 
 irf <- fread(
     "./data-raw/bca_original_var_results/benchmark_var_1955_2017_fd_sr_IRFsr.csv",
     colClasses = "numeric"
     ) |> as.matrix() |> c()
 
-irf_df <- data.table(
-    h = rep(1:40, each = 10 * 1000, times = 10),
-    iter = rep(1:1000, each = 10, times = 10 * 40),
-    impulse = rep(impulse_names, each = 10 * 1000 * 40),
-    response = rep(var_names$varnames, times = 10 * 1000 * 40),
-    value = -1 * irf
-    )
+irf_df <- expand.grid(
+    impulse = impulse_names,
+    iter = 1:1000,
+    h = 1:40,
+    response = var_names$varnames
+    ) |> setDT()
+irf_df[, value := irf]
 
 irf_summ <- irf_df[,.(
         median = median(value),
@@ -37,7 +37,7 @@ irf_summ <- irf_df[,.(
     ]
 
 ## Only Keep "unemploymnt shock"
-df <- irf_summ[impulse == "Main"]
+df <- irf_summ[impulse == "unemployment"]
 
 df_bvar_fd <- df[, model := "bayesian_fd"]
 

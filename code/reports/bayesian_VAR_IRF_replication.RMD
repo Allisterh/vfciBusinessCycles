@@ -25,7 +25,7 @@ The shaded area shows the 16th to 84th percentile of that distribution.
 # Frequency Domain Replication - bvartools package
 ```{r loadDatabvartools, include = F}
 df <- fread(here("./data/replicated_bca_bayesian_VAR_IRF_bvartools.csv"))
-df[, variable := factor(variable, levels = c(
+df[, response := factor(response, levels = c(
     "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
 ), ordered = TRUE)]
 ```
@@ -52,7 +52,7 @@ df[(model == "bayesian_fd" & version == "original") | model == "bayesian_fd"] |>
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
@@ -84,7 +84,7 @@ df[(model == "bayesian_td4" & version == "original") | model == "bayesian_td4"] 
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
@@ -116,7 +116,7 @@ df[(model == "bayesian_td632" & version == "original") | model == "bayesian_td32
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
@@ -129,7 +129,7 @@ df[(model == "bayesian_td632" & version == "original") | model == "bayesian_td32
 # Frequency Domain Replication - BVAR package
 ```{r loadData, include = F}
 df <- fread(here("./data/replicated_bca_bayesian_VAR_IRF.csv"))
-df[, variable := factor(variable, levels = c(
+df[, response := factor(response, levels = c(
     "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
 ), ordered = TRUE)]
 df[model == "bayesian_fd", model := "Original BCA, Frequency Domain"]
@@ -140,14 +140,14 @@ df[model == "bayesian_td632", model := "Original BCA, Time Domain, Horizon 6:32 
 ```{r plotRep2BayFD, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Frequency Domain", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Frequency Domain", "Original BCA, Frequency Domain")] |>
     ggplot(aes(
-        x = horizon,
+        x = h,
         color = model,
         fill = model
     )) +
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(
-        ymin = lower,
-        ymax = upper
+        ymin = pctl_16,
+        ymax = pctl_84
         ),
         alpha = 0.3,
         color = NA
@@ -159,7 +159,7 @@ df[model %in% c("Replication, Frequency Domain", "Original BCA, Frequency Domain
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
@@ -178,14 +178,14 @@ The below plot compares a replication of a Bayesian VAR targetting a horizon of 
 ```{r plotRep2BayTD4, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 4", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Time Domain, Horizon 4", "Original BCA, Time Domain, Horizon 4")] |>
     ggplot(aes(
-        x = horizon,
+        x = h,
         color = model,
         fill = model
     )) +
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(
-        ymin = lower,
-        ymax = upper
+        ymin = pctl_16,
+        ymax = pctl_84
         ),
         alpha = 0.3,
         color = NA
@@ -197,7 +197,7 @@ df[model %in% c("Replication, Time Domain, Horizon 4", "Original BCA, Time Domai
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
@@ -212,14 +212,14 @@ Thus in comparing the replication below, I target the 32nd horizon.
 ```{r plotRep2BayTD32, echo = F, warning = F, fig.cap = "Replication of Bayesian VAR targetting Time Domain, Horizon 32", fig.height = 2.5, out.width = "100%"}
 df[model %in% c("Replication, Time Domain, Horizon 32", "Original BCA, Time Domain, Horizon 6:32 (act. 32)")] |>
     ggplot(aes(
-        x = horizon,
+        x = h,
         color = model,
         fill = model
     )) +
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(
-        ymin = lower,
-        ymax = upper
+        ymin = pctl_16,
+        ymax = pctl_84
         ),
         alpha = 0.3,
         color = NA
@@ -231,7 +231,7 @@ df[model %in% c("Replication, Time Domain, Horizon 32", "Original BCA, Time Doma
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     facet_wrap(
-        vars(variable),
+        vars(response),
         scales = "free_y",
         nrow = 2
         ) +
