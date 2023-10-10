@@ -35,7 +35,7 @@ Targetting business cycle frequencies in frequency domain.
 
 ```{r figVARfd, echo = F, warning = F, fig.cap="Comparison of Replicated IRF to Original, Resample Bootstrap, Bias adjusted", fig.height = 3, out.width = "100%"}
 class_df |>
-    filter(model == "classical_fd" & version != "original") |>
+    filter(model == "classical_fd" & version != "Original BCA") |>
     ggplot(aes(
         x = h,
         color = version,
@@ -44,7 +44,7 @@ class_df |>
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     labs(x = "Horizon", y = NULL) +
@@ -67,7 +67,7 @@ bay_df |>
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     labs(x = "Horizon", y = NULL) +
@@ -88,7 +88,7 @@ bay_df |>
     geom_hline(yintercept = 0) +
     geom_ribbon(aes(ymin = lower, ymax = upper), color = NA, alpha = 0.3) +
     geom_line(aes(y = median)) +
-    facet_wrap(vars(variable), nrow = 2, scales = "free_y") +
+    facet_wrap(vars(response), nrow = 2, scales = "free_y") +
     scale_color_manual(values = c("firebrick", "steelblue")) +
     scale_fill_manual(values = c("firebrick", "steelblue")) +
     labs(x = "Horizon", y = NULL) +
