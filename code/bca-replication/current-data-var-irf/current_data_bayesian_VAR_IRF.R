@@ -46,9 +46,9 @@ irf_df_rep_td632[, version := "current"][, model := "bayesian_td632"]
 
 ## Combind data.frames
 df <- rbindlist(list(
-    irf_df_rep_fd[shock == "Main"],
-    irf_df_rep_td4[shock == "Main"],
-    irf_df_rep_td632[shock == "Main"]
+    irf_df_rep_fd[impulse == "Main"],
+    irf_df_rep_td4[impulse == "Main"],
+    irf_df_rep_td632[impulse == "Main"]
     ), use.names = TRUE, fill = TRUE)
 
 

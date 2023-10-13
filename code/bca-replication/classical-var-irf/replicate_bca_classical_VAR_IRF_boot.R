@@ -24,7 +24,7 @@ v <- VAR(x, p = 2, type = "const")
 mv <- id_fevdfd(v, target = target_var, freqs = bc_freqs)
 
 ## Get the IRF
-mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40)
+mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40)$irf
 
 ## Bootstraps
 boot_df_resample_ba <-
@@ -32,33 +32,24 @@ boot_df_resample_ba <-
     mv, id_fevdfd, nboot = 1000, n_ahead = 40,
     method = "resample", design = "recursive", bias_adjust = TRUE,
     target = "unemployment", freqs = bc_freqs
-    )$IRF_df  |>
-    filter(shock == "Main") |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "replication")
+    )$IRF_df |>
+    filter(impulse == "Main") |>
+    mutate(
+        model = "classical_fd",
+        version = "Replication"
+    )
 
 ## Some data wrangling to get a clean dataframe
 ## with original and replicated IRFs
 bca_irf_df <- bca_irf_df |>
     filter(model == "classical_fd") |>
-    mutate(version = "original") |>
-    rename(h = "horizon") |>
-    mutate(h = h) |>
+    mutate(version = "Original BCA") |>
     rename(lower = "pctl_16") |>
-    rename(upper = "pctl_84") |>
-    mutate(shock = "Main")
+    rename(upper = "pctl_84")
 
-mv_irf_df <- mv_irf[[1]] |>
-    as_tibble() |>
-    rename(h = "V1") |>
-    tidyr::pivot_longer(-h) |>
-    mutate(variable = stringr::str_extract(name, "(?<=%->%).*$")) |>
-    mutate(shock = stringr::str_extract(name, "(?<= ).*(?= )")) |>
-    dplyr::select(!name) |>
-    rename(varirf = "value")
-
+## Merge on VAR irf and bootstrap IRFs
 irf_df <-
-    merge(boot_df_resample_ba, mv_irf_df, by = c("h", "variable", "shock"))
+    merge(boot_df_resample_ba, mv_irf, by = c("h", "impulse", "response"))
 
 comb_df <- rbindlist(list(
     bca_irf_df,

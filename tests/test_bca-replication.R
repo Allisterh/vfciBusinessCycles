@@ -4,16 +4,16 @@ test_that("Replicated Classical VAR IRFs", {
 
   df <-
     fread(here::here("./data/replicated_bca_classical_VAR_IRF.csv")) |>
-    dplyr::select(h, variable, value, model) |>
-    tidyr::pivot_wider(names_from = model, values_from = value) |>
+    dplyr::select(h, response, irf, version) |>
+    tidyr::pivot_wider(names_from = version, values_from = irf) |>
     setDT()
 
 
-  for (var in unique(df$variable)) {
+  for (var in unique(df$response)) {
 
   expect_equal(
-    df[variable == var, Replication],
-    df[variable == var, classical_fd],
+    df[response == var, Replication],
+    df[response == var,  `Original BCA`],
     label = paste("Classical FD", var),
     tolerance = 0.075)
 
@@ -28,35 +28,35 @@ test_that("Replicated Bayesian VAR IRFs", {
 
   df <-
     fread(here::here("./data/replicated_bca_bayesian_VAR_IRF_bvartools.csv")) |>
-    dplyr::select(model, version, h, variable, median)
-  setorder(df, model, version, h, variable)
+    dplyr::select(model, version, h, response, median)
+  setorder(df, model, version, h, response)
 
   for (var in unique(df$variable)) {
 
     expect_equal(
-      df[variable == var & model == "bayesian_fd" & version == "replication", median],
-      df[variable == var & model == "bayesian_fd" & version == "original", median],
+      df[response == var & model == "bayesian_fd" & version == "replication", median],
+      df[response == var & model == "bayesian_fd" & version == "original", median],
       label = paste("Bayesian FD", var),
       tolerance = 0.1
     ) # Diff 0.0355
 
     expect_equal(
-      df[variable == var & model == "bayesian_td4" & version == "replication", median],
-      df[variable == var & model == "bayesian_td4" & version == "original", median],
+      df[response == var & model == "bayesian_td4" & version == "replication", median],
+      df[response == var & model == "bayesian_td4" & version == "original", median],
       label = paste("Bayesian TD4", var),
       tolerance = 0.125
     ) # Diff 0.044
 
     expect_equal(
-      df[variable == var & model == "bayesian_td32" & version == "replication", median],
-      df[variable == var & model == "bayesian_td632" & version == "original", median],
+      df[response == var & model == "bayesian_td32" & version == "replication", median],
+      df[response == var & model == "bayesian_td632" & version == "original", median],
       label = paste("Bayesian TD32", var),
       tolerance = 0.1
     ) # Diff 0.0427
 
     expect_equal(
-        df[variable == var & model == "bayesian_td632" & version == "replication", median],
-        df[variable == var & model == "bayesian_td632" & version == "original", median],
+        df[response == var & model == "bayesian_td632" & version == "replication", median],
+        df[response == var & model == "bayesian_td632" & version == "original", median],
         label = paste("Bayesian TD632", var),
         tolerance = 0.1
     ) # Diff 0.0462

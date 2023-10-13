@@ -20,7 +20,7 @@ v <- VAR(x, p = 2, type = "const")
 mv <- id_fevdfd(v, target = target_var, freqs = bc_freqs)
 
 ## Get the IRF
-mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40)
+mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40)$irf
 
 ## Bootstraps
 boot_df_resample_ba <-
@@ -31,23 +31,15 @@ boot_df_resample_ba <-
         n_ahead = 40,
         method = "resample", design = "recursive", bias_adjust = TRUE,
         target = "unemployment", freqs = bc_freqs
-    )$IRF_df  |>
-    filter(shock == "Main") |>
-    mutate(model = "classical_fd") |>
-    mutate(version = "current")
+    )$IRF_df |>
+    filter(impulse == "Main") |>
+    mutate(
+        model = "classical_fd",
+        version = "Current"
+    )
 
-## Some data wrangling to get a clean dataframe
-## with original and replicated IRFs
-mv_irf_df <- mv_irf[[1]] |>
-    as_tibble() |>
-    rename(h = "V1") |>
-    tidyr::pivot_longer(-h) |>
-    mutate(variable = stringr::str_extract(name, "(?<=%->%).*$")) |>
-    mutate(shock = stringr::str_extract(name, "(?<= ).*(?= )")) |>
-    dplyr::select(!name) |>
-    rename(varirf = "value")
 
 comb_df <-
-    merge(boot_df_resample_ba, mv_irf_df, by = c("h", "variable", "shock"))
+    merge(boot_df_resample_ba, mv_irf, by = c("h", "impulse", "response"))
 
 fwrite(comb_df, "./data/current_bca_classical_VAR_IRF_boot.csv")
