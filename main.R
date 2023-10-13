@@ -10,6 +10,8 @@ renv::restore()
 source("./code/clean-data-raw/bca_original_var_results.R")
 source("./code/clean-data-raw/bca_replication_data.R")
 source("./code/clean-data-raw/bca_current_data.R")
+
+source("./code/clean-data-raw/vfci_data.R")
 source("./code/clean-data-raw/vfciBC_data.R")
 
 ## BCA Replication
