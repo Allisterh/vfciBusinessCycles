@@ -1,0 +1,230 @@
+---
+title: "Historical Shock Contributions"
+author: Matthew DeHaven
+date: OCtober 16, 2023
+output: 
+    pdf_document
+---
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+```
+
+# Fit Models
+
+```{r fitModels, include = T}
+vfciBCdata <- fread(here("./data/vfciBC_data.csv")) |>
+    filter(date <= as.Date("2017-01-01"))
+
+vfciBCdata <- vfciBCdata[, .(date, output, investment, consumption, hours_worked,
+    unemployment, labor_share, interest, inflation, productivity, TFP, vfci)]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+p = 2
+
+## Fit the VAR
+v <- VAR(vfciBCdata[, -"date"], p = p, type = "const")
+
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs)
+mv_u <- id_fevdfd(v, "unemployment", bc_freqs)
+```
+
+# Run Historical decomposition
+
+```{r runHD, include = T}
+hd_vfci <- hd(mv_vfci)$hd |> setDT() |>
+    mutate(date = rep(vfciBCdata$date[-c(1:p)], mv_vfci$K * mv_vfci$K)) |>
+    mutate(model = "vfci")
+
+hd_u <- hd(mv_u)$hd |> setDT() |>
+    mutate(date = rep(vfciBCdata$date[-c(1:p)], mv_u$K * mv_u$K)) |>
+    mutate(model = "u")
+```
+
+# Run Historical Shocks
+
+```{r runHS, include = T}
+hs_vfci <- hs(mv_vfci, cumulative = TRUE)$hs |> setDT() |>
+    mutate(date = rep(vfciBCdata$date[-c(1:p)], mv_vfci$K)) |>
+    mutate(model = "vfci")
+
+hs_u <- hs(mv_u, cumulative = TRUE)$hs |> setDT() |>
+    mutate(date = rep(vfciBCdata$date[-c(1:p)], mv_u$K)) |>
+    mutate(model = "u")
+```
+
+
+```{r getRecessions, include = F}
+require(quantmod)
+getSymbols("USREC", src = "FRED")
+
+start <- index(USREC[which(diff(USREC$USREC)==1)])
+end   <- index(USREC[which(diff(USREC$USREC)==-1)-1])
+
+rec <- data.frame(start = start, end = end[-1])
+rec <- subset(rec, start >= as.Date("1959-01-01"))
+rec <- subset(rec, end <= as.Date("2018-01-01"))
+
+```
+
+```{r plotHD, echo = F, include = T, fig.cap=" Historical Contribution of Main Shock", fig.height = 10, out.width = "100%"}
+plot_data <-
+    rbind(hd_vfci, hd_u) |>
+    filter(impulse == "Main")
+
+p <- 
+    ggplot() +
+    geom_rect(
+        data = rec,
+        aes(
+            xmin = start,
+            xmax = end,
+            ymin = -Inf,
+            ymax = +Inf
+        ),
+        fill = "gray80",
+        color = NA,
+        alpha = 0.5
+    ) +
+    geom_hline(yintercept = 0, color = "gray50") +
+    geom_line(
+        data = plot_data,
+        aes(
+            x = date,
+            y = hd,
+            color = model
+        )
+    ) +
+    facet_wrap(
+        vars(response),
+        ncol = 1,
+        scales = "free_y"
+    ) +
+    labs(
+        x = NULL,
+        y = "Historical Contribution of 'Main' Shock"
+    ) +
+    scale_x_date(
+        breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+        labels = seq(1960, 2020, by = 5),
+        expand = c(0.01,0.01)
+    ) +
+    theme_bw(base_size = 8) +
+    theme(
+        strip.background = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = "top"
+    )
+
+p
+```
+
+```{r plotHD_select, echo = F, include = T, fig.cap=" Historical Contribution of Main Shock, select responses", fig.height = 10, out.width = "100%"}
+plot_data <-
+    rbind(hd_vfci, hd_u) |>
+    filter(impulse == "Main") |>
+    filter(response %in% c("vfci", "unemployment", "output"))
+
+p <- 
+    ggplot() +
+    geom_rect(
+        data = rec,
+        aes(
+            xmin = start,
+            xmax = end,
+            ymin = -Inf,
+            ymax = +Inf
+        ),
+        fill = "gray80",
+        color = NA,
+        alpha = 0.5
+    ) +
+    geom_hline(yintercept = 0, color = "gray50") +
+    geom_line(
+        data = plot_data,
+        aes(
+            x = date,
+            y = hd,
+            color = model
+        )
+    ) +
+    facet_wrap(
+        vars(response),
+        ncol = 1,
+        scales = "free_y"
+    ) +
+    labs(
+        x = NULL,
+        y = "Historical Contribution of 'Main' Shock"
+    ) +
+    scale_x_date(
+        breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+        labels = seq(1960, 2020, by = 5),
+        expand = c(0.01,0.01)
+    ) +
+    theme_bw(base_size = 8) +
+    theme(
+        strip.background = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = "top"
+    )
+
+p
+```
+
+
+```{r plotHS, echo = F, include = T, fig.cap="Cumulative Historical Main Shock", fig.height = 4, out.width = "100%"}
+plot_data <-
+    rbind(hs_vfci, hs_u) |>
+    filter(impulse == "Main")
+
+p <-
+    ggplot() +
+    geom_rect(
+        data = rec,
+        aes(
+            xmin = start,
+            xmax = end,
+            ymin = -Inf,
+            ymax = +Inf
+        ),
+        fill = "gray80",
+        color = NA,
+        alpha = 0.5
+    ) +
+    geom_hline(yintercept = 0, color = "gray50") +
+    geom_line(
+        data = plot_data,
+        aes(
+            x = date,
+            y = hs,
+            color = model
+        )
+    ) +
+    labs(
+        x = NULL,
+        y = "Cumulative Historical Main Shock"
+    ) +
+    scale_x_date(
+        breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+        labels = seq(1960, 2020, by = 5),
+        expand = c(0.01,0.01)
+    ) +
+    theme_bw(base_size = 8) +
+    theme(
+        strip.background = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = "top"
+    )
+
+p
+```
