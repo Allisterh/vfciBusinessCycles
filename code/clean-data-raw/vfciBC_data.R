@@ -5,8 +5,8 @@ require(data.table)
 require(dplyr)
 require(tibble)
 
-load("./data-raw/variables.Rdata")
-setDT(variables)
+variables <- readRDS("./data/vfci_variables.RDS") |>
+  setDT(variables)
 
 bca_df <- fread("./data-raw/bca_current_data.csv")
 
