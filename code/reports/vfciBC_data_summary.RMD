@@ -10,7 +10,7 @@ require(ggplot2)
 ```
 
 ```{r loadData, include = F}
-df <- fread(here("./data/vfciBC_data.csv"))
+df <- fread(here("./data/vfciBC_data.csv"))[,.(date, output, investment, consumption, hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP, vfci, vfci_fgr1gdpc1, vfci_fgr30gdpc1, mu)]
 ```
 
 ```{r figSummary, echo = F, warning = F, fig.height = 7.5, out.width = "100%"}
@@ -24,6 +24,10 @@ df |>
     facet_wrap(vars(variable), ncol = 2, scales = "free_y") +
     labs(x = NULL, y = NULL) +
     theme_bw(base_size = 8) +
+    scale_x_date(
+        breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+        labels = seq(1960, 2020, by = 5)
+    )+
     theme(
         legend.position = "bottom",
         strip.background = element_blank(),

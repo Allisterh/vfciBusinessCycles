@@ -35,7 +35,7 @@ rmarkdown::render("./code/reports/current_VAR_IRF.RMD", "pdf_document", "Current
 #source("./code/vfci-bc/classical_vfcibc_VAR_IRF.R")
 
 ## VFCI BC reports
-#rmarkdown::render("./code/reports/vfciBC_data_summary.RMD", "pdf_document", "VFCIBusinessCycleDataSummary.pdf", "./reports/")
+rmarkdown::render("./code/reports/vfciBC_data_summary.RMD", "pdf_document", "VFCIBusinessCycleDataSummary.pdf", "./reports/")
 #rmarkdown::render("./code/reports/vfciBC_classical_VAR_IRF.RMD", "pdf_document", "VFCIBusinessCycleVARIRFs.pdf", "./reports/")
 
 ## Run tests
