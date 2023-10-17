@@ -8,7 +8,9 @@ require(fevdid)
 
 ## Pull the correct vintage of the BCA data
 vfciBCdata <- fread("./data/vfciBC_data.csv") |>
-    filter(date <= as.Date("2017-01-01"))
+    filter(date <= as.Date("2017-01-01")) |>
+    dplyr::select(date, output, investment, consumption, hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP, vfci)
+
 
 ## Fit the VAR
 v <- VAR(vfciBCdata[, -"date"], p = 2, type = "const")
@@ -27,6 +29,7 @@ weight_df <- data.table(
 
 ## Are the original two VARs orthogonal?
 mv$Q[, 1] %*% mv_v$Q[, 1]
+mv$Q[, 1] %*% new_weights
 
 ##  Change the first shock in the new model to the residual new weights
 mv_new <- mv

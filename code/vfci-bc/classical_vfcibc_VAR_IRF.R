@@ -8,8 +8,8 @@ require(fevdid)
 
 ## Pull the correct vintage of the BCA data
 vfciBCdata <- fread("./data/vfciBC_data.csv") |>
-    filter(date <= as.Date("2017-01-01"))
-vfciBCdata
+    filter(date <= as.Date("2017-01-01")) |>
+    dplyr::select(date, output, investment, consumption, hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP, vfci)
 
 ## Target the BC frequency and umemployment variable
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
@@ -26,15 +26,99 @@ grid <- expand.grid(
     period_h = seq(4, 200, by = 2)
     ) |> setDT()
 
+## Trim the grid to a slightly smaller set
 grid[, diff := period_h - period_l]
 grid <- grid[diff %between% c(6, 50)] ## only keep some periods
 grid <- grid[period_l < 40 | diff > 20] ## Drop short ranges for long periods
 grid <- grid[period_l < 40 | period_l %% 10 == 0]
+grid[, diff := NULL]
 
-grid[, freq_l := 2 * pi / period_h]
-grid[, freq_h := 2 * pi / period_l]
+##
+grid1 <- copy(grid)
+grid2 <- copy(grid)
+names(grid1) <- paste0(names(grid), ".x")
+names(grid2) <- paste0(names(grid), ".y")
+cross_grid <- rbindlist(lapply(seq_len(nrow(grid)), function(i){
+    cbind(grid1, grid2[i, ])
+}))
 
+## Filter Cross grid to compare only with U0632
+cross_grid <- cross_grid[target.x == "unemployment" & sign.x == "pos" & period_l.x == 6 & period_h.x == 32]
 
+dist_metrics <- rbindlist(lapply(seq_len(nrow(cross_grid)), function(i){
+    if(i %% 1000 == 0) print(i)
+    mv.x <- id_fevdfd(
+        v,
+        target = cross_grid[[i, "target.x"]],
+        freqs = 2 * pi / c(cross_grid[[i, "period_l.x"]], cross_grid[[i, "period_h.x"]]),
+        sign = cross_grid[[i, "sign.x"]],
+        grid_size = 2000
+        )
+    mv.y <- id_fevdfd(
+        v,
+        target = cross_grid[[i, "target.y"]],
+        freqs = 2 * pi / c(cross_grid[[i, "period_l.y"]], cross_grid[[i, "period_h.y"]]),
+        sign = cross_grid[[i, "sign.y"]],
+        grid_size = 2000
+        )
+
+    irf.x <- vars::irf(mv.x)$irf[, "irf"]
+    irf.y <- vars::irf(mv.y)$irf[, "irf"]
+
+    orth_dist <- (mv.x$Q[, 1] %*% mv.y$Q[, 1])[1]
+    irf_rmse <- sqrt(mean((irf.x - irf.y)^2))
+
+    cbind(
+        cross_grid[i, ],
+        orth_dist = orth_dist,
+        irf_rmse = irf_rmse
+    )
+}))
+
+## Chart Distances
+require(gghighlight)
+dist_metrics |>
+    filter(target.y == "vfci") |>
+    mutate(id = paste0(target.y, period_l.y, period_h.y)) |>
+    ggplot(aes(
+        x = irf_rmse,
+        y = orth_dist,
+        shape = sign.y
+    )) +
+    geom_point(size = 3) +
+    gghighlight(
+        target.y == "unemployment" & sign.y == "pos" & period_l.y == 6 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 6 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 20 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "pos" & period_l.y == 18 & period_h.y == 26 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 50 & period_h.y == 72,
+        label_key = id
+        ) +
+    theme_bw()
+
+## Targeting unemployment
+dist_metrics |>
+    filter(target.y == "unemployment") |>
+    mutate(id = paste0(target.y, period_l.y, period_h.y)) |>
+    ggplot(aes(
+        x = irf_rmse,
+        y = orth_dist,
+        shape = sign.y
+    )) +
+    geom_point(size = 3) +
+    gghighlight(
+        target.y == "unemployment" & sign.y == "pos" & period_l.y == 6 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 6 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 20 & period_h.y == 32 |
+        target.y == "vfci" & sign.y == "pos" & period_l.y == 18 & period_h.y == 26 |
+        target.y == "vfci" & sign.y == "neg" & period_l.y == 50 & period_h.y == 72,
+        label_key = id
+        ) +
+    theme_bw()
+
+dist_metrics[target.y == "unemployment", ] |> arrange(orth_dist)
+
+u0632_i <- which(grid$target == "unemployment" & grid$period_l == 6 & grid$period_h == 32 & grid$sign == "pos")
 
 ## Actual identification of the shocks, store in a big list
 mv_list <- lapply(seq_len(nrow(grid)), function(i) {
@@ -47,9 +131,15 @@ mv_list <- lapply(seq_len(nrow(grid)), function(i) {
         )
     })
 
+## Test orthogonality of all shocks with BC Freq
+mv_list_orth_u0632 <- lapply(seq_along(mv_list), function(i) {
+    dist <- mv_list[[i]]$Q[, 1] %*% mv_list[[u0632_i]]$Q[, 1]
+    dist[[1]]
+    })
+
 ## IRFs
 irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
-    irf_df <- vars::irf(mv_list[[i]], impulse = "Main", n.ahead = 40) |>
+    irf_df <- vars::irf(mv_list[[i]], impulse = "Main", n.ahead = 40)$irf |>
         setDT() |>
         cbind(grid[i, ])
     }))
@@ -81,7 +171,7 @@ hist_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
 
 ## FEVDFD
 fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
-    fevdfd <- fevdfd(mv_list[[i]])
+    fevdfd <- fevdfd(mv_list[[i]])$fevdfd
     fevdfd_df  <- rbindlist(lapply(names(fevdfd), function(x) {
         fevdfd_df <- fevdfd[[x]] |> setDT()
         fevdfd_df <- fevdfd_df[, .(f, fevdfd = Main)]
@@ -120,7 +210,7 @@ vfci_irf <- irf_df[target == "vfci", .(
     vfci_sign = sign,
      vfci_period_l = period_l,
      vfci_period_h = period_h,
-     vfci_irf = irfß
+     vfci_irf = irf
      )]
 u_irf <- irf_df[target == "unemployment", .(
     h,
@@ -156,6 +246,10 @@ for (i in seq_len(nrow(u_grid))) {
 }
 
 results_df <- rbindlist(results)
+
+## Merge on the orthogonality dist
+results_df[u_sign == "pos" & u_period_l == 6 & u_period_h == 32]
+
 
 ## Save to Disk
 fwrite(irf_df, "./data/classical_vfcibc_VAR_IRF.csv")
