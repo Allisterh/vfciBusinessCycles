@@ -36,18 +36,14 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
   # h$vol_eq$exp_fitted <- attr(h$residuals, "std") # fitted values, same as Stata's `predict, sigma`
   
   # return vfci, mu, time series, and hetreg results
+  # x[seq(nrow(data))] is a way to pad NAs at the end of x to the length of data
   if (prcomp) {
     out <- list(
-      ts = dplyr::mutate(
-        tibble::tibble(
-          qpcR:::cbind.na(
-            qtr = as.Date(variables$qtr),
-            vfci = log(attr(h$residuals, "std")),
-            mu = unname(h$fitted),
-            h$pc_ts
-          )
-        ),
-        qtr = tsibble::yearquarter(qtr)
+      ts = tibble::tibble(
+        qtr = data$qtr,
+        vfci = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        mu = unname(h$fitted)[seq(nrow(data))],
+        h$pc_ts
       ),
       hetreg = h,
       call = Call
@@ -55,15 +51,10 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
   }
   else {
     out <- list(
-      ts = dplyr::mutate( 
-        tibble::tibble(
-          qpcR:::cbind.na(
-            qtr = as.Date(variables$qtr),
-            vfci = log(attr(h$residuals, "std")),
-            mu = unname(h$fitted)
-          )
-        ),
-        qtr = tsibble::yearquarter(qtr)
+      ts = tibble::tibble(
+        qtr = data$qtr,
+        vfci = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        mu = unname(h$fitted)[seq(nrow(data))]
       ),
       hetreg=h,
       call = Call

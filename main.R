@@ -10,6 +10,8 @@ renv::restore()
 source("./code/clean-data-raw/bca_original_var_results.R")
 source("./code/clean-data-raw/bca_replication_data.R")
 source("./code/clean-data-raw/bca_current_data.R")
+
+source("./code/clean-data-raw/vfci_data.R")
 source("./code/clean-data-raw/vfciBC_data.R")
 
 ## BCA Replication
@@ -37,6 +39,7 @@ rmarkdown::render("./code/reports/current_VAR_IRF.RMD", "pdf_document", "Current
 ## VFCI BC reports
 rmarkdown::render("./code/reports/vfciBC_data_summary.RMD", "pdf_document", "VFCIBusinessCycleDataSummary.pdf", "./reports/")
 #rmarkdown::render("./code/reports/vfciBC_classical_VAR_IRF.RMD", "pdf_document", "VFCIBusinessCycleVARIRFs.pdf", "./reports/")
+rmarkdown::render("./code/reports/historical_shocks_decomposition.RMD", "pdf_document", "HistoricalShocksAndDecompositions.pdf", "./reports/")
 
 ## Run tests
 testthat::test_dir("tests")

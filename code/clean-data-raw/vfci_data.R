@@ -240,7 +240,7 @@ vfci_ts <- tibble::tibble(
   !!!purrr::map(results, \(x) x$ts$vfci),
   .name_repair = ~ unlist(names_vfci_ts)
 ) %>%
-  tibble::add_column(qtr = zoo::as.Date(variables$qtr), .before = 1)
+  tibble::add_column(qtr = results[[1]]$ts$qtr, .before = 1)
 
 # conditional mean
 names_mu_ts <- purrr::map(names(results), \(x) paste0("mu_", x))
@@ -248,7 +248,7 @@ mu_ts <- tibble::tibble(
   !!!purrr::map(results, \(x) x$ts$mu),
   .name_repair = ~ unlist(names_mu_ts)
 ) %>%
-  tibble::add_column(qtr = zoo::as.Date(variables$qtr), .before = 1)
+  tibble::add_column(qtr = results[[1]]$ts$qtr, .before = 1)
 
 # merge
 variables <- purrr::reduce(
@@ -271,5 +271,4 @@ variables <- variables %>%
     "baa10ym", "lior3m", "tedrate", "vixcls"
   ))
 
-# overwrite "data-raw/variables.RData"
-save(variables, file = "data-raw/variables.RData")
+saveRDS(variables, "./data/vfci_variables.RDS")
