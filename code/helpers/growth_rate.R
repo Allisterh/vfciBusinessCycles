@@ -19,7 +19,7 @@ growth_rate <- function(
                decimal = gr,
                percent = 100 * gr
   )
-  gr <- if(future_growth) dplyr::lead(gr,delta) else gr
+  gr <- if(future_growth) dplyr::lead(gr,delta+1) else gr
   return(gr)
 }
 

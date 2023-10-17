@@ -13,7 +13,7 @@ get_pc <- function(
   prcomp_tidy <- function(x,...){ 
     #preferred method is use prcomp, using princomp to match stata
     if (match_stata){
-      princomp(x, cor = cor ,scores = scores, ...) #covmat = MASS::cov.rob(x)  
+      princomp(x, cor = cor , scores = scores, ...) #covmat = MASS::cov.rob(x)  
     }
     else{
       prcomp(x, center = center, scale. = scale., ...) 

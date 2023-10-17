@@ -15,14 +15,14 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
       pcs <- pca$x # time series of principal components in princomp
     }
     colnames(pcs) <- paste0("pc", 1:ncol(pcs))
-    data_pcs <- dplyr::bind_cols(data,tibble::as_tibble(pcs),.name_repair = c("minimal"))
+    data_pcs <- dplyr::bind_cols(data, tibble::as_tibble(pcs), .name_repair = c("minimal"))
     x_pcs <- paste0("pc", 1:n_prcomp)
-    h <- hetreg(data_pcs,y,x_pcs, ..., gls_opt = gls_opt)
+    h <- hetreg(data_pcs, y, x_pcs, ..., gls_opt = gls_opt)
     h$pc <- pca
     h$pc_ts <- data_pcs %>% dplyr::select(dplyr::all_of(colnames(pcs)) )
   }
   else {
-    h <- hetreg(data,y,x,het, ..., gls_opt = gls_opt)
+    h <- hetreg(data, y, x, het, ..., gls_opt = gls_opt)
   }
   
   # # mean equation
