@@ -1,0 +1,346 @@
+---
+title: "VFCI Business Cycle VARs for various VFCI series"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+require(stringr)
+```
+
+```{r fitModels, include = F}
+vfciBCdata <- fread(here("./data/vfciBC_data.csv")) |>
+    filter(date <= as.Date("2017-01-01"))
+
+vfcis <- names(vfciBCdata)[str_which(names(vfciBCdata), "^vfci")]
+
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+p = 2
+
+## Fit a U0632
+data <- vfciBCdata[, c("date", "output", "investment", "consumption",
+  "hours_worked", "unemployment", "labor_share", "interest", "inflation",
+  "productivity", "TFP", "vfci"), with = FALSE]
+
+v <- VAR(na.omit(data[, -"date"]), p = p, type = "const")
+
+u0632 <- id_fevdfd(v, "unemployment", bc_freqs, sign = "pos")
+irf_u0632 <- vars::irf(u0632, impulse = "Main", n.ahead = 40)$irf |> setDT()
+irf_u0632[, response := factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest", "vfci"), ordered = T)]
+
+
+## Fit all the VFCI targeting ones
+v_l <- lapply(vfcis, function(vfci_name){
+  data <- vfciBCdata[, c("date", "output", "investment", "consumption",
+  "hours_worked", "unemployment", "labor_share", "interest", "inflation",
+  "productivity", "TFP", vfci_name), with = FALSE]
+
+  v <- VAR(na.omit(data[, -"date"]), p = p, type = "const")
+})
+
+mv_l <- lapply(seq_along(vfcis), function(i){
+  id_fevdfd(v_l[[i]], vfcis[[i]], bc_freqs, sign = "neg")
+})
+mvu_l <- lapply(seq_along(vfcis), function(i){
+  id_fevdfd(v_l[[i]], "unemployment", bc_freqs, sign = "pos")
+})
+
+## Get IRFS for vfci target
+irf_l <- lapply(mv_l, vars::irf, n.ahead = 40, impulse = "Main")
+irf_l <- lapply(seq_along(vfcis), function(i) {
+  irf_l[[i]]$irf$vfci_name <- vfcis[[i]]
+  irf_l[[i]]$irf
+})
+
+irf_df <- rbindlist(irf_l)
+irf_df[, vfci_target := str_remove(str_extract(vfci_name, "(?<=fgr).*$"), "^\\d*")]
+irf_df[, fgr := as.numeric(str_extract(vfci_name, "(?<=fgr)\\d{1,2}"))]
+irf_df[vfci_name == "vfci", `:=`(vfci_target = "gdpc1", fgr = 1)]
+irf_df[str_detect(response, "vfci"), response := "vfci"]
+irf_df[, response := factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest", "vfci"), ordered = T)]
+
+## Get IRFs for u targets
+irfu_l <- lapply(mvu_l, vars::irf, n.ahead = 40, impulse = "Main")
+irfu_l <- lapply(seq_along(vfcis), function(i) {
+  irfu_l[[i]]$irf$vfci_name <- vfcis[[i]]
+  irfu_l[[i]]$irf
+})
+
+irfu_df <- rbindlist(irfu_l)
+irfu_df[, vfci_target := str_remove(str_extract(vfci_name, "(?<=fgr).*$"), "^\\d*")]
+irfu_df[, fgr := as.numeric(str_extract(vfci_name, "(?<=fgr)\\d{1,2}"))]
+irfu_df[vfci_name == "vfci", `:=`(vfci_target = "gdpc1", fgr = 1)]
+irfu_df[str_detect(response, "vfci"), response := "vfci"]
+irfu_df[, response := factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest", "vfci"), ordered = T)]
+
+```
+
+```{r pGDPC1, echo = F, warning = F, fig.height = 3, out.width = "100%", fig.cap = "VFCI Target GDPC1, all forward growth rates"}
+plot_data <- irf_df |>
+  filter(vfci_target == "gdpc1")
+  
+ggplot() +
+  geom_hline(yintercept = 0) +
+    geom_line(
+    data = irf_u0632,
+    aes(
+      x = h,
+      y = irf,
+      linewidth = "u0632"
+    ),
+      color = "firebrick"
+  ) +
+  geom_line(
+    data = plot_data,
+    aes(
+      x = h,
+      y = irf,
+      color = fgr,
+      group = fgr
+    )) +
+  labs(x = NULL, y = NULL, linewidth = NULL) +
+  facet_wrap(
+    vars(response),
+    nrow = 2,
+    scales = "free_y"
+  ) +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = c(0.9, 0.2),
+    legend.key.width = unit(10, "pt"),
+    legend.key.height = unit(7, "pt")
+  )
+
+```
+
+```{r ppcecc96, echo = F, warning = F, fig.height = 3, out.width = "100%", fig.cap = "VFCI Target pcecc96, all forward growth rates"}
+plot_data <- irf_df |>
+  filter(vfci_target == "pcecc96")
+  
+ggplot() +
+  geom_hline(yintercept = 0) +
+    geom_line(
+    data = irf_u0632,
+    aes(
+      x = h,
+      y = irf,
+      linewidth = "u0632"
+    ),
+      color = "firebrick"
+  ) +
+  geom_line(
+    data = plot_data,
+    aes(
+      x = h,
+      y = irf,
+      color = fgr,
+      group = fgr
+    )) +
+  labs(x = NULL, y = NULL, linewidth = NULL) +
+  facet_wrap(
+    vars(response),
+    nrow = 2,
+    scales = "free_y"
+  ) +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = c(0.9, 0.2),
+    legend.key.width = unit(10, "pt"),
+    legend.key.height = unit(7, "pt")
+    )
+
+```
+
+\newpage
+
+```{r pu0632vfcis, echo = F, warning = F, fig.height = 3, out.width = "100%", fig.cap = "Unemployment0632 target, various vfci measures in VAR"}
+plot_data <- irfu_df
+
+ggplot() +
+  geom_hline(yintercept = 0) +
+    geom_line(
+    data = irf_u0632,
+    aes(
+      x = h,
+      y = irf,
+      linewidth = "u0632"
+    ),
+      color = "black"
+  ) +
+  geom_line(
+    data = plot_data,
+    aes(
+      x = h,
+      y = irf,
+      alpha = fgr,
+      color = vfci_target,
+      group = vfci_name
+    )) +
+  labs(x = NULL, y = NULL, linewidth = NULL) +
+  facet_wrap(
+    vars(response),
+    nrow = 2,
+    scales = "free_y"
+  ) +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = c(0.9, 0.2),
+    legend.key.width = unit(10, "pt"),
+    legend.key.height = unit(7, "pt")
+    )
+
+```
+
+\newpage
+# Calculate Distance Metrics
+
+```{r, include = F}
+
+dist_metrics <- lapply(seq_along(vfcis), function(i){
+
+  orth_dist <- mv_l[[i]]$Q[, 1] %*% mvu_l[[i]]$Q[, 1]
+  irf_rmse <- sqrt(mean((irf_l[[i]]$irf - irfu_l[[i]]$irf)^2))
+
+  data.frame(
+    vfci_name = vfcis[i],
+    orth_dist = orth_dist,
+    irf_rmse = irf_rmse
+  )
+}) |> rbindlist()
+dist_metrics[, vfci_target := str_remove(str_extract(vfci_name, "(?<=fgr).*$"), "^\\d*")]
+dist_metrics[, fgr := as.numeric(str_extract(vfci_name, "(?<=fgr)\\d{1,2}"))]
+
+dist_metrics[orth_dist == max(orth_dist)]
+
+```
+
+```{r orthIRFcorrelation, echo = F, warning = F, fig.height = 3.5, out.width = "100%", fig.cap = "Correlation of orth dist and IRF RMSE"}
+
+dist_metrics |>
+ggplot(aes(
+  x = orth_dist,
+  y = irf_rmse,
+  shape = vfci_target,
+  color = fgr
+)) +
+geom_point(size = 3) +
+scale_shape_discrete(na.value = 8) + 
+scale_color_continuous(na.value = "firebrick") +
+scale_x_continuous(limits = c(-1, 1)) +
+scale_y_continuous(limits = c(0, 0.5)) +
+theme_bw()
+
+```
+
+```{r pOrthIRFacrossFGR, echo = F, warning = F, fig.height = 3.5, out.width = "100%", fig.cap = "Orth distance and IRF RMSE across FGR"}
+
+p_orth <- 
+dist_metrics |>
+ggplot(aes(
+  x = fgr,
+  y = orth_dist,
+  fill = vfci_target
+)) +
+geom_hline(yintercept = 0) +
+geom_col(position = position_dodge()) +
+theme_bw() +
+scale_y_continuous(limits = c(-1, 1), expand = c(0,0)) +
+scale_x_continuous(breaks = seq(0, 30, 5))
+
+p_irf <- 
+dist_metrics |>
+ggplot(aes(
+  x = fgr,
+  y = irf_rmse,
+  fill = vfci_target
+)) +
+geom_hline(yintercept = 0) +
+geom_col(position = position_dodge()) +
+theme_bw() +
+scale_y_continuous(limits = c(0, 0.5), expand = c(0,0)) +
+scale_x_continuous(breaks = seq(0, 30, 5))
+
+cowplot::plot_grid(p_orth, p_irf, ncol = 1)
+```
+
+\newpage
+# Show Best Matches
+```{r, include = T}
+dist_metrics[, m_orth_dist := max(abs(orth_dist)), by = .(vfci_target)][abs(orth_dist) == m_orth_dist]
+dist_metrics[, m_irf_rmse := min(irf_rmse), by = .(vfci_target)][irf_rmse == m_irf_rmse]
+```
+
+```{r pBestOrthMatch, echo = F, warning = F, fig.height = 3, out.width = "100%", fig.cap = "Best Orth Distance Match"}
+best_orth_match <- dist_metrics[abs(orth_dist) == m_orth_dist & vfci_target == "gdpc1", vfci_name]
+
+ggplot() +
+  geom_hline(yintercept = 0) +
+  geom_line(
+    data = irf_df[vfci_name == best_orth_match],
+    aes(
+      x = h,
+      y = irf,
+      color = best_orth_match
+    )) +
+  geom_line(
+    data = irfu_df[vfci_name == best_orth_match],
+    aes(
+      x = h,
+      y = irf,
+      color = "u0632"
+    )) +
+  facet_wrap(
+    vars(response),
+    nrow = 2,
+    scales = "free_y"
+  ) +
+  labs(x = NULL, y= NULL) +
+  theme_bw(base_size = 8) + 
+    theme(
+    legend.position = c(0.9, 0.2),
+    legend.key.width = unit(10, "pt"),
+    legend.key.height = unit(7, "pt")
+    )
+
+```
+
+```{r pBestIRFRMSEMatch, echo = F, warning = F, fig.height = 3, out.width = "100%", fig.cap = "Best IRF RMSE Match"}
+best_irf_rmse_match <- dist_metrics[irf_rmse == m_irf_rmse & vfci_target == "gdpc1", vfci_name]
+
+ggplot() +
+  geom_hline(yintercept = 0) +
+  geom_line(
+    data = irf_df[vfci_name == best_irf_rmse_match],
+    aes(
+      x = h,
+      y = irf,
+      color = best_irf_rmse_match
+    )) +
+  geom_line(
+    data = irfu_df[vfci_name == best_irf_rmse_match],
+    aes(
+      x = h,
+      y = irf,
+      color = "u0632"
+    )) +
+  facet_wrap(
+    vars(response),
+    nrow = 2,
+    scales = "free_y"
+  ) +
+  labs(x = NULL, y= NULL) +
+  theme_bw(base_size = 8) + 
+    theme(
+    legend.position = c(0.9, 0.2),
+    legend.key.width = unit(10, "pt"),
+    legend.key.height = unit(7, "pt")
+    )
+
+```
