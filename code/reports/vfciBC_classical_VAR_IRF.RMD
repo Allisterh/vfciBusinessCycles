@@ -15,6 +15,9 @@ df[, label := paste(target, period_l, ":", period_h)]
 rmse <- fread(here("./data/classical_vfcibc_VAR_IRF_rmse.csv"))
 vfci <- fread(here("./data/vfciBC_data.csv"))
 bca_irf <- fread(here("./data/replicated_bca_classical_VAR_IRF.csv"))
+
+df[, response := factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest", "vfci"), ordered = T)]
+bca_irf[, response := factor(response, levels = c("unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest", "vfci"), ordered = T)]
 ```
 
 ```{r, echo = F, fig.height = 3, out.width = "100%"}
