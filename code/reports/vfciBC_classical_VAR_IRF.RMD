@@ -14,6 +14,37 @@ df <- fread(here("./data/classical_vfcibc_VAR_IRF.csv"))
 df[, label := paste(target, period_l, ":", period_h)]
 rmse <- fread(here("./data/classical_vfcibc_VAR_IRF_rmse.csv"))
 vfci <- fread(here("./data/vfciBC_data.csv"))
+bca_irf <- fread(here("./data/replicated_bca_classical_VAR_IRF.csv"))
+```
+
+```{r, echo = F, fig.height = 3, out.width = "100%"}
+ggplot() +
+    geom_hline(yintercept = 0) +
+    geom_line(
+        data = df[target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32],
+        aes(
+            x = h,
+            y = irf,
+            color = "+ vfci (11 variables)"
+    )) +
+    geom_line(
+        data = bca_irf[version == "Replication"],
+        aes(
+            x = h,
+            y = irf,
+            color = "BCA (10 variables)"
+    )) +
+    facet_wrap(
+        vars(response),
+        nrow = 2,
+        scales = "free_y"
+    ) +
+    theme_bw(base_size = 8) +
+    theme(
+        legend.position = "bottom"
+    )
+  
+
 ```
 
 ## All iterations
@@ -64,8 +95,9 @@ rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][rmse == min(rmse)]
 ```
 
 ```{r figMatchMBCall, echo = F, warning = F, fig.height = 3, out.width = "100%"}
+
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 60 & period_h == 98) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 28 & period_h == 76) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -89,7 +121,7 @@ rmse[rmse == min(rmse)]
 
 ```{r figMatchUVFCI, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 32 & period_h == 40) | (target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 32)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 24 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 12 & period_h == 38)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -111,7 +143,7 @@ rmse[u_period_l == vfci_period_l & u_period_h == vfci_period_h][rmse == min(rmse
 
 ```{r figMatchUVFCI_sameperiod, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 24 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 20 & period_h == 32) | (target == "unemployment" & sign == "pos" & period_l == 20 & period_h == 32)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -130,7 +162,7 @@ What does targetting the other half of the business cycle requency look like?
 
 ```{r figOtherBC, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 6 & period_h == 24) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 24)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 6 & period_h == 20) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 20)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -147,7 +179,7 @@ df |>
 
 # Targetting Unemployment IRF
 
-Picking the VFCI Iteration that most closely matches the Main Business Cycle shock for just the unemployment impulse responses (target: unemployment, 6 - 32 q).  Prefers an even longer period shock.
+Picking the VFCI Iteration that most closely matches the Main Business Cycle shock for just the unemployment impulse responses (target: unemployment, 6 - 32 q). 
 
 ```{r}
 rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][u_rmse == min(u_rmse)]
@@ -155,7 +187,7 @@ rmse[u_sign == "pos" & u_period_l == 6 & u_period_h == 32][u_rmse == min(u_rmse)
 
 ```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 170 & period_h == 200) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 30 & period_h == 80) | (target == "unemployment" & sign == "pos" & period_l == 6 & period_h == 32)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -169,7 +201,7 @@ df |>
 ```
 
 
-Picking the two iterations of VFCI and Unemployment that are most closely similar for the unemployment irf.  Similar frequency as before.
+Picking the two iterations of VFCI and Unemployment that are most closely similar for the unemployment irf. 
 
 ```{r}
 rmse[u_rmse == min(u_rmse)]
@@ -177,7 +209,7 @@ rmse[u_rmse == min(u_rmse)]
 
 ```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 28 & period_h == 34) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 22 & period_h == 28) | (target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 30)) |>
     ggplot(aes(
         x = h,
         y = irf,
@@ -200,7 +232,7 @@ rmse[u_period_l == vfci_period_l & u_period_h == vfci_period_h][u_rmse == min(u_
 
 ```{r, echo = F, warning = F, fig.height = 3, out.width = "100%"}
 df |>
-    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 24 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 24 & period_h == 30)) |>
+    dplyr::filter((target == "vfci" & sign == "neg" & period_l == 22 & period_h == 30) | (target == "unemployment" & sign == "pos" & period_l == 22 & period_h == 30)) |>
     ggplot(aes(
         x = h,
         y = irf,
