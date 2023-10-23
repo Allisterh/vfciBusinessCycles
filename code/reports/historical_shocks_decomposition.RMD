@@ -31,7 +31,7 @@ p = 2
 ## Fit the VAR
 v <- VAR(vfciBCdata[, -"date"], p = p, type = "const")
 
-mv_vfci <- id_fevdfd(v, "vfci", bc_freqs)
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
 mv_u <- id_fevdfd(v, "unemployment", bc_freqs)
 ```
 
