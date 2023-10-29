@@ -12,10 +12,10 @@ theme_pres <-
         legend.position = "top",
         legend.background = element_blank(),
         legend.title = element_blank(),
-        legend.margin = margin(0, 0, -10, 0),
+        legend.margin = margin(0, 0, 0, 0),
         legend.text = element_text(size = 7),
         legend.key.size = unit(10, "pt"),
-        plot.margin = margin(0, 2, 0, 0, "pt")
+        plot.margin = margin(2, 2, 2, 2, "pt")
         )
 
 var_order <- c(
@@ -35,3 +35,5 @@ var_order <- c(
 ## Colors
 vfci_color <- "steelblue"
 u_color <- "darkorange"
+inf_color <- "firebrick"
+int_color <- "lightpink"

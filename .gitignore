@@ -1,5 +1,8 @@
 temp.R
 
+## Presentation charts
+presentations/2023-11-01-Brown-Macro-Breakfast/figs/*.pdf
+
 .DS_Store
 
 # Latex Files
