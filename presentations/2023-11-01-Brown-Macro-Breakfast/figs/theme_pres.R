@@ -35,5 +35,7 @@ var_order <- c(
 ## Colors
 vfci_color <- "steelblue"
 u_color <- "darkorange"
+vfci_color2 <- "#9cbeda"
+u_color2 <- "#fdcd93"
 inf_color <- "firebrick"
 int_color <- "lightpink"

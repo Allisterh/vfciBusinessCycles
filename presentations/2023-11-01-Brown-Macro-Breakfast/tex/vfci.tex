@@ -1,104 +1,28 @@
-\begin{frame}{VFCI Estimation}
+\begin{frame}{Volatility Financial Conditions Index (VFCI)}
+  \label{vfci}
 
-  Usual model assumptions give an Euler equation which relate
-  \begin{itemize}
-    \item asset prices, $X_t$
-    \item future consumption growth, $\ln c_{t+1} - \ln c_t$
-  \end{itemize}
-  through the SDF.
-
-  \vspace{-1cm}
-  \begin{align}
-    \ln c_{t+1} - \ln c_t &= \beta X_t + \varepsilon_t
-    \\
-    \text{Var}[\varepsilon_t] &= \lambda X_t + \text{Var}[\epsilon_t]
-  \end{align}
-
-  VFCI is the log of the unpredictable portion of the variance of eq. (1).
-
-  \vspace{-1cm}
-  \setcounter{equation}{0}
-  \begin{align*}
-    \text{VFCI}_t &\equiv \ln \text{Var}[\epsilon_t]
-  \end{align*}
-
-\end{frame}
-
-
-\begin{frame}{VFCI Estimation}
-
-  Usual model assumptions give an Euler equation which relate
-  \begin{itemize}
-    \item asset prices, $X_t$
-    \item future consumption growth, $\ln c_{t+\textcolor{red}{2}} - \ln c_{t\textcolor{red}{+1}}$
-  \end{itemize}
-  through the SDF.
-
-  \vspace{-1cm}
-  \setcounter{equation}{0}
-  \begin{align}
-    \ln c_{t+\textcolor{red}{2}} - \ln c_{t\textcolor{red}{+1}} &= \beta X_t + \varepsilon_t
-    \\
-    \text{Var}[\varepsilon_t] &= \lambda X_t + \text{Var}[\epsilon_t]
-  \end{align}
-
-  VFCI is the log of the unpredictable portion of the variance of eq. (1).
-
-  \vspace{-1cm}
-  \begin{align*}
-    \text{VFCI}_t &\equiv \ln \text{Var}[\epsilon_t]
-  \end{align*}
-
-  \textcolor{red}{Consumption forwarded one more period to align with theory.}
-
-\end{frame}
-
-
-\begin{frame}{VFCI Estimation}
-
-  Usual model assumptions give an Euler equation which relate
-  \begin{itemize}
-    \item asset prices, $X_t$
-    \item future consumption growth, $\ln c_{t+\textcolor{blue}{h}} - \ln c_{t+1}$
-  \end{itemize}
-  through the SDF.
-
-  \vspace{-1cm}
-  \setcounter{equation}{0}
-  \begin{align}
-    \ln c_{t+\textcolor{blue}{h}} - \ln c_{t+1} &= \beta X_t + \varepsilon_t
-    \\
-    \text{Var}[\varepsilon_t] &= \lambda X_t + \text{Var}[\epsilon_t]
-  \end{align}
-
-  VFCI is the log of the unpredictable portion of the variance of eq. (1).
-
-  \vspace{-1cm}
-  \begin{align*}
-    \text{VFCI}_{t,\textcolor{blue}{h}} &\equiv \ln \text{Var}[\epsilon_t]
-  \end{align*}
-
-  \textcolor{blue}{Can also consider longer forward growth horizons, $h \in [1,\infty)$.}
-
-\end{frame}
-
-\begin{frame}{Choosing a forward growth horizon}
-
-  Will use: $\text{VFCI}_{t, 10}$
-
-  Why?
-  \begin{itemize}
-    \item 10 is in between 0 and 26 quarters (length of the business cycle)
+  \vspace{0.25cm}
   
-    \item Creates a good match between targeting either VFCI or unemployment for the\dots
-    \begin{itemize}
-      \item IRF
-      \item Forecast error variance decompositions
-      \item Historical shock contributions
-    \end{itemize}
-    
+  VFCI can be interpreted as the \textbf{price of risk}.  Constructed using 
+  
+  \begin{itemize}
+    \item Asset returns
+    \item Forward consumption growth
   \end{itemize}
+  \vspace{0.1cm}
 
-  Results are robust to choosing similar horizons [8, 12].
+  Can target consumption growth at different forward horizons.
 
+  \vspace{0.25cm}
+
+  Will use VFCI constructed targeting a horizon of 10 quarters.  Why?
+  \begin{itemize}
+    \item performs well
+    \item lies within the business cycle length
+  \end{itemize}
+  \vspace{0.1cm}
+
+  Results are robust to similar horizon targets.
+
+  \gotobutton{1.25}{0.3}{vfci_estimation}{VFCI Estimation}
 \end{frame}

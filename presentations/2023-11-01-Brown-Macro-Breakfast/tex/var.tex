@@ -1,3 +1,63 @@
-\begin{frame}{Explain VAR}
+\begin{frame}{VAR Setup}
+
+A \textbf{SVAR}(p) model for a vector of variables, $x_t$,
+
+\vspace{-1cm}
+\begin{align*}
+  B_0 x_t = B_1 x_{t-1} + \dots + B_p x_{t-p} + \epsilon_t
+\end{align*}
+\vspace{-1cm}
+
+Empirically, only the $A_i$ matrices and reduced form residuals, $\upsilon_t$, can be estimated
+
+\vspace{-1cm}
+\begin{align*}
+   x_t = \underbrace{B_0^{-1}B_1}_{A_1} x_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} x_{t-p} + \underbrace{B_0^{-1}\epsilon_t}_{\upsilon_t}
+\end{align*}
+
+This relates $\upsilon_t$ to an unknown linear mapping of stuctural shocks, $\epsilon_t$.
+
+\vspace{-1cm}
+\begin{align*}
+   \upsilon_t = B_0^{-1} \epsilon_t
+\end{align*}
+\vspace{-1cm}
+
+\textbf{Identification problem:} determining the $B_0$ matrix.
 
 \end{frame}
+
+
+\begin{frame}{Max Forecast Error Variance Identification}
+
+  \begin{enumerate}
+    \item Pick one variable to target from $x_t$ (i.e. unemployment, $x_t^{(u)}$)
+    \item Compute the forecast error for target horizon, $h$
+    
+    \vspace{-1.1cm}
+    \begin{align*}
+      F_{t+h} = \underbrace{x^{(u)}_{t+h}}_{real\hspace{-0.05cm}ization} - \underbrace{x^{(u)}_{t+h \mid t}}_{prediction}
+    \end{align*}
+    \vspace{-0.6cm}
+
+    \item Choose vector $B_0^{(u)}$ to maximize the variance of $F_{t+h}$
+    
+    \vspace{-1.1cm}
+    \begin{align*}
+      \max_{B_0^{(u)}} \ \ \ \text{Var}[F_{t+h}]
+    \end{align*}
+    \vspace{-0.75cm}
+
+    \item This will identify \textbf{one} shock
+
+    \vspace{-1.1cm}
+    \begin{align*}
+      \epsilon_t^{u} = B_0^{(u)} \hat{\upsilon}_t
+    \end{align*}
+    \vspace{-1.2cm} 
+  \end{enumerate}
+  \begin{itemize}
+    \item Can instead calculate $F$ for frequency range $\{\omega^-, \omega^+\}$
+  \end{itemize}
+  
+  \end{frame}

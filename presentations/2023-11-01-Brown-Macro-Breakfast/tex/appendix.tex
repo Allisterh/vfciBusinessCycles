@@ -5,6 +5,45 @@
   APPENDIX
 \end{frame}
 
+\begin{frame}{Shock Weights}
+
+  \begin{figure}
+    \includegraphics[height = 3in]{figs/results-fig4-vfci_u_0632_qb.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Shock Weights: 18 to 36 q}
+
+  \begin{figure}
+    \includegraphics[height = 3in]{figs/results-fig54-vfci_u_1836_qb.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}{Historical Contribution: 18 to 36 q}
+
+  \begin{figure}
+    \includegraphics[height = 3in]{figs/results-fig52-vfci_u_1836_hd.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{FEVDFD: 18 to 36 q}
+
+  \begin{figure}
+    \includegraphics[height = 3in]{figs/results-fig53-vfci_u_1836_fevdfd.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}{Comparing VAR Targets}
 
   \begin{figure}
@@ -59,3 +98,203 @@
   \end{figure}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{VFCI Estimation}
+  \label{vfci_estimation}
+  
+  \vspace{0.3cm}
+  Assuming (1) no arbitrage and (2) a representative agent,
+  
+  a log-linear approximation of the representative agent's FOC relates
+  \begin{itemize}
+    \item asset prices, $R_t$
+    \item future consumption growth, $\Delta c_{t+1} = \ln c_{t+1} - \ln c_t$
+  \end{itemize}
+
+  This relationship can be estimated empirically:
+
+  \vspace{-1cm}
+  \begin{align}
+    \Delta c_{t+1} &= \beta R_t + \varepsilon_t
+    \\
+    \ln \text{Vol}[\varepsilon_t] &= \lambda R_t + \upsilon_t
+  \end{align}
+
+  VFCI is predicted value from eq. (2). Interpreted as the ``price of risk''.
+
+  \vspace{-1cm}
+  \setcounter{equation}{0}
+  \begin{align*}
+    \text{VFCI}_t &\equiv \ln \widehat{\text{Vol}[\epsilon_t]}
+  \end{align*}
+
+  \returnbutton{1}{0.3}{vfci}{VFCI}
+\end{frame}
+
+\begin{frame}{VFCI Estimation}
+
+  \vspace{0.3cm}
+  Assuming (1) no arbitrage and (2) a representative agent,
+  
+  a log-linear approximation of the representative agent's FOC relates
+  \begin{itemize}
+    \item asset prices, $R_t$
+    \item future consumption growth, $\Delta c_{t+\textcolor{red}{2}} = \ln c_{t+\textcolor{red}{2}} - \ln c_{t\textcolor{red}{+1}}$
+  \end{itemize}
+
+  This relationship can be estimated empirically:
+
+  \vspace{-1cm}
+  \begin{align}
+    \Delta c_{t+1} &= \beta R_t + \varepsilon_t
+    \\
+    \ln \text{Vol}[\varepsilon_t] &= \lambda R_t + \upsilon_t
+  \end{align}
+
+  VFCI is predicted value from eq. (2). Interpreted as the ``price of risk''.
+
+  \vspace{-1cm}
+  \setcounter{equation}{0}
+  \begin{align*}
+    \text{VFCI}_t &\equiv \ln \widehat{\text{Vol}[\epsilon_t]}
+  \end{align*}
+
+  \textcolor{red}{Consumption forwarded one more period to align with theory.}
+
+  
+\end{frame}
+
+
+\begin{frame}{VFCI Estimation}
+
+  \vspace{0.3cm}
+  Assuming (1) no arbitrage and (2) a representative agent,
+  
+  a log-linear approximation of the representative agent's FOC relates
+  \begin{itemize}
+    \item asset prices, $R_t$
+    \item future consumption growth, $\Delta c_{t+1+\textcolor{blue}{h}} = \ln c_{t+ 1 + \textcolor{blue}{h}} - \ln c_{t+1}$
+  \end{itemize}
+
+  This relationship can be estimated empirically:
+
+  \vspace{-1cm}
+  \begin{align}x
+    \Delta c_{t+1} &= \beta R_t + \varepsilon_t
+    \\
+    \ln \text{Vol}[\varepsilon_t] &= \lambda R_t + \upsilon_t
+  \end{align}
+
+  VFCI is predicted value from eq. (2). Interpreted as the ``price of risk''.
+
+  \vspace{-1cm}
+  \setcounter{equation}{0}
+  \begin{align*}
+    \text{VFCI}_{t,\textcolor{blue}{h}} &\equiv \ln \widehat{\text{Vol}[\epsilon_t]}
+  \end{align*}
+
+  \textcolor{blue}{Can also consider longer forward growth horizons, $h \in [1,\infty)$.}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{VAR Setup}
+
+  \begin{enumerate}
+    \item Run the empirical VAR
+  
+    \vspace{-1cm}
+    \begin{align*}
+      A(L) X_t &= u_t
+    \end{align*}
+    \vspace{-1cm}
+  
+    with \ \ \ $A(L) \equiv \sum_{\tau = 0}^{p} A_\tau L^\tau$, \ \ \ $A_0 = I$, \ \ \ and \ \ \ $\mathbf{E}[u_t u_t'] = \Sigma$
+  
+    \item Orthogonalize the residuals, $S = $ Choleskey decomposition of $\Sigma$
+    
+    \vspace{-1cm}
+    \begin{align*}
+      u_t = S \epsilon_t
+    \end{align*}
+    \vspace{-1cm}
+  
+    with \ \ \ $\mathbf{E}[\epsilon_t \epsilon_t'] = I$
+  
+    \item Denote all possible rotations, $Q$, of structural shocks, $\epsilon_t$
+    
+    \vspace{-1cm}
+    \begin{align*}
+      S = \tilde{S}Q
+    \end{align*}
+    \vspace{-1cm}
+  
+    where $Q$ is any orthonormal ($QQ' = I$) rotation matrix.
+  
+    \item This is the identification problem. Which $Q$ to choose?
+  \end{enumerate}
+  
+  \end{frame}
+  
+  
+  \begin{frame}{Max Variance Identification}
+  
+    \begin{enumerate}
+      \item Write out the VMA($\infty$) representation of a VAR($p$)
+    
+      \vspace{-1cm}
+      \begin{align*}
+        X_t &= B(L) u_t
+      \end{align*}
+      \vspace{-1cm}
+    
+      with \ \ \ $B(L) \equiv \sum_{\tau = 0}^{p} B_\tau L^\tau$ \ \ \ and \ \ \ $B(L) = A(L)^{-1}$
+    
+      \item Substitute in rotations of structural shocks, $u_t = \tilde{S}Q\epsilon_t$
+      
+      \vspace{-1cm}
+      \begin{align*}
+        X_t = C(L) Q \epsilon_t
+      \end{align*}
+      \vspace{-1cm}
+    
+      with \ \ \ $C(L) = B(L)\tilde{S}$ \ \ \ and \ \ \ $\Gamma(L) = C(L) Q$  \ \ \ stores the IRF.
+    
+      
+    \end{enumerate}
+    
+    \end{frame}
+  
+  
+    \begin{frame}{Max Variance Identification}
+  
+      \begin{enumerate}
+        \item The forecast error variance (FEV) for time horizon of $T$
+      
+      \vspace{-1cm}
+      \begin{align*}
+        FEV_{T} &= \sum_{t=0}^{T} \Gamma(t)'\Gamma(t)
+        \\
+        &= \sum_{t=0}^{T} Q'C(t)'C(t)Q
+      \end{align*}
+      \vspace{-1cm}
+      
+        \item The forecast error variance for a frequency range, $\{\underline{\omega}, \bar{\omega}\}$
+        
+        \vspace{-1cm}
+        \begin{align*}
+          FEV_{\underline{\omega}, \bar{\omega}} &= \int_{\underline{\omega}}^{\bar{\omega}} Q'C(e^{-i\omega})'C(e^{-i\omega})Q \ d\omega
+          \\
+          &= Q' \left( \int_{\underline{\omega}}^{\bar{\omega}} C(e^{-i\omega})'C(e^{-i\omega}) \ d\omega \right) Q
+        \end{align*}
+        \vspace{-1cm}
+      
+        \dots
+      \end{enumerate}
+      
+      \end{frame}

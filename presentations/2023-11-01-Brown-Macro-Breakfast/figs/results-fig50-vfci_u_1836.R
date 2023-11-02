@@ -7,10 +7,10 @@ require(fevdid)
 require(ggplot2)
 
 ## Plot settings
-irf_filename <- "results-fig1-vfci_u_0632_irf.pdf"
-hd_filename <- "results-fig2-vfci_u_0632_hd.pdf"
-fevdfd_filename <- "results-fig3-vfci_u_0632_fevdfd.pdf"
-qb_filename <- "results-fig4-vfci_u_0632_qb.pdf"
+irf_filename <- "results-fig51-vfci_u_1836_irf.pdf"
+hd_filename <- "results-fig52-vfci_u_1836_hd.pdf"
+fevdfd_filename <- "results-fig53-vfci_u_1836_fevdfd.pdf"
+qb_filename <- "results-fig54-vfci_u_1836_qb.pdf"
 prespath <- "./presentations/2023-11-01-Brown-Macro-Breakfast/figs/"
 plot_height <- 3
 plot_width <- 4.5
@@ -26,7 +26,7 @@ vfciBCdata <- vfciBCdata[, .(date, output, investment, consumption, hours_worked
     unemployment, labor_share, interest, inflation, productivity, TFP, vfci = vfci_fgr10gdpc1)]
 
 ## Target the BC frequency and umemployment variable
-bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+bc_freqs <- c(2 * pi / 36, 2 * pi / 18)
 p <- 2
 
 ## Fit the VAR
@@ -81,10 +81,9 @@ plot <-
     x = "Horizon"
   ) +
   scale_color_manual(
-    name = "Targeted Variable",
     values = c(
-      vfci = vfci_color,
-      u = u_color
+      vfci = vfci_color2,
+      u = u_color2
     ),
     labels = c(
       vfci = "VFCI",
@@ -92,10 +91,7 @@ plot <-
     )
   ) +
   theme_pres +
-  theme(
-    legend.position = c(0.875, 0.15),
-    legend.title = element_text(size = 7)
-    )
+  theme(legend.position = c(0.875, 0.15))
 
 ## Save to disk
 ggsave(
@@ -156,14 +152,13 @@ plot <- ggplot() +
     scales = "free_y"
   ) +
   labs(
-    y = "Historical Contribution of Shock",
+    y = "Historical Contribution",
     x = NULL
   ) +
   scale_color_manual(
-    name = "Targeted Variable",
     values = c(
-      vfci = vfci_color,
-      u = u_color
+      vfci = vfci_color2,
+      u = u_color2
     ),
     labels = c(
       vfci = "VFCI",
@@ -176,10 +171,7 @@ plot <- ggplot() +
     expand = c(0, 0)
   ) +
   theme_pres +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(size = 7)
-    )
+  theme(legend.position = "bottom")
 
 ## Save to disk
 ggsave(
@@ -234,18 +226,17 @@ plot <-
     scales = "free_y"
   ) +
   labs(
-    y = "Forecast Error Variance Decomposition",
-    x = "Frequency Domain"
+    y = "Forecast Error Variance Decomposition (Freq. Domain)",
+    x = NULL
   ) +
   scale_y_continuous(
     limits = c(0, 1),
     expand = c(0, 0)
   ) +
   scale_color_manual(
-    name = "Targeted Variable",
     values = c(
-      vfci = vfci_color,
-      u = u_color
+      vfci = vfci_color2,
+      u = u_color2
     ),
     labels = c(
       vfci = "VFCI",
@@ -253,10 +244,7 @@ plot <-
     )
   ) +
   theme_pres +
-  theme(
-    legend.position = c(0.875, 0.15),
-    legend.title = element_text(size = 7)
-    )
+  theme(legend.position = c(0.875, 0.15))
 
 ## Save to disk
 ggsave(
@@ -290,10 +278,9 @@ q_plot <- q_df |>
   y = "Standardized Variance Weights"
  ) +
  scale_fill_manual(
-  name = "Targeted Variable",
     values = c(
-      vfci = vfci_color,
-      u = u_color
+      vfci = vfci_color2,
+      u = u_color2
     ),
     labels = c(
       vfci = "VFCI",
@@ -304,10 +291,7 @@ q_plot <- q_df |>
     guide = guide_axis(n.dodge = 2)
   ) +
  theme_pres +
- theme(
-  legend.position = c(0.85, 0.25),
-    legend.title = element_text(size = 7)
-    )
+ theme(legend.position = c(0.85, 0.25))
 
 
 ## B Weights
@@ -337,10 +321,9 @@ b_plot <- b_df |>
     guide = guide_axis(n.dodge = 2)
   ) +
  scale_fill_manual(
-  name = "Targeted Variable",
     values = c(
-      vfci = vfci_color,
-      u = u_color
+      vfci = vfci_color2,
+      u = u_color2
     ),
     labels = c(
       vfci = "VFCI",
@@ -348,8 +331,7 @@ b_plot <- b_df |>
     )
   ) +
  theme_pres +
- theme(legend.position = c(0.85, 0.25),
-    legend.title = element_text(size = 7))
+ theme(legend.position = c(0.85, 0.25))
 
 plot <- cowplot::plot_grid(q_plot, b_plot, ncol = 1)
 ggsave(

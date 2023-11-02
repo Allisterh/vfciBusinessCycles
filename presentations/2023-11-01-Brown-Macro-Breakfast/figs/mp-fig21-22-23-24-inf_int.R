@@ -37,6 +37,18 @@ mv_u <- id_fevdfd(v, "unemployment", bc_freqs)
 mv_int <- id_fevdfd(v, "interest", bc_freqs, sign = "neg")
 mv_inf <- id_fevdfd(v, "inflation", bc_freqs, sign = "neg")
 
+## Get Recession data
+require(quantmod)
+getSymbols("USREC", src = "FRED")
+
+start <- zoo::index(USREC[which(diff(USREC$USREC)==1)])
+end   <- zoo::index(USREC[which(diff(USREC$USREC)==-1)-1])
+
+rec <- data.frame(start = start, end = end[-1])
+rec <- subset(rec, start >= as.Date("1962-01-01"))
+rec <- subset(rec, end <= as.Date("2018-01-01"))
+
+
 ##### IRF
 
 irf_vfci <- irf(mv_vfci, n.ahead = 40, impulse = "Main")$irf
@@ -130,16 +142,31 @@ plot_order <- c("VFCI", "Unemployment", "Inflation")
 hd_df <- hd_df[response %in% plot_order]
 hd_df[, response := factor(response, levels = plot_order, ordered = TRUE)]
 
-plot <-
-  hd_df[impulse == "Main"] |>
-  filter(model %in% c("interest", "inflation", "vfci", "u")) |>
-  ggplot(aes(
-    x = date,
-    y = hd,
-    color = model
-  )) +
+plot_data <- hd_df[impulse == "Main"] |>
+  filter(model %in% c("interest", "inflation", "vfci", "u"))
+
+plot <- ggplot() +
+  geom_rect(
+    data = rec,
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray80",
+    color = NA,
+    alpha = 0.5
+    ) +
   geom_hline(yintercept = 0) +
-  geom_line() +
+  geom_line(
+    data = plot_data,
+    aes(
+      x = date,
+      y = hd,
+      color = model
+    )
+  ) +
   facet_wrap(
     vars(response),
     ncol = 1,
