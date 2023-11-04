@@ -1,0 +1,176 @@
+---
+title: "Compare Linear Spacing in Time or Frequency Domain"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+require(stringr)
+```
+
+```{r fitModels, include = F}
+x <- fread(here("./data/vfciBC_data.csv")) |>
+  filter(date <= as.Date("2017-01-01")) |>
+  dplyr::select(
+    date,
+    output,
+    investment,
+    consumption,
+    hours_worked,
+    unemployment,
+    labor_share,
+    interest,
+    inflation,
+    productivity,
+    TFP,
+    vfci = vfci_fgr10gdpc1
+  )
+
+
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+v <- VAR(x[, -"date"], p = lags, type = "const")
+
+mv_list <- list(
+  evenFreqUnemp = id_fevdfd(v, "unemployment", bc_freqs),
+  evenTimeUnemp = id_fevdfd(v, "unemployment", freq_grid = 2 * pi / 6:32),
+  evenFreqVFCI = id_fevdfd(v, "vfci", bc_freqs, sign = "neg"),
+  evenTimeVFCI = id_fevdfd(v, "vfci", freq_grid = 2 * pi / 6:32, sign = "neg")
+)
+
+colors <- c(
+  evenFreqUnemp = "lightpink",
+  evenFreqVFCI = 'lightblue',
+  evenTimeUnemp = "firebrick",
+  evenTimeVFCI = "steelblue"
+)
+
+## IRF
+irf_df <- rbindlist(lapply(seq_along(mv_list), function(i){
+  irf <- irf(mv_list[[i]], n.ahead = 40)$irf
+  irf$model <- names(mv_list)[[i]]
+  irf
+}))
+
+## FEVDFD
+fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i){
+  fevdfd <- fevdfd(mv_list[[i]])$fevdfd
+  fevdfd$model <- names(mv_list)[[i]]
+  fevdfd
+}))
+
+```
+
+```{r plot_spacing, echo = F, warning = F, fig.height = 4, out.width = "100%", fig.cap = "Comparing even time or frequency spacing"}
+cowplot::plot_grid(
+  ggplot(date = NULL) +
+  geom_rect(aes(
+    xmin = 6,
+    xmax = 32,
+    ymin = 2 * pi /32,
+    ymax = 2 * pi / 6
+    ),
+    fill = "gray90"
+  ) +
+  geom_point(aes(
+    x = 2:100,
+    y = 2 * pi / 2:100
+    ),
+    alpha = 0.5,
+    color = "red"
+  ) +
+  labs(title = "Even Time Spacing", x = "Time", y = "Frequency") +
+  scale_y_continuous(
+    breaks = seq(0, pi, length.out = 5),
+    labels = c("0", "2\u03c0/8", "2\u03c0/4", "2\u03c0/2.666", "2\u03c0/2")
+  ) +
+  theme_bw(),
+  ggplot(date = NULL) +
+  geom_rect(aes(
+    xmin = 6,
+    xmax = 32,
+    ymin = 2 * pi /32,
+    ymax = 2 * pi / 6
+    ),
+    fill = "gray90"
+  ) +
+  geom_point(aes(
+    x = 1 / (seq(0.06283185, pi, length.out = 100) / (2 * pi)),
+    y = seq(0.06283185, pi, length.out = 100)
+    ),
+    color = "blue",
+    alpha = 0.5
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, pi, length.out = 5),
+    labels = c("0", "2\u03c0/8", "2\u03c0/4", "2\u03c0/2.666", "2\u03c0/2")
+  ) +
+  labs(title = "Even Frequency Spacing", x = "Time", y = "Frequency") +
+  theme_bw() 
+)
+```
+
+\newpage
+
+```{r plot_irf, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "IRF, comparing even time or freq spacing"}
+irf_df[impulse == "Main"] |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+
+```
+
+
+```{r plot_fevdfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVDFD, comparing even time or freq spacing"}
+fevdfd_df[impulse == "Main"][f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = fevdfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = bc_freqs[[1]],
+    xmax = bc_freqs[[2]],
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  theme_bw(base_size = 8)+
+  theme(legend.position = "top")
+
+```
