@@ -44,5 +44,7 @@ rmarkdown::render("./code/reports/vfciBC_fgrXX.RMD", "pdf_document", "VFCIVariat
 rmarkdown::render("./code/reports/compare_FD_TD_spacing.RMD", "pdf_document", "CompareFDTDSpacing.pdf", "./reports")
 rmarkdown::render("./code/reports/vfciBC_allVARcharts.RMD", "pdf_document", "AllVARcharts.pdf", "./reports")
 
+rmarkdown::render("./code/reports/business_cycle_frequencies.RMD", "pdf_document", "BusinessCycleFrequencies.pdf", "./reports")
+
 ## Run tests
 testthat::test_dir("tests")

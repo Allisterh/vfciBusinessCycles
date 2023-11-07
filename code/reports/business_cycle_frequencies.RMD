@@ -1,0 +1,109 @@
+---
+title: "Business Cycle Frequencies"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(ggplot2)
+```
+
+```{r getRecessions, include = F}
+require(quantmod)
+getSymbols("USREC", src = "FRED")
+
+start <- zoo::index(USREC[which(diff(USREC$USREC)==1)])
+end   <- zoo::index(USREC[which(diff(USREC$USREC)==-1)-1])
+
+rec <- data.frame(start = start, end = end[-1]) |> setDT()
+
+rec[, start_lead1 := shift(start, n = 1, type = "lead")]
+rec[, recession_length := lubridate::interval(start, end) %/% months(1) / 3]
+rec[, peak_to_peak_length := lubridate::interval(start, start_lead1) %/% months(1) / 3]
+```
+
+
+```{r plot_irf, echo = F, warning = F, fig.height = 2, out.width = "100%", fig.cap = "Business Cycle"}
+rec |>
+  ggplot() + 
+  geom_rect(
+    color = NA,
+    fill = "lightpink",
+  aes(
+    xmin = start,
+    xmax = end,
+    ymin = -1,
+    ymax = 1
+  )) +
+  scale_x_date(
+    breaks = seq(as.Date("1850-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1850, 2020, by = 10),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_bw(base_size = 8)
+```
+
+```{r table_all, echo = F, include = T, results = "asis"}
+stargazer::stargazer(
+  rec,
+  type = "latex",
+  summary.stat = c("n", "min", "p25", "median", "mean", "p75", "max"),
+  flip = TRUE,
+  header = FALSE
+  )
+```
+
+
+```{r table_postwar, echo = F, include = T, results = "asis"}
+stargazer::stargazer(
+  rec[start >= as.Date("1950-01-1")],
+  type = "latex",
+  summary.stat = c("n", "min", "p25", "median", "mean", "p75", "max"),
+  flip = TRUE,
+  header = FALSE
+  )
+```
+
+```{r plot_hists, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "Business Cycle Histograms"}
+
+cowplot::plot_grid(
+  ncol = 1,
+  ggplot(data = NULL) +
+    geom_histogram(aes(
+      x = rec[, peak_to_peak_length]
+    ),
+    fill = "lightpink"
+    ) +
+  labs(
+      title = "All",
+      x = "Peak to Peak Length"
+    ) +
+  scale_x_continuous(limits = c(0, 50), expand = c(0, 0)),
+  ggplot(data = NULL) +
+    geom_histogram(aes(
+      x = rec[start < as.Date("1950-01-1"), peak_to_peak_length]
+    ),
+    fill = "firebrick"
+    ) +
+  labs(
+      title = "Prewar (< 1950)",
+      x = "Peak to Peak Length"
+    ) +
+  scale_x_continuous(limits = c(0, 50), expand = c(0, 0)),
+  ggplot(data = NULL) +
+    geom_histogram(aes(
+      x = rec[start >= as.Date("1950-01-1"), peak_to_peak_length]
+    ),
+    fill = "steelblue"
+    ) +
+  labs(
+      title = "Postwar (>= 1950)",
+      x = "Peak to Peak Length"
+    ) +
+  scale_x_continuous(limits = c(0, 50), expand = c(0, 0))
+)
+```
