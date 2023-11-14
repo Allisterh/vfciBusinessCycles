@@ -121,7 +121,7 @@ q_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
 b_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   data.table(
     variable = colnames(mv_list[[i]]$y),
-    weight = mv_list[[i]]$B[, 1],
+    weight = solve(mv_list[[i]]$B)[1, ],
     model = names(mv_list)[[i]]
   )
 }))
