@@ -313,8 +313,8 @@ q_plot <- q_df |>
 ## B Weights
 b_df <- data.table(
   impulse = rownames(mv_u$B),
-  u = mv_u$B[, 1],
-  vfci = mv_vfci$B[, 1]
+  u = solve(mv_u$B)[1, ],
+  vfci = solve(mv_vfci$B)[1, ]
   ) |> tidyr::pivot_longer(-impulse, names_to = "model") |>
   setDT()
 
