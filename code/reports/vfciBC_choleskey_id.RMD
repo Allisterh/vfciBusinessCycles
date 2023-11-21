@@ -1,0 +1,405 @@
+---
+title: "All VAR Charts"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+```
+
+```{r fitModels, include = T}
+x <- fread(here::here("./data/vfciBC_data.csv")) |>
+  filter(date <= as.Date("2017-01-01")) |>
+  dplyr::select(
+    date,
+    vfci = vfci_fgr10gdpc1,
+    interest,
+    output,
+    investment,
+    consumption,
+    hours_worked,
+    unemployment,
+    labor_share,
+    inflation,
+    productivity,
+    TFP
+  )
+
+
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+v <- VAR(x[, -"date"], p = lags, type = "const")
+
+grid <- tribble(
+  ~model, ~color,  ~method, ~freq, ~target, ~sign, ~chol_order,
+  "v0632", "goldenrod", "fevdfd", bc_freqs, "vfci", "neg", NA,
+  "u0632", "steelblue", "fevdfd", bc_freqs, "unemployment", "pos", NA,
+  "vChol", "firebrick", "chol", NA, "vfci", "neg", c("vfci", "interest", "output", "investment", "consumption", "hours_worked", "unemployment", "labor_share", "inflation", "productivity", "TFP"),
+  "uChol", "mediumorchid", "chol", NA, "unemployment", "pos", c("unemployment", "vfci", "interest", "output", "investment", "consumption", "hours_worked", "labor_share", "inflation", "productivity", "TFP"),
+  "infChol", "black", "chol", NA, "inflation", "neg", c("inflation", "unemployment", "vfci", "interest", "output", "investment", "consumption", "hours_worked", "labor_share", "productivity", "TFP"),
+  "ivChol", "lightpink", "chol", NA, "vfci", "neg", c("interest", "vfci", "output", "investment", "consumption", "hours_worked", "unemployment", "labor_share", "inflation", "productivity", "TFP")
+)
+
+mv_list <- lapply(seq_len(nrow(grid)), function(i){
+  if (grid[[i, "method"]] == "fevdfd") {
+    mv <- id_fevdfd(v, grid[[i, "target"]], grid[[i, "freq"]][[1]], sign = grid[[i, "sign"]])
+  } else if (grid[[i, "method"]] == "chol") {
+    vchol <- VAR(relocate(x[, -"date"], grid[[i, "target"]]), p = lags, type = "const")
+    mv <- id.chol(vchol, order_k = grid[[i, "chol_order"]][[1]])
+    mv$B <- mv$B * ifelse(grid[[i, "sign"]] == "pos", 1, -1)
+  }
+  return(mv)
+})
+
+
+colors <- setNames(grid$color, grid$model)
+```
+
+
+```{r, include = F}
+## IRF
+irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  if (grid[[i, "method"]] == "fevdfd") {
+    irf <- irf(mv_list[[i]], n.ahead = 40)$irf |> setDT()
+    irf <- irf[impulse == "Main"]
+  } else if (grid[[i, "method"]] == "chol") {
+    irf <- irf(mv_list[[i]], n.ahead = 40)$irf |>
+      tidyr::pivot_longer(-V1) |>
+      mutate(
+        response = stringr::str_extract(name, "(?<=% ).*$"),
+        impulse = stringr::str_extract(name, "(?<=\\[ ).*(?= \\])"),
+        name = NULL
+      ) |>
+      rename(c(
+        h = "V1",
+        irf = "value"
+      )) |>
+      dplyr::filter(impulse == grid[[i, "target"]]) |>
+      dplyr::select(h, impulse, response, irf)
+
+  }
+  irf$model <- grid[[i, "model"]]
+  irf
+}))
+
+## IRF FD
+irffd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  irffd <- irffd(mv_list[[i]], n.ahead = 40)$irffd |> setDT()
+  irffd$model <- grid[[i, "model"]]
+  irffd[impulse %in% c("Main", grid[[i, "target"]])]
+}))
+
+## FEVDFD
+fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fevdfd <- fevdfd(mv_list[[i]])$fevdfd |> setDT()
+  fevdfd$model <- grid[[i, "model"]]
+  fevdfd[impulse %in% c("Main", grid[[i, "target"]])]
+}))
+
+## FEVD
+fevd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  if (grid[[i, "method"]] == "fevdfd") {
+    fevd <- fevd(mv_list[[i]], n.ahead = 100)$fevd |> setDT()
+    fevd <- fevd[impulse == "Main"]
+  } else if (grid[[i, "method"]] == "chol") {
+    fevd <- fevd(mv_list[[i]], n.ahead = 100)[[grid[[i, "target"]]]] |>
+    mutate(h = row_number()) |>
+    tidyr::pivot_longer(-h, names_to = "response", values_to = "fevd") |>
+      mutate(impulse = grid[[i, 'target']]) |>
+      dplyr::select(h, impulse, response, fevd)
+  }
+  fevd$model <- grid[[i, "model"]]
+  fevd
+}))
+
+## FEVFD
+fevfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fevfd <- fevfd(mv_list[[i]])$fevfd |> setDT()
+  fevfd$model <- grid[[i, "model"]]
+  fevfd[impulse %in% c("Main", grid[[i, "target"]])]
+}))
+
+## FEV
+fev_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fev <- fev(mv_list[[i]], n_ahead = 100)$fev |> setDT()
+  fev$model <- grid[[i, "model"]]
+  fev[impulse %in% c("Main", grid[[i, "target"]])]
+}))
+
+## HS
+hs_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  hs <- hs(mv_list[[i]])$hs |> setDT()
+  hs$model <- grid[[i, "model"]]
+  hs <- hs[impulse %in% c("Main", grid[[i, "target"]])]
+  hs$date <- x[-c(1:lags), "date"][[1]]
+  hs
+}))
+
+## HD
+hd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  hd <- hd(mv_list[[i]])$hd |> setDT()
+  hd$model <- grid[[i, "model"]]
+  hd <- hd[impulse %in% c("Main", grid[[i, "target"]])]
+  hd$date <- rep(x[-c(1:lags), "date"][[1]], v$K)
+  hd
+}))
+
+b_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  data.table(
+    variable = colnames(mv_list[[i]]$y),
+    weight = solve(mv_list[[i]]$B)[1, ],
+    model = grid[[i, "model"]]
+  )
+}))
+
+```
+
+```{r plot_irf, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "IRF"}
+irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+\newpage
+
+```{r plot_irffd, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain"}
+irffd_df[f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_irffd2, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain (<= 2 pi /6)"}
+irffd_df[f %between%  c(2 * pi / 40, 2 * pi / 6)] |>
+  ggplot(aes(
+    x = f,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevdfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVDFD"}
+fevdfd_df[f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = fevdfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD"}
+fevd_df |>
+  ggplot(aes(
+    x = h,
+    y = fevd / 100,
+    color = model
+  )) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV FD"}
+fevfd_df[f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = fevfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fev, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV"}
+fev_df |>
+  ggplot(aes(
+    x = h,
+    y = fev ,
+    color = model
+  )) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_hs, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "Historical Shocks"}
+hs_df |>
+  ggplot(aes(
+    x = date,
+    y = hs,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_hd, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Historical Shocks"}
+hd_df |>
+  ggplot(aes(
+    x = date,
+    y = hd,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    ncol = 2,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_b, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "B Weights (Empirical Shocks)"}
+b_df |>
+  ggplot(aes(
+    x = variable,
+    y = weight,
+    fill = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_col(
+    position = position_dodge()
+  ) +
+  scale_fill_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
