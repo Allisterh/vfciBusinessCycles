@@ -46,6 +46,8 @@ rmarkdown::render("./code/reports/vfciBC_allVARcharts.RMD", "pdf_document", "All
 
 rmarkdown::render("./code/reports/business_cycle_frequencies.RMD", "pdf_document", "BusinessCycleFrequencies.pdf", "./reports")
 rmarkdown::render("./code/reports/vfciBC_choleskey_id.RMD", "pdf_document", "CholeskeyIDVARS.pdf", "./reports")
+rmarkdown::render("./code/reports/vfciBC_heteroskedastic_id.RMD", "pdf_document", "HeteroskedasticIDVARS.pdf", "./reports")
+rmarkdown::render("./code/reports/vfciBC_tdistribution_id.RMD", "pdf_document", "tDistributionIDVARS.pdf", "./reports")
 
 ## Run tests
 testthat::test_dir("tests")
