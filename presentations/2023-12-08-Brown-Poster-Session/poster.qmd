@@ -1,0 +1,434 @@
+---
+title: Financial Conditions and the Business Cycle
+format:
+  poster-typst: 
+    size: "36x24"
+    poster-authors: " "
+    departments: " "
+    footer-text: "Brown University Poster Session"
+    footer-url: "www.matthewdehaven.com"
+    footer-emails: "December 8, 2023"
+    footer-color: "e6e6e6"
+---
+
+```{r}
+#| include: false
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+```
+
+```{r}
+#| include: false
+
+theme_pres <-
+    theme_bw(base_size = 20) +
+    theme(
+        axis.text = element_text(size = 16, margin = margin(0, 0, 0, 0)),
+        axis.title = element_text(size = 18),
+        panel.grid = element_blank(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_blank(),
+        legend.key=element_rect(fill = alpha("white", 0)),
+        legend.position = "top",
+        legend.background = element_blank(),
+        legend.title = element_text(size = 18),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.text = element_text(size = 16),
+        plot.margin = margin(2, 2, 2, 2, "pt")
+        )
+
+var_order <- c(
+    VFCI = "vfci",
+    Unemployment = "unemployment",
+    `Fed Funds` = "interest",
+    Inflation = "inflation",
+    Output = "output",
+    Investment = "investment",
+    Consumption = "consumption",
+    `Hours Worked` = "hours_worked",
+    `Labor Share` = "labor_share",
+    TFP = "TFP",
+    `Labor Prod.` = "productivity"
+)
+
+crossplot_order <- c("Output", "Investment", "Consumption", "Hours Worked", "Fed Funds", "Labor Prod.", "Inflation", "TFP", "VFCI")
+
+
+## Colors
+vfci_color <- "steelblue"
+u_color <- "darkorange"
+vfci_chol_color <- "goldenrod"
+```
+
+# Motivation
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit.
+
+# Data
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur.
+
+## VAR Variables
+
+```{=typst}
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  align(left)[
+    + Output
+    + Consumption
+    + Investment
+    + Hours Worked
+  ],
+  align(left)[
+    5. Unemployment
+    + Labor Share
+    + Interest
+    + Inflation
+  ],
+  align(left)[
+    9. Labor Productivity
+    + TFP
+    + VFCI
+  ]
+)
+```
+
+```{r}
+#| include: false
+df <- fread(here::here("./data/vfciBC_data.csv"))
+setnames(df, "vfci", "VFCI")
+
+p <- 
+  df |>
+  tidyr::pivot_longer(-"date") |>
+  filter(name %in% c("VFCI")) |>
+  ggplot(aes(
+    x = date,
+    y = value
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1.5) +
+  scale_x_date(
+    expand = c(0, 0),
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, by = 10)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  theme_pres
+
+ggsave("./figs/vfci.svg", p, width = 10, height = 2, units = "in")
+```
+
+::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+
+![Raw VFCI Time Series](./figs/vfci.svg)
+
+:::
+
+### VFCI Construction
+si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
+
+
+# Results
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. 
+
+
+```{r}
+#| include: false
+
+vfciBCdata <- fread(here::here("./data/vfciBC_data.csv")) |>
+    filter(date <= as.Date("2017-01-01"))
+
+vfciBCdata <- vfciBCdata[, .(date, output, investment, consumption, hours_worked,
+    unemployment, labor_share, interest, inflation, productivity, TFP, vfci = vfci_fgr10gdpc1)]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+p <- 2
+
+## Fit the VAR
+v <- VAR(vfciBCdata[, -"date"], p = p, type = "const")
+
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+mv_u <- id_fevdfd(v, "unemployment", bc_freqs)
+
+##### IRF
+
+irf_vfci <- irf(mv_vfci, n.ahead = 40, impulse = "Main")$irf
+irf_u <- irf(mv_u, n.ahead = 40, impulse = "Main")$irf
+
+irf_vfci$model <- "vfci"
+irf_u$model <- "u"
+
+irf_df <- rbind(irf_vfci, irf_u)
+
+setDT(irf_df)
+
+## Plotting
+irf_df[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
+
+plot <-
+  irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1.5) +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  labs(
+    y = "Impulse Response Function",
+    x = "Horizon"
+  ) +
+  scale_color_manual(
+    name = "Targeted Variable",
+    values = c(
+      vfci = vfci_color,
+      u = u_color
+    ),
+    labels = c(
+      vfci = "VFCI",
+      u = "Unemployment"
+    )
+  ) +
+  theme_pres +
+  theme(
+    legend.position = c(0.875, 0.15)
+    )
+
+## Save to disk
+ggsave(
+  "./figs/irf_plot.svg",
+  plot,
+  width = 10,
+  height = 7,
+  units = "in"
+  )
+```
+
+::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+
+![Impulse Responses for VAR Shocks Targeting Unemployment or VFCI](./figs/irf_plot.svg)
+
+:::
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. 
+
+
+```{r}
+#| include: false
+x <- fread(here::here("./data/vfciBC_data.csv")) |>
+    filter(date <= as.Date("2017-01-01"))
+
+x <- x[, .(date, output, investment, consumption, hours_worked,
+    unemployment, labor_share, interest, inflation, productivity, TFP, vfci = vfci_fgr10gdpc1)]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+targets <- names(x[, -1])
+
+p <- 2
+v <- vars::VAR(x[, -"date"], p = p, type = "const")
+
+## ID shock
+mv_l <- lapply(seq_along(targets), function(i) {
+  id_fevdfd(v, targets[[i]], bc_freqs, sign = ifelse(targets[[i]] %in% c("unemployment", "labor_share"), "pos", "neg"))
+}) 
+
+hs_df <- rbindlist(lapply(seq_along(targets), function(i) {
+  hs <- hs(mv_l[[i]])$hs |> setDT()
+  hs <- hs[impulse == "Main"]
+  hs$target <- targets[[i]]
+  hs$date <- x[-c(1:p), "date"][[1]]
+  hs
+}))
+
+hs_cross <- merge(
+  hs_df[, .(date, target.x = target, hs.x = hs)],
+  hs_df[, .(date, target.y = target, hs.y = hs)],
+  by = "date",
+  all = TRUE,
+  allow.cartesian = TRUE
+)
+
+
+
+hs_cross <- hs_cross |>
+  filter(target.x == "unemployment")
+hs_cross[, target.y := factor(target.y, levels = var_order, labels = names(var_order), ordered = TRUE)]
+
+corrs <- hs_cross[, .(
+  corr = cor(hs.x, hs.y),
+  min_x = min(hs.x) * 0.65,
+  max_y = max(hs.y) * 0.9
+  ), by = .(target.x, target.y)] |>
+  filter(target.x == "unemployment") 
+
+plot_cross_vfci <- ggplot() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_vline(xintercept = 0, color = "gray50") +
+  geom_point(
+    data = hs_cross,
+    size = 2,
+    alpha = 0.5,
+    aes(
+      x = hs.x,
+      y = hs.y
+    )) +
+  geom_text(
+    data = corrs,
+    color = "firebrick",
+    size = 6,
+    aes(
+      x = min_x,
+      y = max_y,
+      label = round(corr, 3)
+    )
+  ) +
+  facet_wrap(
+    vars(target.y),
+    scales = "free"
+  ) +
+  theme_pres +
+  labs(
+    x = "Unemployment Targeted Shock",
+    y = "Other Targeted Shock"
+  ) +
+  theme(plot.margin = margin(2, 4, 2, 6, "pt"))
+
+## Save to disk
+ggsave(
+  "./figs/correlation_scatterplots.svg",
+  plot_cross_vfci,
+  width = 10,
+  height = 7,
+  units = "in"
+)
+
+```
+
+::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+
+![Scatterplot of VAR Shocks](./figs/correlation_scatterplots.svg)
+
+:::
+
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
+
+
+```{r}
+#| include: false
+
+vfciBCdata <- fread(here::here("./data/vfciBC_data.csv")) |>
+    filter(date <= as.Date("2017-01-01"))
+
+vfciBCdata <- vfciBCdata[, .(date, vfci = vfci_fgr10gdpc1, output, investment, consumption,hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP)]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+p <- 2
+
+## Fit the VAR
+v <- VAR(vfciBCdata[, -"date"], p = p, type = "const")
+
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+sv_vfci_chol <- id.chol(v) 
+
+## Flip shock sign to align with FEVD shock direction
+sv_vfci_chol$B <- sv_vfci_chol$B * -1
+
+
+## IRF
+irf_vfci <- irf(mv_vfci, n.ahead = 40, impulse = "Main")$irf
+irf_vfci_chol <- irf(sv_vfci_chol, n.ahead = 40)$irf |>
+      tidyr::pivot_longer(-V1) |>
+      mutate(
+        response = stringr::str_extract(name, "(?<=% ).*$"),
+        impulse = stringr::str_extract(name, "(?<=\\[ ).*(?= \\])"),
+        name = NULL
+      ) |>
+      rename(c(
+        h = "V1",
+        irf = "value"
+      )) |>
+      dplyr::filter(impulse == "vfci") |>
+      dplyr::select(h, impulse, response, irf)
+
+irf_vfci$model <- "fevdfd"
+irf_vfci_chol$model <- "vfci_chol"
+
+irf_df <- rbind(irf_vfci, irf_vfci_chol)
+
+setDT(irf_df)
+
+## Plotting
+irf_df[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
+
+plot <-
+  irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1.5) +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  labs(
+    y = "Impulse Response Function",
+    x = "Horizon"
+  ) +
+  scale_color_manual(
+    name = "Targeted Variable",
+    values = c(
+      fevdfd = vfci_color,
+      vfci_chol = vfci_chol_color
+    ),
+    labels = c(
+      fevdfd = "FEV Max",
+      vfci_chol = "VFCI Choleskey"
+    )
+  ) +
+  theme_pres +
+  theme(
+    legend.position = c(0.875, 0.15)
+    )
+
+## Save to disk
+ggsave(
+  "./figs/irf_choleskey_plot.svg",
+  plot,
+  width = 10,
+  height = 7,
+  units = "in"
+  )
+```
+
+::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+
+![Impulse Responses for VAR Shocks Targeting VFCI or VFCI Choleskey](./figs/irf_choleskey_plot.svg)
+
+:::
+
+# Conclusion
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
