@@ -29,6 +29,7 @@ theme_pres <-
     theme(
         axis.text = element_text(size = 16, margin = margin(0, 0, 0, 0)),
         axis.title = element_text(size = 18),
+        plot.caption = element_text(size = 14),
         panel.grid = element_blank(),
         plot.background = element_blank(),
         panel.background = element_blank(),
@@ -65,54 +66,107 @@ u_color <- "darkorange"
 vfci_chol_color <- "goldenrod"
 ```
 
-# Motivation
+```{r}
+#| include: false
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit.
+vardata <- fread(here::here("./data/vfciBC_data.csv"))
+```
+
+# Motivation
+Are financial conditions a reflection of the macroeconomy or do they drive fluctuations?
+
+"Business-Cycle Anatomy" by Angeletos, Collard, and Dellas (2020) show that business cycles exhibit comovement across a host of macro variables (output, unemployment, consumption, hours worked, investment) at a specific period of 6 to 32 quarters.
+
+We show that financial conditions, particularly the VFCI which measures the price of risk, is also a part of the business cycle.
+We then show that a shock to financial conditions generates the same dynamics as this empirically identified business cycle shock.
 
 # Data
+All data is measured quarterly and runs from `r zoo::as.yearqtr(min(vardata$date))` to `r zoo::as.yearqtr(as.Date("2017-01-01"))`.
+Most of the time series used are standard macro series, pulled from the FRED by the Federal Reserve Bank of St. Louis.
+An exception is the Volatility Financial Conditions Index (VFCI), introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP).
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur.
-
-## VAR Variables
+<!-- ## Variables
 
 ```{=typst}
 #grid(
-  columns: (1fr, 1fr, 1fr),
+  columns: (1fr, 1fr, 1.2fr, 1fr),
   align(left)[
-    + Output
-    + Consumption
-    + Investment
-    + Hours Worked
+    1. VFCI
+    5. Output
+    9. Labor Share
   ],
   align(left)[
-    5. Unemployment
-    + Labor Share
-    + Interest
-    + Inflation
+    2. Unemployment
+    6. Investment
+    10. TFP
   ],
   align(left)[
-    9. Labor Productivity
-    + TFP
-    + VFCI
+    3. Fed Funds Rate
+    7. Consumption
+    11. Labor Productivity
+  ],
+  align(left)[
+    4. Inflation
+    8. Hours Worked
   ]
 )
+``` -->
+
+```{r}
+#| include: false
+
+## Get Recession data
+require(quantmod)
+getSymbols("USREC", src = "FRED")
+
+start <- zoo::index(USREC[which(diff(USREC$USREC)==1)])
+end   <- zoo::index(USREC[which(diff(USREC$USREC)==-1)-1])
+
+rec <- data.frame(start = start, end = end[-1])
+rec <- subset(rec, start >= as.Date("1962-01-01"))
+rec <- subset(rec, end <= as.Date("2022-01-01"))
 ```
+
 
 ```{r}
 #| include: false
 df <- fread(here::here("./data/vfciBC_data.csv"))
 setnames(df, "vfci", "VFCI")
 
-p <- 
-  df |>
+p_data <- df |>
   tidyr::pivot_longer(-"date") |>
-  filter(name %in% c("VFCI")) |>
-  ggplot(aes(
+  filter(name %in% c("VFCI")) 
+
+p <- ggplot() +
+  geom_rect(
+    data = rec,
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray70",
+    color = NA,
+    alpha = 0.5
+    ) +
+  geom_hline(yintercept = 0) +
+  geom_line(
+    data = p_data,
+  aes(
     x = date,
     y = value
-  )) +
-  geom_hline(yintercept = 0) +
-  geom_line(linewidth = 1.5) +
+  ),
+    linewidth = 1.5
+  ) +
+  annotate(
+    "text",
+    x = max(df$date),
+    y = -0.95,
+    size = 4,
+    hjust = 1,
+    label = "NBER recessions shaded in gray."
+  ) +
   scale_x_date(
     expand = c(0, 0),
     breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
@@ -120,7 +174,7 @@ p <-
   ) +
   labs(
     x = NULL,
-    y = NULL
+    y = NULL,
   ) +
   theme_pres
 
@@ -129,18 +183,62 @@ ggsave("./figs/vfci.svg", p, width = 10, height = 2, units = "in")
 
 ::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
 
-![Raw VFCI Time Series](./figs/vfci.svg)
+![Raw VFCI Time Series](./figs/vfci.svg){#fig-raw-vfci}
 
 :::
 
-### VFCI Construction
-si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
+The VFCI can be interpreted as the **price of risk**.
+It is consctucted using (1) asset returns and (2) forward consumption growth.
+We use a horizon of 10 quarters, but results are robust to similar horizons.
+<!-- As shown in @fig-raw-vfci, the VFCI peaks before each recession, as well as during some periods of financial stress, such as the savings and loans crisis during the 1980s, the Black Monday stock market crash in October of 1989, and the collapse of Long-Term Capital Management hedge fund in September of 1998. -->
 
+# Identifying the Business Cycle Shock
 
-# Results
+### VAR Identification Problem
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. 
+A **SVAR**(p) model with $p$ lags, for a vector of variables, $x_t$,
 
+$$
+B_0 x_t = B_1 x_{t-1} + . . . + B_p x_{t-p} + \epsilon_t
+$$
+
+Empirically, only the following $A_i$ matrices and reduced form residuals, $\nu_t$, are observed,
+
+$$
+ x_t = \underbrace{B_0^{-1}B_1}_{A_1} x_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} x_{t-p} + \underbrace{B_0^{-1}\epsilon_t}_{\upsilon_t}
+$$
+
+The matrix, $B_0$, of contemperaneous impacts linearly maps the reduced form residuals to the structural shocks.  The identification problem is determining $B_0$.
+
+$$
+ \nu_t = B_0^{-1} \epsilon_t
+$$
+
+### Max Forecast Error Variance (FEV) Identification
+
+Pick one variable to target from $x_t$ (i.e. unemployment, $x_t^(u)$ or VFCI $x_t^(vfci)$).
+Compute the forecast error for target horizon, $h$,
+
+$$
+  F_{t+h} = x^{(u)}_{t+h} - x^{(u)}_{t+h \mid t}
+$$
+
+Choose vector $B_0^(u)$ to maximize the variance of $F_{t+h}$,
+
+$$
+  \max_{B_0^{(u)}} \ \ \ \text{Var}[F_{t+h}]
+$$
+
+This will identify **one** shock, up to a change of sign.
+
+$$
+  \epsilon_t^{u} = B_0^{(u)} \hat{\upsilon}_t
+$$
+
+For the business cycle shock, calculate the forecast errors, $F$, over a frequency range $\{\omega^-, \omega^+\}$.
+
+We implement this identification scheme targeting unemployment and then again targeting VFCI.
+The two identified shocks have remarkably similar dynamics, shown in @fig-irf-u-vfci.
 
 ```{r}
 #| include: false
@@ -220,13 +318,16 @@ ggsave(
   )
 ```
 
-::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+::: {.block fill=luma(240) inset="20pt" radius="10pt" width="100%"}
 
-![Impulse Responses for VAR Shocks Targeting Unemployment or VFCI](./figs/irf_plot.svg)
+![IRFs for Max FEV Shocks Targeting Unemployment or VFCI](./figs/irf_plot.svg){#fig-irf-u-vfci}
 
 :::
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. 
+We can run this same identification method for all variables in the VAR, identifying 11 separate shocks.
+The scatterplot and correlation of each of those max FEV shocks with the unemployment targeted shock is shown in @fig-u-other-scatter.
+It is clear that VFCI, Fed Funds, output, investment, consumption, and hours worked are all highly correlated with unemployment.
+The inflation and productivity measures show lower correlations.
 
 
 ```{r}
@@ -273,10 +374,12 @@ hs_cross[, target.y := factor(target.y, levels = var_order, labels = names(var_o
 
 corrs <- hs_cross[, .(
   corr = cor(hs.x, hs.y),
-  min_x = min(hs.x) * 0.65,
-  max_y = max(hs.y) * 0.9
+  min_x = min(hs.x) * 0.95,
+  max_y = max(hs.y) * 0.85,
+  min_y = min(hs.y) * 0.85
   ), by = .(target.x, target.y)] |>
-  filter(target.x == "unemployment") 
+  dplyr::filter(target.x == "unemployment") 
+corrs[, loc_y := ifelse(corr < 0, min_y, max_y)]
 
 plot_cross_vfci <- ggplot() +
   geom_hline(yintercept = 0, color = "gray50") +
@@ -293,9 +396,10 @@ plot_cross_vfci <- ggplot() +
     data = corrs,
     color = "firebrick",
     size = 6,
+    hjust = 0,
     aes(
       x = min_x,
-      y = max_y,
+      y = loc_y,
       label = round(corr, 3)
     )
   ) +
@@ -323,13 +427,22 @@ ggsave(
 
 ::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
 
-![Scatterplot of VAR Shocks](./figs/correlation_scatterplots.svg)
+![Scatterplot of Max FEV VAR Shocks](./figs/correlation_scatterplots.svg){#fig-u-other-scatter}
 
 :::
 
+These previous two figures show that the VFCI is a part of the business cycle.
+But it could be that financial conditions are simply a reflection of the shifts in the macro economy, not a driver of the cycle.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
+# VFCI Shock Matches the Business Cycle 
 
+We will assume a recursive identifcation scheme (Choleskey), setting VFCI as the first variable in the VAR. This is equivalent to assuming that,
+$$
+  B_0^(vfci) = \begin{bmatrix} b_{0,1}^(vfci) & 0 & 0 & ... & 0 \end{bmatrix}
+$$
+
+This assumption is strong, implying that innovations to all other variables in the economy do not have a contemperoneous impact on the VFCI.
+This can be justified by VFCI being a financial variable measured and thus reacts to any new shock before the slowly moving macro variables.
 
 ```{r}
 #| include: false
@@ -398,14 +511,14 @@ plot <-
     x = "Horizon"
   ) +
   scale_color_manual(
-    name = "Targeted Variable",
+    name = "Identification Method",
     values = c(
       fevdfd = vfci_color,
       vfci_chol = vfci_chol_color
     ),
     labels = c(
-      fevdfd = "FEV Max",
-      vfci_chol = "VFCI Choleskey"
+      fevdfd = "Max FEV",
+      vfci_chol = "Choleskey"
     )
   ) +
   theme_pres +
@@ -425,10 +538,17 @@ ggsave(
 
 ::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
 
-![Impulse Responses for VAR Shocks Targeting VFCI or VFCI Choleskey](./figs/irf_choleskey_plot.svg)
+![IRFs for Max FEV or Choleskey targeting VFCI](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
 
 :::
 
+It is clear in @fig-irf-maxfev-chol, that an innovation to the VFCI causes the same dynamics as the identified businness cycle shocks.
+Given the assumptions for recursive identification, this shows that shocks to VFCI is a driver of the business cycle.
+
 # Conclusion
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen permagna accessio potest, si aliquod aeternum et infinitum impendere malum nobis opinemur. Quod idem licet transferre in voluptatem, ut postea variari voluptas distinguique possit, augeri amplificarique non possit. At etiam Athenis, ut e patre audiebam facete et urbane Stoicos irridente, statua est in quo a nobis philosophia defensa et collaudata est, cum id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, om- nis dolor repellendus. Temporibus autem quibusdam et.
+Our work so far shows for certain that the financial conditions, as measured by the VFCI, are a part of business cycle.
+We have also shown some evidence that changes in the VFCI are driving part of the business cycle.
+
+The implication of this finding is that financial conditions are not just a simple reflection of macroeconomic events, but are either a source of shocks or a common transmission mechanism of shocks from elswhere in the economy.
+This makes financial conditions extremely relevant for policymakers and an area that should be given more focus in macroeconomic research.

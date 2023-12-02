@@ -249,7 +249,7 @@
 <circle cx='113.09' cy='75.18' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='116.51' cy='66.81' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='95.70' cy='77.46' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='80.56' y='46.81' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.754</text>
+<text x='60.51' y='48.45' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.754</text>
 <rect x='51.04' y='32.94' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -481,7 +481,7 @@
 <circle cx='113.09' cy='255.54' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='116.51' cy='252.26' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='95.70' cy='262.19' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='80.56' y='210.77' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.881</text>
+<text x='60.51' y='213.05' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.881</text>
 <rect x='51.04' y='195.65' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -713,7 +713,7 @@
 <circle cx='113.09' cy='418.85' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='116.51' cy='419.88' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='95.70' cy='409.24' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='80.56' y='373.88' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.079</text>
+<text x='60.51' y='376.37' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.079</text>
 <rect x='51.04' y='358.35' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -945,7 +945,7 @@
 <circle cx='280.95' cy='85.70' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='284.37' cy='83.22' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='263.56' cy='98.33' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='248.42' y='47.55' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='9.49px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='228.37' y='49.57' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='9.49px' lengthAdjust='spacingAndGlyphs'>1</text>
 <rect x='218.90' y='32.94' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -1177,7 +1177,7 @@
 <circle cx='280.95' cy='254.25' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='284.37' cy='255.96' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='263.56' cy='263.80' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='248.42' y='210.78' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.951</text>
+<text x='228.37' y='213.06' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.951</text>
 <rect x='218.90' y='195.65' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -1409,7 +1409,7 @@
 <circle cx='280.95' cy='406.64' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='284.37' cy='406.82' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='263.56' cy='400.11' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='248.42' y='373.29' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='48.38px' lengthAdjust='spacingAndGlyphs'>-0.499</text>
+<text x='228.37' y='451.06' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='48.38px' lengthAdjust='spacingAndGlyphs'>-0.499</text>
 <rect x='218.90' y='358.35' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -1641,7 +1641,7 @@
 <circle cx='462.15' cy='70.14' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='465.57' cy='67.50' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='444.76' cy='75.07' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='429.62' y='46.39' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.803</text>
+<text x='409.57' y='47.82' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.803</text>
 <rect x='400.11' y='32.94' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -1873,7 +1873,7 @@
 <circle cx='462.15' cy='267.97' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='465.57' cy='262.41' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='444.76' cy='275.52' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='429.62' y='212.04' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.645</text>
+<text x='409.57' y='214.95' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.645</text>
 <rect x='400.11' y='195.65' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -2105,7 +2105,7 @@
 <circle cx='462.15' cy='413.76' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='465.57' cy='418.26' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='444.76' cy='406.28' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='429.62' y='373.82' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='48.38px' lengthAdjust='spacingAndGlyphs'>-0.298</text>
+<text x='409.57' y='451.84' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='48.38px' lengthAdjust='spacingAndGlyphs'>-0.298</text>
 <rect x='400.11' y='358.35' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -2337,7 +2337,7 @@
 <circle cx='643.35' cy='61.74' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='646.78' cy='68.73' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='625.97' cy='73.87' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='610.83' y='45.91' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.408</text>
+<text x='590.78' y='47.10' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.408</text>
 <rect x='581.31' y='32.94' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
@@ -2569,7 +2569,7 @@
 <circle cx='643.35' cy='253.73' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='646.78' cy='246.42' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
 <circle cx='625.97' cy='264.96' r='2.49' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' />
-<text x='610.83' y='210.51' text-anchor='middle' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.951</text>
+<text x='590.78' y='212.66' style='font-size: 17.07px;fill: #B22222; font-family: "Arial";' textLength='42.70px' lengthAdjust='spacingAndGlyphs'>0.951</text>
 <rect x='581.31' y='195.65' width='134.70' height='97.81' style='stroke-width: 1.94; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1MDQuMDA=)'>
