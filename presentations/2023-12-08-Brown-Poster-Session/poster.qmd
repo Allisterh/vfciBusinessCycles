@@ -447,7 +447,7 @@ $$
 $$
 
 This assumption is strong, implying that innovations to all other variables in the economy do not have a contemperoneous impact on the VFCI.
-This can be justified by VFCI being a financial variable measured and thus reacts to any new shock before the slowly moving macro variables.
+This can be justified by VFCI being the only included financial variable and thus reacts to any new shock before the slowly moving macro variables.
 
 ```{r}
 #| include: false
@@ -547,12 +547,12 @@ ggsave(
 
 :::
 
-It is clear in @fig-irf-maxfev-chol, that an innovation to the VFCI causes the same dynamics as the identified businness cycle shocks.
+It is clear in @fig-irf-maxfev-chol, that an innovation to the VFCI causes the same dynamics as the identified business cycle shocks.
 Given the assumptions for recursive identification, this shows that shocks to VFCI is a driver of the business cycle.
 
 # Conclusion
 
-Our work so far shows that financial conditions, as measured by the VFCI, are a part of business cycle.
+Our work finds that financial conditions, as measured by the VFCI, are a part of business cycle.
 We have also shown some evidence that changes in the VFCI are driving part of the business cycle.
 
 The implication of this finding is that financial conditions are not just a simple reflection of macroeconomic events, but are either a source of shocks or a common transmission mechanism of shocks from elswhere in the economy.
