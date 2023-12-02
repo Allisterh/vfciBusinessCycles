@@ -427,7 +427,7 @@
 <polyline points='64.32,404.18 69.30,404.18 ' style='stroke-width: 1.94; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='64.32,372.31 69.30,372.31 ' style='stroke-width: 1.94; stroke: #333333; stroke-linecap: butt;' />
 <text x='393.65' y='498.03' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='62.01px' lengthAdjust='spacingAndGlyphs'>Horizon</text>
-<text transform='translate(14.90,244.55) rotate(-90)' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='223.09px' lengthAdjust='spacingAndGlyphs'>Impulse Response Function</text>
+<text transform='translate(14.90,244.55) rotate(-90)' text-anchor='middle' style='font-size: 18.00px; font-family: "Arial";' textLength='269.09px' lengthAdjust='spacingAndGlyphs'>Impulse Response Function (IRF)</text>
 <text x='553.87' y='377.37' style='font-size: 18.00px; font-family: "Arial";' textLength='166.09px' lengthAdjust='spacingAndGlyphs'>Identification Method</text>
 <rect x='553.87' y='388.32' width='17.28' height='17.28' style='stroke-width: 1.94; stroke: none;' />
 <line x1='555.60' y1='396.96' x2='569.43' y2='396.96' style='stroke-width: 3.20; stroke: #4682B4; stroke-linecap: butt;' />

@@ -77,13 +77,13 @@ Are financial conditions a reflection of the macroeconomy or do they drive fluct
 
 "Business-Cycle Anatomy" by Angeletos, Collard, and Dellas (2020) show that business cycles exhibit comovement across a host of macro variables (output, unemployment, consumption, hours worked, investment) at a specific period of 6 to 32 quarters.
 
-We show that financial conditions, particularly the VFCI which measures the price of risk, is also a part of the business cycle.
+We show that the Volatility Financial Conditions Index (VFCI) which measures the price of risk, is also a part of the business cycle.
 We then show that a shock to financial conditions generates the same dynamics as this empirically identified business cycle shock.
 
 # Data
 All data is measured quarterly and runs from `r zoo::as.yearqtr(min(vardata$date))` to `r zoo::as.yearqtr(as.Date("2017-01-01"))`.
 Most of the time series used are standard macro series, pulled from the FRED by the Federal Reserve Bank of St. Louis.
-An exception is the Volatility Financial Conditions Index (VFCI), introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP).
+The VFCI is introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP), and is plotted in @fig-raw-vfci.
 
 <!-- ## Variables
 
@@ -289,7 +289,7 @@ plot <-
     scales = "free_y"
   ) +
   labs(
-    y = "Impulse Response Function",
+    y = "Impulse Response Function (IRF)",
     x = "Horizon"
   ) +
   scale_color_manual(
@@ -410,9 +410,14 @@ plot_cross_vfci <- ggplot() +
   theme_pres +
   labs(
     x = "Unemployment Targeted Shock",
-    y = "Other Targeted Shock"
+    y = "Other Targeted Shock",
+    tag = "Correlations for each\nscatter shown in red."
   ) +
-  theme(plot.margin = margin(2, 4, 2, 6, "pt"))
+  theme(
+    plot.margin = margin(2, 2, 2, 2, "pt"),
+    plot.tag.position = c(.9, .18),
+    plot.tag = element_text(size = 14, color = "firebrick")
+    )
 
 ## Save to disk
 ggsave(
@@ -436,7 +441,7 @@ But it could be that financial conditions are simply a reflection of the shifts 
 
 # VFCI Shock Matches the Business Cycle 
 
-We will assume a recursive identifcation scheme (Choleskey), setting VFCI as the first variable in the VAR. This is equivalent to assuming that,
+We will assume a recursive identifcation scheme (i.e. Choleskey), setting VFCI as the first variable in the VAR. This is equivalent to assuming that,
 $$
   B_0^(vfci) = \begin{bmatrix} b_{0,1}^(vfci) & 0 & 0 & ... & 0 \end{bmatrix}
 $$
@@ -507,7 +512,7 @@ plot <-
     scales = "free_y"
   ) +
   labs(
-    y = "Impulse Response Function",
+    y = "Impulse Response Function (IRF)",
     x = "Horizon"
   ) +
   scale_color_manual(
@@ -538,7 +543,7 @@ ggsave(
 
 ::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
 
-![IRFs for Max FEV or Choleskey targeting VFCI](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
+![IRFs for VFCI Shock Identified with Max FEV or Choleskey](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
 
 :::
 
@@ -547,7 +552,7 @@ Given the assumptions for recursive identification, this shows that shocks to VF
 
 # Conclusion
 
-Our work so far shows for certain that the financial conditions, as measured by the VFCI, are a part of business cycle.
+Our work so far shows that financial conditions, as measured by the VFCI, are a part of business cycle.
 We have also shown some evidence that changes in the VFCI are driving part of the business cycle.
 
 The implication of this finding is that financial conditions are not just a simple reflection of macroeconomic events, but are either a source of shocks or a common transmission mechanism of shocks from elswhere in the economy.
