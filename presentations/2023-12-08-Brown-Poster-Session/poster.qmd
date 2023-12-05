@@ -68,7 +68,6 @@ vfci_chol_color <- "goldenrod"
 
 ```{r}
 #| include: false
-
 vardata <- fread(here::here("./data/vfciBC_data.csv"))
 ```
 
@@ -80,37 +79,10 @@ Are financial conditions a reflection of the macroeconomy or do they drive fluct
 We show that the Volatility Financial Conditions Index (VFCI) which measures the price of risk, is also a part of the business cycle.
 We then show that a shock to financial conditions generates the same dynamics as this empirically identified business cycle shock.
 
-# Data
-All data is measured quarterly and runs from `r zoo::as.yearqtr(min(vardata$date))` to `r zoo::as.yearqtr(as.Date("2017-01-01"))`.
-Most of the time series used are standard macro series, pulled from the FRED by the Federal Reserve Bank of St. Louis.
-The VFCI is introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP), and is plotted in @fig-raw-vfci.
+# Volatility Financial Conditions Index (VFCI)
 
-<!-- ## Variables
-
-```{=typst}
-#grid(
-  columns: (1fr, 1fr, 1.2fr, 1fr),
-  align(left)[
-    1. VFCI
-    5. Output
-    9. Labor Share
-  ],
-  align(left)[
-    2. Unemployment
-    6. Investment
-    10. TFP
-  ],
-  align(left)[
-    3. Fed Funds Rate
-    7. Consumption
-    11. Labor Productivity
-  ],
-  align(left)[
-    4. Inflation
-    8. Hours Worked
-  ]
-)
-``` -->
+The VFCI is introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP), and can be interpreted as the *price of risk*.
+It has superior explanatory power for equity and bond risk premia compared to other financial condition indexes and has robust causal evidence that tightening of the VFCI leads to a decline in macroeconomic conditions and easing of monetary policy.
 
 ```{r}
 #| include: false
@@ -126,7 +98,6 @@ rec <- data.frame(start = start, end = end[-1])
 rec <- subset(rec, start >= as.Date("1962-01-01"))
 rec <- subset(rec, end <= as.Date("2022-01-01"))
 ```
-
 
 ```{r}
 #| include: false
@@ -162,10 +133,10 @@ p <- ggplot() +
   annotate(
     "text",
     x = max(df$date),
-    y = -0.95,
+    y = -0.925,
     size = 4,
     hjust = 1,
-    label = "NBER recessions shaded in gray."
+    label = "NBER recessions in gray."
   ) +
   scale_x_date(
     expand = c(0, 0),
@@ -178,18 +149,20 @@ p <- ggplot() +
   ) +
   theme_pres
 
-ggsave("./figs/vfci.svg", p, width = 10, height = 2, units = "in")
+ggsave("./figs/vfci.svg", p, width = 10, height = 1.5, units = "in")
 ```
 
 ::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
 
-![Raw VFCI Time Series](./figs/vfci.svg){#fig-raw-vfci}
+![VFCI](./figs/vfci.svg){#fig-raw-vfci}
 
 :::
 
-The VFCI can be interpreted as the **price of risk**.
-It is consctucted using (1) asset returns and (2) forward consumption growth.
+The VFCI is consctucted using (1) asset returns and (2) forward consumption growth.
 We use a horizon of 10 quarters, but results are robust to similar horizons.
+
+All data used in the VARs are measured quarterly and run from `r zoo::as.yearqtr(min(vardata$date))` to `r zoo::as.yearqtr(as.Date("2017-01-01"))`.
+
 <!-- As shown in @fig-raw-vfci, the VFCI peaks before each recession, as well as during some periods of financial stress, such as the savings and loans crisis during the 1980s, the Black Monday stock market crash in October of 1989, and the collapse of Long-Term Capital Management hedge fund in September of 1998. -->
 
 # Identifying the Business Cycle Shock
@@ -216,7 +189,7 @@ $$
 
 ### Max Forecast Error Variance (FEV) Identification
 
-Pick one variable to target from $x_t$ (i.e. unemployment, $x_t^(u)$ or VFCI $x_t^(vfci)$).
+Pick one variable to target from $x_t$ (i.e. unemployment, $x_t^(u)$).
 Compute the forecast error for target horizon, $h$,
 
 $$
@@ -237,7 +210,7 @@ $$
 
 For the business cycle shock, calculate the forecast errors, $F$, over a frequency range $\{\omega^-, \omega^+\}$.
 
-We implement this identification scheme targeting unemployment and then again targeting VFCI.
+We run the max FEV identification scheme targeting unemployment and then again targeting VFCI.
 The two identified shocks have remarkably similar dynamics, shown in @fig-irf-u-vfci.
 
 ```{r}
@@ -324,7 +297,7 @@ ggsave(
 
 :::
 
-We can run this same identification method for all variables in the VAR, identifying 11 separate shocks.
+We can use the same method for all variables in the VAR, identifying 11 separate shocks.
 The scatterplot and correlation of each of those max FEV shocks with the unemployment targeted shock is shown in @fig-u-other-scatter.
 It is clear that VFCI, Fed Funds, output, investment, consumption, and hours worked are all highly correlated with unemployment.
 The inflation and productivity measures show lower correlations.
