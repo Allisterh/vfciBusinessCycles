@@ -417,7 +417,7 @@ ggsave(
 :::
 
 
-# VFCI Shock Matches the Business Cycle 
+# VFCI Shock Generates Same Dynamics
 
 Assume a recursive identifcation scheme (i.e. Choleskey). Set VFCI as the first variable.
 
