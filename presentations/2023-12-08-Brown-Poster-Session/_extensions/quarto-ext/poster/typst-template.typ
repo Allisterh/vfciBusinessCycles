@@ -174,7 +174,7 @@
         text(authors_font_size, "Tobias Adrian"), 
         text(authors_font_size, "Matthew DeHaven"),
         text(authors_font_size, "Fernando Duarte"),
-        text(institution_font_size, "IMF"), 
+        text(institution_font_size, "IMF") + super[1], 
         text(institution_font_size, "Brown"),
         text(institution_font_size, "Brown")
       )

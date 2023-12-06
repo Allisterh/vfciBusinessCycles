@@ -434,6 +434,6 @@
 <rect x='553.87' y='405.60' width='17.28' height='17.28' style='stroke-width: 1.94; stroke: none;' />
 <line x1='555.60' y1='414.24' x2='569.43' y2='414.24' style='stroke-width: 3.20; stroke: #DAA520; stroke-linecap: butt;' />
 <text x='580.12' y='402.70' style='font-size: 16.00px; font-family: "Arial";' textLength='65.78px' lengthAdjust='spacingAndGlyphs'>Max FEV</text>
-<text x='580.12' y='419.98' style='font-size: 16.00px; font-family: "Arial";' textLength='74.71px' lengthAdjust='spacingAndGlyphs'>Choleskey</text>
+<text x='580.12' y='419.98' style='font-size: 16.00px; font-family: "Arial";' textLength='65.81px' lengthAdjust='spacingAndGlyphs'>Cholesky</text>
 </g>
 </svg>

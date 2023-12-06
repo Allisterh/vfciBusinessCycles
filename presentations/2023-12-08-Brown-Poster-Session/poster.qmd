@@ -72,24 +72,26 @@ vardata <- fread(here::here("./data/vfciBC_data.csv"))
 ```
 
 # Motivation
+Q: What is the role of financial conditions in generating business cycles?
+
 - Business cycles remarkably similar even when seemingly instigated by different shocks.
 
 - Implies a common shock or a common propogation mechanism.
 
 - "Business-Cycle Anatomy" by Angeletos, Collard, and Dellas (2020) use new max forecast error variance method to empirically identify a "business cycle" shock from a large VAR.
 
-We show financial conditions are a compelling candidate for a common propogation mechanism.
+We show financial conditions are a compelling candidate for a common propogation mechanism or shock.
 
 # Volatility Financial Conditions Index (VFCI)
-Introduced in "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP)
+"The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP)
 
 - Can be interpreted as the *price of risk*.
 
-- Better than other financial condition indexes at explaining equity and bond risk premia.
+- Which is equivalent to the effective level of risk aversion for the aggregate household.
 
 - Causal evidence that a tightening of the VFCI leads to a decline in macroeconomic conditions, easing of monetary policy, but little impact on inflation.
 
-- Constructed using (1) asset returns and (2) 10 quarter forward consumption growth
+- Constructed using (1) asset returns and (2) 10 quarter forward consumption growth.
 
 ```{r}
 #| include: false
@@ -307,8 +309,8 @@ ggsave(
 
 - Target each variable with max FEV method and compare with business cycle shock.
 
-VFCI is clearly a part of the "business cycle" block. 
-Inflation, TFP, productivity are not.
+VFCI is part of the "business cycle" block. 
+Inflation, TFP, productivity, labor share are not.
 
 ```{r}
 #| include: false
@@ -354,7 +356,7 @@ hs_cross[, target.y := factor(target.y, levels = var_order, labels = names(var_o
 
 corrs <- hs_cross[, .(
   corr = cor(hs.x, hs.y),
-  min_x = min(hs.x) * 0.95,
+  min_x = min(hs.x) * 0.975,
   max_y = max(hs.y) * 0.85,
   min_y = min(hs.y) * 0.85
   ), by = .(target.x, target.y)] |>
@@ -419,7 +421,7 @@ ggsave(
 
 # VFCI Shock Generates Same Dynamics
 
-Assume a recursive identifcation scheme (i.e. Choleskey). Set VFCI as the first variable.
+Assume a recursive identifcation scheme (i.e. Cholesky). Set VFCI as the first variable.
 
 $$
   B_0^(vfci) = \begin{bmatrix} b_{0,1}^(vfci) & 0 & 0 & ... & 0 \end{bmatrix}
@@ -507,7 +509,7 @@ plot <-
     ),
     labels = c(
       fevdfd = "Max FEV",
-      vfci_chol = "Choleskey"
+      vfci_chol = "Cholesky"
     )
   ) +
   theme_pres +
@@ -527,7 +529,7 @@ ggsave(
 
 ::: {.block fill="luma(240)" inset="15pt" radius="10pt" width="100%"}
 
-![IRFs for VFCI Shock Identified with Max FEV or Choleskey](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
+![IRFs for VFCI Shock Identified with Max FEV or Cholesky](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
 
 :::
 
@@ -548,3 +550,10 @@ The implication is that financial conditions are not just a reflection of macroe
 ```
 
 This makes financial conditions extremely relevant for policymakers and an area that should be given a more prominent focus in macroeconomic research and modeling about the business cycle.
+```{=typst}
+#v(20pt)
+#set text(
+  size: 14pt,
+)
+#super[1]The views expressed here are the authors’ and are not necessarily representative of the views of the International Monetary Fund, its Management, or its Executive Directors.
+```
