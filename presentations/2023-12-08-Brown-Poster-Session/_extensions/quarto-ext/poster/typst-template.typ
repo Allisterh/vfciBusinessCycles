@@ -52,7 +52,7 @@
   title_column_size: "20",
 
   // Poster title's font size (in pt).
-  title_font_size: "48",
+  title_font_size: "56",
 
   // Authors' font size (in pt).
   authors_font_size: "28",
@@ -93,7 +93,7 @@
     width: width,
     height: height,
     margin: 
-      (top: 0.75in, left: 1in, right: 1in, bottom: 1.5in),
+      (top: 0.5in, left: 0.75in, right: 0.75in, bottom: 1.25in),
     footer: [
       #set align(center)
       #set text(32pt)
@@ -165,7 +165,7 @@
       rows: 1,
       column-gutter: 0pt,
       row-gutter: 10pt,
-      text(title_font_size, title, weight: "extrabold") + "\n\n" + 
+      text(title_font_size, title, weight: "extrabold") + "\n" + 
       grid(
         rows: 2,
         columns: 3,
@@ -181,7 +181,7 @@
     ) 
   )
   line(length: 100%)
-  v(20pt)
+  v(10pt)
   // Start three column mode and configure paragraph properties.
   show: columns.with(num_columns, gutter: 64pt)
   set par(justify: true, first-line-indent: 0em)

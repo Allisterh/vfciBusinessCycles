@@ -72,17 +72,24 @@ vardata <- fread(here::here("./data/vfciBC_data.csv"))
 ```
 
 # Motivation
-Are financial conditions a reflection of the macroeconomy or do they drive fluctuations?
+- Business cycles remarkably similar even when seemingly instigated by different shocks.
 
-"Business-Cycle Anatomy" by Angeletos, Collard, and Dellas (2020) show that business cycles exhibit comovement across a host of macro variables (output, unemployment, consumption, hours worked, investment) at a specific period of 6 to 32 quarters.
+- Implies a common shock or a common propogation mechanism.
 
-We show that the Volatility Financial Conditions Index (VFCI) which measures the price of risk, is also a part of the business cycle.
-We then show that a shock to financial conditions generates the same dynamics as this empirically identified business cycle shock.
+- "Business-Cycle Anatomy" by Angeletos, Collard, and Dellas (2020) use new max forecast error variance method to empirically identify a "business cycle" shock from a large VAR.
+
+We show financial conditions are a compelling candidate for a common propogation mechanism.
 
 # Volatility Financial Conditions Index (VFCI)
+Introduced in "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP)
 
-The VFCI is introduced in  "The Market Price of Risk and Macro-Financial Dynamics" by Adrian, Duarte, and Iyer (WP), and can be interpreted as the *price of risk*.
-It has superior explanatory power for equity and bond risk premia compared to other financial condition indexes and has robust causal evidence that tightening of the VFCI leads to a decline in macroeconomic conditions and easing of monetary policy.
+- Can be interpreted as the *price of risk*.
+
+- Better than other financial condition indexes at explaining equity and bond risk premia.
+
+- Causal evidence that a tightening of the VFCI leads to a decline in macroeconomic conditions, easing of monetary policy, but little impact on inflation.
+
+- Constructed using (1) asset returns and (2) 10 quarter forward consumption growth
 
 ```{r}
 #| include: false
@@ -132,9 +139,9 @@ p <- ggplot() +
   ) +
   annotate(
     "text",
-    x = max(df$date),
+    x = as.Date("2022-01-01"),
     y = -0.925,
-    size = 4,
+    size = 5,
     hjust = 1,
     label = "NBER recessions in gray."
   ) +
@@ -149,27 +156,20 @@ p <- ggplot() +
   ) +
   theme_pres
 
-ggsave("./figs/vfci.svg", p, width = 10, height = 1.5, units = "in")
+ggsave("./figs/vfci.svg", p, width = 10, height = 2.5, units = "in")
 ```
 
-::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+::: {.block fill="luma(240)" inset="15pt" radius="10pt" width="100%"}
 
 ![VFCI](./figs/vfci.svg){#fig-raw-vfci}
 
 :::
 
-The VFCI is consctucted using (1) asset returns and (2) forward consumption growth.
-We use a horizon of 10 quarters, but results are robust to similar horizons.
-
-All data used in the VARs are measured quarterly and run from `r zoo::as.yearqtr(min(vardata$date))` to `r zoo::as.yearqtr(as.Date("2017-01-01"))`.
-
 <!-- As shown in @fig-raw-vfci, the VFCI peaks before each recession, as well as during some periods of financial stress, such as the savings and loans crisis during the 1980s, the Black Monday stock market crash in October of 1989, and the collapse of Long-Term Capital Management hedge fund in September of 1998. -->
 
-# Identifying the Business Cycle Shock
+# Max Forecast Error Variance (FEV) ID
 
-### VAR Identification Problem
-
-A **SVAR**(p) model with $p$ lags, for a vector of variables, $x_t$,
+A SVAR(p) model with $p$ lags, for a vector of variables, $x_t$,
 
 $$
 B_0 x_t = B_1 x_{t-1} + . . . + B_p x_{t-p} + \epsilon_t
@@ -181,19 +181,16 @@ $$
  x_t = \underbrace{B_0^{-1}B_1}_{A_1} x_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} x_{t-p} + \underbrace{B_0^{-1}\epsilon_t}_{\upsilon_t}
 $$
 
-The matrix, $B_0$, of contemperaneous impacts linearly maps the reduced form residuals to the structural shocks.  The identification problem is determining $B_0$.
+The identification problem is determining $B_0$.
 
 $$
  \nu_t = B_0^{-1} \epsilon_t
 $$
 
-### Max Forecast Error Variance (FEV) Identification
-
-Pick one variable to target from $x_t$ (i.e. unemployment, $x_t^(u)$).
-Compute the forecast error for target horizon, $h$,
+Compute the forecast error for one target variable (i.e. $u$) for target horizon, $h$
 
 $$
-  F_{t+h} = x^{(u)}_{t+h} - x^{(u)}_{t+h \mid t}
+  F_{t+h} = x^{(u)}_{t+h} - x^{(u)}_{t+h \mid t} = \sum_{i=0}^{h-1} \underbrace{\Gamma_i}_{IRF} B_0^{(u)^{-1}} \epsilon_{t+h+i}
 $$
 
 Choose vector $B_0^(u)$ to maximize the variance of $F_{t+h}$,
@@ -208,10 +205,21 @@ $$
   \epsilon_t^{u} = B_0^{(u)} \hat{\upsilon}_t
 $$
 
-For the business cycle shock, calculate the forecast errors, $F$, over a frequency range $\{\omega^-, \omega^+\}$.
+For business cycle shock, calculate forecast errors over a frequency range, 6 to 32 quarters.
 
-We run the max FEV identification scheme targeting unemployment and then again targeting VFCI.
-The two identified shocks have remarkably similar dynamics, shown in @fig-irf-u-vfci.
+```{=typst} 
+#colbreak()
+```
+
+# Using VFCI to Identify the Business Cycle
+
+We use the max FEV identification method to identify two shocks:
+
+- one targeting unemployment---the "Business Cycle" shock,
+
+- one targeting VFCI.
+
+The dynamics of the IRFs are remarkably similar.
 
 ```{r}
 #| include: false
@@ -291,17 +299,16 @@ ggsave(
   )
 ```
 
-::: {.block fill=luma(240) inset="20pt" radius="10pt" width="100%"}
+::: {.block fill=luma(240) inset="15pt" radius="10pt" width="100%"}
 
 ![IRFs for Max FEV Shocks Targeting Unemployment or VFCI](./figs/irf_plot.svg){#fig-irf-u-vfci}
 
 :::
 
-We can use the same method for all variables in the VAR, identifying 11 separate shocks.
-The scatterplot and correlation of each of those max FEV shocks with the unemployment targeted shock is shown in @fig-u-other-scatter.
-It is clear that VFCI, Fed Funds, output, investment, consumption, and hours worked are all highly correlated with unemployment.
-The inflation and productivity measures show lower correlations.
+- Target each variable with max FEV method and compare with business cycle shock.
 
+VFCI is clearly a part of the "business cycle" block. 
+Inflation, TFP, productivity are not.
 
 ```{r}
 #| include: false
@@ -403,24 +410,28 @@ ggsave(
 
 ```
 
-::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+::: {.block fill="luma(240)" inset="15pt" radius="10pt" width="100%"}
 
 ![Scatterplot of Max FEV VAR Shocks](./figs/correlation_scatterplots.svg){#fig-u-other-scatter}
 
 :::
 
-These previous two figures show that the VFCI is a part of the business cycle.
-But it could be that financial conditions are simply a reflection of the shifts in the macro economy, not a driver of the cycle.
 
 # VFCI Shock Matches the Business Cycle 
 
-We will assume a recursive identifcation scheme (i.e. Choleskey), setting VFCI as the first variable in the VAR. This is equivalent to assuming that,
+Assume a recursive identifcation scheme (i.e. Choleskey). Set VFCI as the first variable.
+
 $$
   B_0^(vfci) = \begin{bmatrix} b_{0,1}^(vfci) & 0 & 0 & ... & 0 \end{bmatrix}
 $$
 
-This assumption is strong, implying that innovations to all other variables in the economy do not have a contemperoneous impact on the VFCI.
-This can be justified by VFCI being the only included financial variable and thus reacts to any new shock before the slowly moving macro variables.
+- Implies that innovations to all other variables do not have a contemperoneous impact on the VFCI.
+
+This can be justified by:
+
+- VFCI is the only financial variable,
+
+- VFCI reacts to any new shock before the slowly moving macro variables.
 
 ```{r}
 #| include: false
@@ -514,19 +525,26 @@ ggsave(
   )
 ```
 
-::: {.block fill="luma(240)" inset="20pt" radius="10pt" width="100%"}
+::: {.block fill="luma(240)" inset="15pt" radius="10pt" width="100%"}
 
 ![IRFs for VFCI Shock Identified with Max FEV or Choleskey](./figs/irf_choleskey_plot.svg){#fig-irf-maxfev-chol}
 
 :::
 
-It is clear in @fig-irf-maxfev-chol, that an innovation to the VFCI causes the same dynamics as the identified business cycle shocks.
-Given the assumptions for recursive identification, this shows that shocks to VFCI is a driver of the business cycle.
+A shock to VFCI causes the same dynamics as the identified business cycle shock.
+
+- This is evidence that financial conditions could act as the common propogation mechanism of shocks to the economy.
 
 # Conclusion
 
-Our work finds that financial conditions, as measured by the VFCI, are a part of business cycle.
-We have also shown some evidence that changes in the VFCI are driving part of the business cycle.
+- We first showed that VFCI has the same business cycle properties as unemloyment, output, investment, consumption, and hours worked.
 
-The implication of this finding is that financial conditions are not just a simple reflection of macroeconomic events, but are either a source of shocks or a common transmission mechanism of shocks from elswhere in the economy.
-This makes financial conditions extremely relevant for policymakers and an area that should be given more focus in macroeconomic research.
+- Then we showed that shocks to the VFCI generate the exact dynamics seen in the business cycle.
+
+The implication is that financial conditions are not just a reflection of macroeconomic events, but are either a source of shocks or a common transmission mechanism of shocks from elswhere in the economy.  
+
+```{=typst}
+#v(20pt)
+```
+
+This makes financial conditions extremely relevant for policymakers and an area that should be given a more prominent focus in macroeconomic research and modeling about the business cycle.
