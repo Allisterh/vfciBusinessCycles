@@ -93,12 +93,12 @@
     width: width,
     height: height,
     margin: 
-      (top: 0.5in, left: 0.75in, right: 0.75in, bottom: 1.25in),
+      (top: 0.6in, left: 0.75in, right: 0.75in, bottom: 1.5in),
     footer: [
       #set align(center)
       #set text(32pt)
       #line(length: 100%)
-      #v(0pt, weak: true)
+      #v(-10pt, weak: true)
       #block(
         fill: none,
         stroke: none,
@@ -181,7 +181,7 @@
     ) 
   )
   line(length: 100%)
-  v(10pt)
+  v(0pt)
   // Start three column mode and configure paragraph properties.
   show: columns.with(num_columns, gutter: 64pt)
   set par(justify: true, first-line-indent: 0em)

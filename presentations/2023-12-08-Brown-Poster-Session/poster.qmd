@@ -549,7 +549,7 @@ The implication is that financial conditions are not just a reflection of macroe
 #v(20pt)
 ```
 
-This makes financial conditions extremely relevant for policymakers and an area that should be given a more prominent focus in macroeconomic research and modeling about the business cycle.
+This makes financial conditions extremely relevant for policymakers and an area that should be focused on in macroeconomic research and modeling about the business cycle.
 ```{=typst}
 #v(20pt)
 #set text(
