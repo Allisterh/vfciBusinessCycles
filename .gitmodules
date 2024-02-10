@@ -1,3 +1,3 @@
-[submodule "vfciBusinessCycles-Overleaf"]
-	path = vfciBusinessCycles-Overleaf
-	url = https://github.com/VFCI/vfciBusinessCycles-Overleaf.git
+[submodule "paper-Overleaf"]
+	path = paper-Overleaf
+	url = https://git@git.overleaf.com/65c64a11a7f7bc75b6e6a20a
