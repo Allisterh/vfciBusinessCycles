@@ -1,0 +1,342 @@
+---
+title: "Mean - Vol Relationship"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(tidyfast)
+require(dplyr)
+require(ggplot2)
+require(patchwork)
+require(vars)
+require(svars)
+require(fevdid)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+
+\section{VAR}
+
+A reduced form VAR of some number of variables, $k$, and  some number of lags, $p$, is written as,
+\begin{align}
+y_t = A_1 y_{t-1} + ... + A_{p} y_{t-p} + u_t
+\end{align}
+
+where $A_i$ is a $kxk$ matrix of coefficients and,
+\begin{align}
+  y_t = \begin{bmatrix}\text{output}_t\\\text{unemployment}_t\\\text{inflation}_t\\...\\\text{vfci}_t\end{bmatrix}, \hspace{1cm} u_t = \begin{bmatrix}u^\text{output}_t\\u^\text{unemployment}_t\\u^\text{inflation}_t\\...\\u^\text{vfci}_t\end{bmatrix}
+\end{align}
+
+Each $u_t$ are the reduced form residuals for the accompanying data series.
+
+\subsubsection{Max Share ID}
+
+Then, using the max share identification method, we identify one structural shock, $w^{\text{BC}}_t$, which drives the business cycle.
+
+\begin{align}
+u_t = P Q^* w_t
+\end{align}
+
+where $P$ is the choleskey of $\Sigma_u$ and $Q^*$ is the identified rotation matrix that returns $w^{\text{BC}}_t$ in the first column.
+
+Then we can write,
+\begin{align}
+y_t = A_1 y_{t-1} + ... + A_{p} y_{t-p} + P Q^* \begin{bmatrix}w^{\text{BC}}_t \\ w^2_t \\ w^3_t \\ . . . \\ w^k_t \end{bmatrix}
+\end{align}
+
+\subsubsection{Business Cycle Contribution}
+
+Using the identified business cycle shock, we can construct the time series for $y_t^{\text{BC}}$ which are the contributions to each variable of the VAR driven by the identified shock.
+
+\begin{align}
+  \widehat{y^{\text{BC}}}_t = \widehat{\begin{bmatrix}\text{output}^{\text{BC}}_t\\\text{unemployment}^{\text{BC}}_t\\\text{inflation}^{\text{BC}}_t\\...\\\text{vfci}^{\text{BC}}_t\end{bmatrix}}
+\end{align}
+
+\subsubsection{Business Cycle Volatility}
+
+The realized volatility for the business cycle can be defined as:
+\begin{align}
+v^\text{BC}_t = log(\left[w^{\text{BC}}_t\right]^2)
+\end{align}
+
+This volatility can also be modeled using the variables of the VAR:
+\begin{align}
+v^{\text{BC}}_t = \alpha_1 y_{t-1} + ... + \alpha_{p} y_{t-p} + \epsilon_t
+\end{align}
+
+where $\alpha_i$ is a $1xk$ vector of coefficients.
+
+We can then estimate $\widehat{v^\text{BC}_t}$ as a time series.
+
+\subsubsection{Mean-Vol Relationship}
+
+The mean-vol relationship is then the relationship between
+
+(1) the predicted means:
+
+\begin{align}
+  \widehat{y^{\text{BC}}}_t
+\end{align}
+
+(2) the predicted volatility:
+
+\begin{align}
+  \widehat{v^\text{BC}_t}
+\end{align}
+
+\textbf{Note:} There are multiple predicted means (one for each of the $k$ variables), but only one predicted volatility of the business cycle.
+Therefore, there will be $k$ mean-vol relationships which will depend upon the relationship between each variable's predicted mean and the business cycle shock.
+
+\newpage
+\section{The Data}
+
+```{r, include = F}
+X <- fread(here("./data/vfciBC_data.csv"))
+X <- X[,.(date, output, investment, consumption, hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP, vfci = vfci_fgr10gdpc1)]
+X <- X[date <= as.Date("2017-01-01")]
+
+lags <- 2
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+
+v <- VAR(X[, -"date"], p = lags, type = "const")
+
+models <- list(
+  mv_u = id_fevdfd(v, "unemployment", bc_freqs),
+  mv_vfci = id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+)
+
+```
+
+```{r make_shocks, include = F}
+
+contributions <- rbindlist(lapply(names(models), function(n) {
+  hd(models[[n]])$hd |>
+    as.data.table() |>
+    _[, model := n]
+}))
+
+shocks <- lapply(names(models), function(n) {
+  hs(models[[n]])$hs |>
+    as.data.table() |>
+    _[, model := n] |>
+    _[, vol := log(hs^2)]
+})
+
+X[, t := seq_len(nrow(X)) - lags]
+
+het_data <- lapply(shocks, function(s) {
+  s |>
+  merge(X, by = "t")
+})
+
+het_models <- lapply(het_data, function(h) {
+  lm(formula = "vol ~ 
+  lag(output) + lag(investment) + lag(consumption) + lag(hours_worked) + lag(unemployment) + 
+  lag(labor_share) + lag(interest) + lag(inflation) + lag(productivity) + lag(TFP) + lag(vfci) +
+  lag(output, 2) + lag(investment, 2) + lag(consumption, 2) + lag(hours_worked, 2) + lag(unemployment, 2) + 
+  lag(labor_share, 2) + lag(interest, 2) + lag(inflation, 2) + lag(productivity, 2) + lag(TFP, 2) + lag(vfci, 2)
+  ", data = h)
+})
+
+pred_vol <- rbindlist(lapply(seq_along(het_data), function(i) {
+  het_data[[i]][, predicted_vol := predict(het_models[[i]])]
+}))
+
+
+## Merge mean and vol data
+mv_data <- merge(
+  contributions,
+  pred_vol,
+  by = c("model", "t", "impulse"),
+  allow.cartesian = TRUE
+)
+```
+
+Here are the contributions of the Business Shock, $\widehat{y_t^{\text{BC}}}$, to a subset of the variables, compared to the total unexplained varaition in those series.
+
+```{r, include = TRUE, fig.height = 4, out.width = "100%"}
+mv_data |>
+ _[response %in% c("output", "unemployment", "inflation", "vfci")] |>
+ _[impulse == "Main"] |>
+ ggplot(aes(
+   x = date
+ )) +
+ geom_line(aes(y = total, color = "Total")) +
+ geom_line(aes(y = hd, color = "Contribution from BC Shock")) +
+ facet_grid(
+  cols = vars(model),
+  rows = vars(response),
+  scales = "free"
+ ) +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+```
+
+And here is the realized volatility of the business cycle shock, $v_t^{\text{BC}}$, and the predicted value, $\widehat{v_t^{\text{BC}}}$:
+
+```{r, include = TRUE, fig.height = 3, out.width = "100%"}
+mv_data |>
+  _[impulse == "Main"] |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = vol, color = "vol")) +
+  geom_line(aes(y = predicted_vol, color = "predicted_vol")) +
+  facet_grid(
+    cols = vars(model),
+    scales = "free"
+  ) +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+```
+
+The correlation between the two sets of predicted values are not particularly high:
+
+```{r, include = TRUE, fig.height = 4, out.width = "100%"}
+mv_data |>
+  _[response %in% c("unemployment", "output", "inflation")] |>
+  _[impulse == "Main"] |>
+  ggplot(aes(
+    x = predicted_vol,
+    y = hd
+  )) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_grid(
+    rows = vars(response),
+    cols = vars(model),
+    scales = "free"
+  ) +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+```
+
+
+
+
+
+\newpage
+
+
+
+
+```{r}
+data <- copy(X)
+
+data <- data |>
+  dt_pivot_longer(-c(date, t), names_to = "variable", values_to = "original")
+
+resid_data <-
+  residuals(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "residuals")
+
+fitted_data <-
+  fitted(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "fitted")
+
+data <- data |>
+  merge(resid_data, by = c("t", "variable")) |>
+  merge(fitted_data, by = c("t", "variable"))
+
+data[, vol := log(residuals^2)]
+```
+
+```{r, include = TRUE, fig.height = 8, out.width = "100%"}
+p1 <- data |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = original, color = "original")) +
+  geom_line(aes(y = fitted, color = "fitted")) +
+  facet_grid(rows = vars(variable), scales = "free") +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+
+p2 <- data |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = residuals, color = "residuals")) +
+  facet_grid(rows = vars(variable), scales = "free") +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+
+p1 | p2
+```
+
+```{r}
+reg_data <- data |>
+  merge(
+    dt_pivot_wider(data[,.(t, variable, original)], names_from = variable, values_from = original),
+    by = c("t"),
+    allow.cartesian = TRUE
+  )
+
+fitted_vol_data <-
+  rbindlist(lapply(unique(reg_data$variable), function(n) {
+    het_model <- lm(formula = "vol ~ 
+    lag(output) + lag(investment) + lag(consumption) + lag(hours_worked) + lag(unemployment) + 
+    lag(labor_share) + lag(interest) + lag(inflation) + lag(productivity) + lag(TFP) + lag(vfci) +
+    lag(output, 2) + lag(investment, 2) + lag(consumption, 2) + lag(hours_worked, 2) + lag(unemployment, 2) + 
+    lag(labor_share, 2) + lag(interest, 2) + lag(inflation, 2) + lag(productivity, 2) + lag(TFP, 2) + lag(vfci, 2)
+    ", data = reg_data[variable == n])
+    fitted(het_model) |>
+      as.data.table() |>
+      setnames("V1", "fitted_vol") |>
+      _[, variable := n] |>
+      _[, t := .I] |>
+      _[, resid_vol := residuals(het_model)]
+  }))
+
+data <- data |>
+  merge(fitted_vol_data, by = c("t", "variable"))
+```
+
+
+```{r, include = TRUE, fig.height = 8, out.width = "100%"}
+p1 <- data |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = vol, color = "original vol")) +
+  geom_line(aes(y = fitted_vol, color = "fitted vol")) +
+  facet_grid(rows = vars(variable), scales = "free") +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+
+p2 <- data |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = resid_vol, color = "residuals vol")) +
+  facet_grid(rows = vars(variable), scales = "free") +
+ theme_bw(base_size = 8) +
+ theme(legend.position = "top")
+
+p1 | p2
+```
+
+```{r, include = TRUE, fig.height = 8, out.width = "80%"}
+data |>
+  ggplot(aes(
+    x = fitted_vol,
+    y = fitted
+  )) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(
+    vars(variable),
+    ncol = 2,
+    scales = "free"
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
