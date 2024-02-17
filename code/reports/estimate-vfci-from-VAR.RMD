@@ -1,0 +1,200 @@
+---
+title: "Mean - Vol Relationship"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(tidyfast)
+require(dplyr)
+require(ggplot2)
+require(patchwork)
+require(vars)
+require(svars)
+require(fevdid)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+\section{VAR}
+
+A reduced form VAR of some number of variables, $k$, and  some number of lags, $p$, is written as,
+\begin{align}
+y_t = A_1 y_{t-1} + ... + A_{p} y_{t-p} + u_t
+\end{align}
+
+where $A_i$ is a $kxk$ matrix of coefficients and,
+\begin{align}
+  y_t = \begin{bmatrix}\text{output}_t\\\text{unemployment}_t\\\text{inflation}_t\\...\\\text{vfci}_t\end{bmatrix}, \hspace{1cm} u_t = \begin{bmatrix}u^\text{output}_t\\u^\text{unemployment}_t\\u^\text{inflation}_t\\...\\u^\text{vfci}_t\end{bmatrix}
+\end{align}
+
+Each $u_t$ are the reduced form residuals for the accompanying data series.
+
+With this, we can estimate the predicted values, $\widehat{y}_t$, and the residuals, $\widehat{u}_t$.
+
+\subsubsection{Volatility}
+
+We can then define the log-variance as 
+\begin{align}
+  \text{Var}_t \equiv \log(\widehat{u}_t^2)
+\end{align}
+
+This can be estimated with the regression,
+\begin{align}
+  \text{Var}_t = \alpha_1 y_{t-1} + . . . + \alpha_{p} y_{t-p} + \epsilon_t
+\end{align}
+
+Then the VFCI is defined as,
+\begin{align}
+  \text{VFCI}_t \equiv \widehat{\text{Var}_t}
+\end{align}
+
+The VFCI series is then rescaled to N(0,1).
+
+\subsection{External VFCI}
+We will compare to the externally estimated VFCI on forward GDP growth (forwarded 1 quarter) and financial principal components.
+
+\newpage
+
+
+
+```{r, include = F}
+all_data <- fread(here("./data/vfciBC_data.csv"))
+X <- all_data[,.(date, output, investment, consumption, hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP)]
+X <- X[date <= as.Date("2017-01-01")]
+
+lags <- 2
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+
+v <- VAR(X[, -"date"], p = lags, type = "const")
+
+X[, t := seq_len(nrow(X)) - lags]
+```
+
+```{r}
+data <- copy(X)
+
+data <- data |>
+  dt_pivot_longer(-c(date, t), names_to = "variable", values_to = "original")
+
+resid_data <-
+  residuals(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "residuals")
+
+fitted_data <-
+  fitted(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "fitted")
+
+data <- data |>
+  merge(resid_data, by = c("t", "variable")) |>
+  merge(fitted_data, by = c("t", "variable"))
+
+data[, log_var := log(residuals^2)]
+```
+
+```{r}
+reg_data <- data |>
+  merge(
+    dt_pivot_wider(data[,.(t, variable, original)], names_from = variable, values_from = original),
+    by = c("t"),
+    allow.cartesian = TRUE
+  )
+
+fitted_log_var_data <-
+  rbindlist(lapply(unique(reg_data$variable), function(n) {
+    het_model <- lm(formula = "log_var ~ 
+    lag(output) + lag(investment) + lag(consumption) + lag(hours_worked) + lag(unemployment) + 
+    lag(labor_share) + lag(interest) + lag(inflation) + lag(productivity) + lag(TFP) +
+    lag(output, 2) + lag(investment, 2) + lag(consumption, 2) + lag(hours_worked, 2) + lag(unemployment, 2) + 
+    lag(labor_share, 2) + lag(interest, 2) + lag(inflation, 2) + lag(productivity, 2) + lag(TFP, 2)
+    ", data = reg_data[variable == n])
+    fitted(het_model) |>
+      as.data.table() |>
+      setnames("V1", "fitted_log_var") |>
+      _[, variable := n] |>
+      _[, t := .I] |>
+      _[, resid_log_var := residuals(het_model)]
+  }))
+
+data <- data |>
+  merge(fitted_log_var_data, by = c("t", "variable"))
+```
+
+
+```{r}
+data[, var_vfci := scale(fitted_log_var), by = variable]
+#data[, var_vfci := scale(sqrt(exp(fitted_log_var))), by = variable]
+
+## Flip variables with reverse mean-vol relationship
+data[variable == "unemployment", var_vfci := -1 * var_vfci]
+
+
+## Merge on vfci data
+ext_vfci_data <- all_data[, .(date, vfci_ext = vfci_fgr1gdpc1)]
+ext_vfci_data[, vfci_ext := scale(vfci_ext)]
+
+data <- data |>
+  merge(ext_vfci_data, by = "date")
+
+```
+
+
+```{r, include = TRUE, fig.height = 9, out.width = "100%"}
+data |>
+  ggplot(aes(
+    x = date,
+    y = var_vfci,
+    color = variable
+  )) +
+  geom_line(aes(color = "vfci_var")) +
+  geom_line(aes(y = vfci_ext, color = "vfci_ext")) +
+  facet_wrap(
+    vars(variable),
+    ncol = 2,
+    scales = "free"
+  ) +
+  scale_color_manual(
+    values = c(
+      vfci_var = "firebrick",
+      vfci_ext = "black"
+    ),
+    labels = c(
+      vfci_var = "VFCI from VAR (one for each variable)",
+      vfci_ext = "External VFCI"
+    )
+  ) +
+  theme_bw(base_size = 8) + 
+  theme(legend.position = "top")
+```
+
+
+\newpage
+
+```{r, include = TRUE, fig.height = 9, out.width = "100%"}
+corrs <- data[, .(corr = cor(var_vfci, vfci_ext)), by = variable]
+
+data |>
+  ggplot(aes(
+    x = vfci_ext,
+    y = var_vfci
+  )) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_vline(xintercept = 0, color = "gray50") +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, fullrange = TRUE) +
+  geom_label(data = corrs, aes(x = - 4, y = 3.5, label = paste0("Corr: ", round(corr, 2))), hjust = 0) +
+  facet_wrap(
+    vars(variable),
+    ncol = 3
+  ) +
+  scale_x_continuous(limits = c(-4, 4), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4, 4), expand = c(0,0)) +
+  theme_bw(base_size = 8) +
+  coord_fixed()
+```

@@ -46,6 +46,7 @@ rmarkdown::render("./code/reports/vfciBC_allVARcharts.RMD", "pdf_document", "All
 
 rmarkdown::render("./code/reports/business_cycle_frequencies.RMD", "pdf_document", "BusinessCycleFrequencies.pdf", "./reports")
 rmarkdown::render("./code/reports/mean-vol-relationship.RMD", "pdf_document", "MeanVolRelationship.pdf", "./reports")
+rmarkdown::render("./code/reports/estimate-vfci-from-VAR.RMD", "pdf_document", "EstimateVFCIfromVAR.pdf", "./reports")
 
 ## Run tests
 testthat::test_dir("tests")
