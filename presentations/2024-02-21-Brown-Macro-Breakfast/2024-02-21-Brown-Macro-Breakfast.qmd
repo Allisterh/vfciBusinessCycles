@@ -18,6 +18,221 @@ format:
     self-contained: true
 ---
 
+```{r}
+#| include: false
+require(dplyr)
+require(data.table)
+require(tidyfast)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+require(patchwork)
+require(gt)
+```
+
+```{r}
+#| include: false
+
+theme_pres <-
+    theme_bw(base_size = 16) +
+    theme(
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(size = 12, margin = margin(0, 0, 0, 0)),
+        axis.title = element_text(size = 14),
+        plot.caption = element_text(size = 11),
+        panel.grid = element_blank(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_blank(),
+        legend.key=element_rect(fill = alpha("white", 0)),
+        legend.position = "top",
+        legend.background = element_blank(),
+        legend.title = element_text(size = 14),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.text = element_text(size = 10),
+        plot.margin = margin(10, 10, 0, 10, "pt")
+        )
+
+var_order <- c(
+    VFCI = "vfci",
+    Unemployment = "unemployment",
+    `Fed Funds` = "interest",
+    Inflation = "inflation",
+    Output = "output",
+    Investment = "investment",
+    Consumption = "consumption",
+    `Hours Worked` = "hours_worked",
+    `Labor Share` = "labor_share",
+    TFP = "TFP",
+    `Labor Prod.` = "productivity"
+)
+
+crossplot_order <- c("Output", "Investment", "Consumption", "Hours Worked", "Fed Funds", "Labor Prod.", "Inflation", "TFP", "VFCI")
+
+
+## Colors
+vfci_color <- "steelblue"
+u_color <- "darkorange"
+vfci_chol_color <- "goldenrod"
+```
+
+```{r}
+#| include: false
+vardata <- fread(here::here("./data/vfciBC_data.csv"))
+```
+
+```{r}
+#| include: false
+
+## Get Recession data
+require(quantmod)
+getSymbols("USREC", src = "FRED")
+
+start <- zoo::index(USREC[which(diff(USREC$USREC)==1)])
+end   <- zoo::index(USREC[which(diff(USREC$USREC)==-1)-1])
+
+rec <- data.table(start = start, end = end[-1])
+```
+
+```{r}
+#| include: false
+
+vfciBCdata <- copy(vardata)[, .(date, output, investment, consumption, hours_worked,
+    unemployment, labor_share, interest, inflation, productivity, TFP, vfci = vfci_fgr10gdpc1)] |>
+    _[date <= as.Date("2017-01-01")]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+## Fit the VAR
+v <- VAR(vfciBCdata[, -"date"], p = lags, type = "const")
+
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+mv_u <- id_fevdfd(v, "unemployment", bc_freqs)
+
+##### IRF
+
+irf_vfci <- irf(mv_vfci, n.ahead = 40, impulse = "Main")$irf
+irf_u <- irf(mv_u, n.ahead = 40, impulse = "Main")$irf
+
+irf_vfci$model <- "vfci"
+irf_u$model <- "u"
+
+irf_df <- rbind(irf_vfci, irf_u)
+
+setDT(irf_df)
+
+## Plotting
+irf_df[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
+```
+
+```{r}
+targets <- names(vfciBCdata[, -1])
+
+mv_l <- lapply(seq_along(targets), function(i) {
+  id_fevdfd(v, targets[[i]], bc_freqs, sign = ifelse(targets[[i]] %in% c("unemployment", "labor_share"), "pos", "neg"))
+}) 
+
+hd_df <- rbindlist(lapply(seq_along(targets), function(i) {
+  hd <- hd(mv_l[[i]])$hd |> setDT()
+  hd <- hd[impulse == "Main"]
+  hd$target <- targets[[i]]
+  hd$date <- rep(vfciBCdata[-c(1:lags), "date"][[1]], length(targets))
+  hd
+}))
+
+hs_df <- rbindlist(lapply(seq_along(targets), function(i) {
+  hs <- hs(mv_l[[i]])$hs |> setDT()
+  hs <- hs[impulse == "Main"]
+  hs$target <- targets[[i]]
+  hs$date <- vfciBCdata[-c(1:lags), "date"][[1]]
+  hs
+}))
+
+hs_cross <- merge(
+  hs_df[, .(date, target.x = target, hs.x = hs)],
+  hs_df[, .(date, target.y = target, hs.y = hs)],
+  by = "date",
+  all = TRUE,
+  allow.cartesian = TRUE
+)
+
+
+hs_cross <- hs_cross |>
+  filter(target.x == "unemployment")
+hs_cross[, target.y := factor(target.y, levels = var_order, labels = names(var_order), ordered = TRUE)]
+
+corrs <- hs_cross[, .(
+  corr = cor(hs.x, hs.y),
+  min_x = min(hs.x) * 0.95,
+  max_x = max(hs.x) * 0.95,
+  max_y = max(hs.y) * 0.975,
+  min_y = min(hs.y) * 0.975
+  ), by = .(target.x, target.y)] |>
+  dplyr::filter(target.x == "unemployment") 
+corrs[, loc_y := ifelse(corr < 0, min_y, max_y)]
+corrs[, loc_x := ifelse(corr < 0, min_x, max_x)]
+
+```
+
+```{r}
+meanvol_data <- copy(vfciBCdata)
+meanvol_data[, t := seq_len(nrow(vfciBCdata)) - lags]
+
+meanvol_data <- meanvol_data |>
+  dt_pivot_longer(-c(date, t), names_to = "variable", values_to = "original")
+
+resid_data <-
+  residuals(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "residuals")
+
+fitted_data <-
+  fitted(v) |>
+  as.data.table() |>
+  _[, t := .I] |>
+  dt_pivot_longer(-t, names_to = "variable", values_to = "fitted")
+
+meanvol_data <- meanvol_data |>
+  merge(resid_data, by = c("t", "variable")) |>
+  merge(fitted_data, by = c("t", "variable"))
+
+meanvol_data[, log_var := log(residuals^2)]
+
+reg_data <- meanvol_data |>
+  merge(
+    dt_pivot_wider(meanvol_data[,.(t, variable, original)], names_from = variable, values_from = original),
+    by = c("t"),
+    allow.cartesian = TRUE
+  )
+
+fitted_log_var_data <-
+  rbindlist(lapply(unique(reg_data$variable), function(n) {
+    het_model <- lm(formula = "log_var ~ 
+    lag(output) + lag(investment) + lag(consumption) + lag(hours_worked) + lag(unemployment) + 
+    lag(labor_share) + lag(interest) + lag(inflation) + lag(productivity) + lag(TFP) + lag(vfci) +
+    lag(output, 2) + lag(investment, 2) + lag(consumption, 2) + lag(hours_worked, 2) + lag(unemployment, 2) + 
+    lag(labor_share, 2) + lag(interest, 2) + lag(inflation, 2) + lag(productivity, 2) + lag(TFP, 2) + lag(vfci, 2)
+    ", data = reg_data[variable == n])
+    fitted(het_model) |>
+      as.data.table() |>
+      setnames("V1", "fitted_log_var") |>
+      _[, variable := n] |>
+      _[, t := .I] |>
+      _[, resid_log_var := residuals(het_model)]
+  }))
+
+meanvol_data <- meanvol_data |>
+  merge(fitted_log_var_data, by = c("t", "variable"))
+
+diff_vars <- c("output", "consumption", "investment", "productivity", "TFP")
+meanvol_data[, fitted_adj := fitted]
+meanvol_data[variable %in% diff_vars, fitted_adj := fitted - shift(fitted, n = 1, type = "lag"), by = "variable"]
+```
+
 ## Goal for Presentation Today
 
 Focus on the "story" of the project.
@@ -59,7 +274,27 @@ Defined to be a cycle with a period of 6 to 32 quarters.
 
 . . .
 
-[Picture of NBER Recession peaks-to-peaks, > 1950]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3
+
+rec |>
+ _[,peak_to_peak := lubridate::interval(shift(start, 1, "lag"), start) %/% months(1) / 3] |>
+ _[start >= as.Date("1950-01-01")] |>
+ ggplot(aes(
+  x = peak_to_peak
+ )) +
+ geom_rect(xmin = 6, xmax = 32, ymin = -Inf, ymax = +Inf, fill = "lightgray")+
+ geom_boxplot() +
+ scale_y_continuous(expand = c(0.2,0.2), breaks = NULL) +
+ scale_x_continuous(limits = c(0,50), breaks = seq(0,50,10), expand = c(0,0)) +
+ labs(
+  x = "Peak-to-Peak Business Cycle Length",
+  title = "NBER Cycle Lengths since 1950"
+ ) +
+ theme_pres
+```
 
 
 ## Co-movement in Macro Variables
@@ -96,16 +331,110 @@ They call this shock the "main business cycle shock".
 
 ## The Main Business Cycle Shock
 
-The shock looks like a homoskedastic, mean-zero shock
+The shock looks like a roughly homoskedastic, mean-zero shock.
 
-[picture of shock] [histogram of shock]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3.5
 
-. . .
+p1_df <- hs_df[target == "unemployment"]
 
-But the structure of the VAR means the contribution of the shock to macro variables looks like the business cycle:
+p1 <- 
+  ggplot() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_line(
+    data = p1_df,
+    aes(
+    x = date,
+    y = hs
+  )) + 
+  geom_rect(
+    data = rec[start >= as.Date("1962-01-01")],
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray70",
+    color = NA,
+    alpha = 0.5
+    ) +
+  labs(
+    x = "",
+    y = "Business Cycle Shock"
+  ) +
+  scale_x_date(
+    expand = c(0.02, 0),
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, by = 10)
+  ) +
+  theme_pres
 
-[Picture of business cycle for unemployment]
+p2 <- 
+  hs_df[target == "unemployment"] |>
+  ggplot(aes(
+    x = hs
+  )) +
+  geom_vline(xintercept = 0, color = "black") +
+  geom_histogram(fill = "gray50", color = "white") +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 30)) + 
+  labs(
+    x = "Business Cycle Shock",
+    y = "Count"
+  ) +
+  theme_pres
+p1 | p2 + plot_layout(widths = c(2,1))
+```
 
+
+## The Main Business Cycle Shock
+
+But the structure of the VAR means the contribution of the shock to macro variables looks like the business cycle.
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3.5
+p3_df <- hd_df |>
+  _[target == "unemployment"] |>
+  _[response == "unemployment"]
+
+p3 <- 
+  ggplot() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_line(
+    data = p3_df,
+    aes(
+    x = date,
+    y = hd
+  )) +
+  geom_rect(
+    data = rec[start >= as.Date("1962-01-01")],
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray70",
+    color = NA,
+    alpha = 0.5
+    ) +
+  labs(
+    x = NULL,
+    y = "Business Cycle Shock\nContribution to Unemployment"
+  ) +
+  scale_x_date(
+    expand = c(0.02, 0),
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, by = 10)
+  ) +
+  theme_pres
+
+p3
+```
 
 ## The Main Business Cycle Shock
 
@@ -115,7 +444,27 @@ This business cycle shock also explains a large amount of the unforecasted varia
 
 . . .
 
-[Table showing this]
+```{r}
+fevdid::fevdfd(mv_u)$fevdfd |>
+ as.data.table() |>
+ _[impulse == "Main"] |>
+ _[response %in% c("unemployment", "output", "hours_worked", "consumption", "investment")] |>
+ _[f %between% bc_freqs,.(mean_fevdfd = mean(fevdfd)), by = .(response)] |>
+ dt_pivot_longer(-response) |>
+ _[, response := factor(response, levels = var_order, labels = names(var_order))] |>
+ _[, value := round(value, 4)] |>
+ dt_pivot_wider(names_from = response, values_from = value) |>
+ _[, name := "Explained Unforecasted Variation"] |>
+ setnames("name", " ") |>
+ gt() |>
+ fmt_markdown(columns = 1) |>
+ fmt_percent() |>
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_options(table.font.size = 18)
+```
 
 
 ## The Main Business Cycle Shock
@@ -126,9 +475,50 @@ If the shock was constructed targeting either
 
 The same "main business cycle shock" would be identified.
 
-. . .
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 4
 
-[Picture showing the correlations between the 4 shocks and unemployment one]
+p <- hs_cross |>
+  _[target.y %in% c("Output", "Investment", "Hours Worked", "Consumption")] |>
+  ggplot(aes(
+    x = hs.y,
+    y = hs.x
+  )) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_vline(xintercept = 0, color = "gray50") +
+  geom_point(
+    size = 3,
+    alpha = 0.5
+  ) +
+  geom_text(
+    data = corrs[target.y %in% c("Output", "Investment", "Hours Worked", "Consumption")],
+    color = "firebrick",
+    size = 5,
+    hjust = 0,
+    aes(
+      x = min_y,
+      y = max_x,
+      label = round(corr, 2)
+    )
+  ) +
+  facet_wrap(
+    vars(target.y),
+    nrow = 1,
+    scales = "free_x"
+    ) +
+  labs(
+    x = "Other Targeted Shock",
+    y = "Targeted Unemployment",
+    title = "Comparing VAR Shocks",
+    caption = "Correlations shown in red numbers."
+  ) +
+  theme_pres
+
+p
+```
+
 
 ## The Main Business Cycle Shock
 
@@ -178,8 +568,53 @@ The VFCI...
 - can be interpreted as the *price of risk*
   - equivalent to the level of risk aversion of the aggregate housheold
 
-[Picture of the VFCI with recession dates]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3
 
+p_data <- vardata |>
+  _[,.(date, vfci = vfci_fgr10gdpc1)] |>
+  dt_pivot_longer(-date) |>
+  _[!is.na(value)] |>
+  _[, value := scale(value)]
+
+p <- ggplot() +
+  geom_rect(
+    data = rec[start >= as.Date("1962-01-01")],
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray70",
+    color = NA,
+    alpha = 0.5
+    ) +
+  geom_hline(yintercept = 0) +
+  geom_line(
+    data = p_data,
+  aes(
+    x = date,
+    y = value
+  )
+  ) +
+  scale_x_date(
+    expand = c(0.02, 0),
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, by = 10)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "VFCI",
+    caption = "Constructed using forward gdp growth 10 quarters ahead.\nNBER recessions in gray."
+  ) +
+  theme_pres
+
+p
+```
 
 ## Theory Behind the VFCI
 
@@ -225,15 +660,88 @@ and normalized to be mean 0 and variance 1.
 
 Including VFCI in the VAR and targeting it for the max-share method returns the same business cycle shock.
 
-[Picture of shock correlations-vfci and unemployment]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 5
 
+p <- hs_cross |>
+  _[target.y == "VFCI"] |>
+  ggplot(aes(
+    x = hs.y,
+    y = hs.x
+  )) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_vline(xintercept = 0, color = "gray50") +
+  geom_point(
+    size = 3,
+    alpha = 0.5
+  ) +
+  geom_text(
+    data = corrs[target.y == "VFCI"],
+    color = "firebrick",
+    size = 5,
+    hjust = 0,
+    aes(
+      x = min_y,
+      y = max_x,
+      label = paste0("Corr: ", round(corr, 2))
+    )
+  ) +
+  labs(
+    x = "Targeted VFCI",
+    y = "Targeted Unemployment",
+    title = "Comparing VAR Shocks"
+  ) +
+  theme_pres
+
+p
+```
 
 ## Targeting VFCI Identifies Same Shock
 
 The dynamics of the two shocks are also the same.
 
-[Picture of impulse responses for select variables]
+```{r}
+#| echo: false
+#| fig-align: center
 
+p <-
+  irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1.5) +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  labs(
+    y = "Impulse Response Function (IRF)",
+    x = "Horizon"
+  ) +
+  scale_color_manual(
+    name = "Targeted Variable",
+    values = c(
+      vfci = vfci_color,
+      u = u_color
+    ),
+    labels = c(
+      vfci = "VFCI",
+      u = "Unemployment"
+    )
+  ) +
+  theme_pres +
+  theme(
+    legend.position = c(0.875, 0.15)
+    )
+
+p
+```
 
 ## VFCI Co-moves with the Business Cycle
 
@@ -278,7 +786,26 @@ There are $k$ mean-vol relationships in the VAR, one for each variable.
 
 Using unemployment, we can see a strong linear relationship between the conditional mean and the conditional volatility.
 
-[picture showing mean-vol for unemp]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 4
+#| fig-width: 4.25
+meanvol_data |>
+  _[variable == "unemployment"] |>
+  ggplot(aes(
+    x = sqrt(exp(fitted_log_var)),
+    y = fitted_adj
+  )) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "firebrick") +
+  labs(
+    y = "Condtional Mean",
+    x = "Conditional Volatility",
+    title = "Mean-Vol: Unemployment"
+  ) +
+  theme_pres
+```
 
 [[Mean-Vol for Output]{.button}](#app-mean-vol-output)
 
@@ -289,7 +816,7 @@ We have seen
 
 - the existence of the mean-vol relationship in the empirical data,
 
-- and that financial conditions moving strongly with the business cycle,
+- and that financial conditions move strongly with the business cycle,
 
 suggesting financial conditions could be the propagation mechanism.
 
@@ -302,10 +829,92 @@ If this is true, we would also expect a shock to financial conditions to generat
 ## A Shock to VFCI
 
 If we assume a Choleskey idenfication with VFCI ordered first,
-
 then a shock to VFCI generates the same business cycle dynamics.
 
-[Picture of the IRFs matching]
+```{r}
+#| echo: false
+#| fig-align: center
+
+
+vfciBCdata <- vardata[, .(date, vfci = vfci_fgr10gdpc1, output, investment, consumption,hours_worked, unemployment, labor_share, interest, inflation, productivity, TFP)] |>
+ _[date <= as.Date("2017-01-01")]
+
+## Target the BC frequency and umemployment variable
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+p <- 2
+
+## Fit the VAR
+v <- VAR(vfciBCdata[, -"date"], p = p, type = "const")
+
+mv_vfci <- id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+sv_vfci_chol <- id.chol(v) 
+
+## Flip shock sign to align with FEVD shock direction
+sv_vfci_chol$B <- sv_vfci_chol$B * -1
+
+
+## IRF
+irf_vfci <- irf(mv_vfci, n.ahead = 40, impulse = "Main")$irf
+irf_vfci_chol <- irf(sv_vfci_chol, n.ahead = 40)$irf |>
+      tidyr::pivot_longer(-V1) |>
+      mutate(
+        response = stringr::str_extract(name, "(?<=% ).*$"),
+        impulse = stringr::str_extract(name, "(?<=\\[ ).*(?= \\])"),
+        name = NULL
+      ) |>
+      rename(c(
+        h = "V1",
+        irf = "value"
+      )) |>
+      dplyr::filter(impulse == "vfci") |>
+      dplyr::select(h, impulse, response, irf)
+
+irf_vfci$model <- "fevdfd"
+irf_vfci_chol$model <- "vfci_chol"
+
+irf_df <- rbind(irf_vfci, irf_vfci_chol)
+
+setDT(irf_df)
+
+## Plotting
+irf_df[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
+
+plot <-
+  irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1.5) +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  labs(
+    y = "Impulse Response Function (IRF)",
+    x = "Horizon"
+  ) +
+  scale_color_manual(
+    name = "Identification Method",
+    values = c(
+      fevdfd = vfci_color,
+      vfci_chol = vfci_chol_color
+    ),
+    labels = c(
+      fevdfd = "Max Share",
+      vfci_chol = "Cholesky"
+    )
+  ) +
+  theme_pres +
+  theme(
+    legend.position = c(0.875, 0.15)
+    )
+
+plot
+```
 
 
 ## Conclusion
@@ -368,6 +977,25 @@ For business cycle shock, calculate forecast errors over a frequency range, 6 to
 
 Using output instead.
 
-[picture showing mean-vol for output]
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 4
+#| fig-width: 4.25
+meanvol_data |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = sqrt(exp(fitted_log_var)),
+    y = fitted_adj
+  )) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "firebrick") +
+  labs(
+    y = "Condtional Mean\n(in log-differences)",
+    x = "Conditional Volatility",
+    title = "Mean-Vol: Output"
+  ) +
+  theme_pres
+```
 
 [[Back]{.button}](#mean-vol-unemployment)
