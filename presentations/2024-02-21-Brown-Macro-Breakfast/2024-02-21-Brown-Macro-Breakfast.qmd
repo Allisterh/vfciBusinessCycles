@@ -124,6 +124,21 @@ irf_df <- rbind(irf_vfci, irf_u)
 
 setDT(irf_df)
 
+##### HD
+
+hd_vfci <- hd(mv_vfci)$hd
+hd_u <- hd(mv_u)$hd
+
+hd_vfci$model <- "vfci"
+hd_u$model <- "u"
+
+mv_hd_df <- rbind(hd_vfci, hd_u)
+
+setDT(mv_hd_df)
+
+mv_hd_df <- mv_hd_df[impulse == "Main"]
+mv_hd_df[, date := rep(vfciBCdata[-(1:lags),"date"][[1]], 22)]
+
 ## Plotting
 irf_df[, response := factor(response, levels = var_order, labels = names(var_order), ordered = TRUE)]
 ```
@@ -239,11 +254,14 @@ Focus on the "story" of the project.
 
 Last presentation before I start drafting the paper (3rd year paper).
 
-- Only minor changes to analysis
+- Only minor changes to analysis before that draft
 
 - Looking for comments about...
    - structure
-   - 
+   - framing
+   - how convincing/persuasive the story is
+
+But feel free to give comments on everything too!
 
 ## Co-movement over the Business Cycle
 
@@ -251,20 +269,18 @@ Empirically, we observe co-movement across macro variables over the business cyc
 
 . . .
 
-**Key Question:** What drives this co-movement?
+**Key Question in Macroeconomics:** What drives this co-movement?
 
-- A single shock?
-- A common propagation mechanism?
+- A single shock
+- A common propagation mechanism
 
 . . .
 
-We will show:
+We argue that...
 
-- fianncial conditions also co-move with the business cycle
+- financial conditions are the common propagation mechanism
 
-- financial conditions provide a compelling propagation mechanism
-
-## The Business Cycle
+## The Business Cycle {#bussiness-cycle-def}
 
 Defined to be a cycle with a period of 6 to 32 quarters.
 
@@ -274,32 +290,14 @@ Defined to be a cycle with a period of 6 to 32 quarters.
 
 . . .
 
-```{r}
-#| echo: false
-#| fig-align: center
-#| fig-height: 3
+- Usually business cycles are on the longer end of this range
 
-rec |>
- _[,peak_to_peak := lubridate::interval(shift(start, 1, "lag"), start) %/% months(1) / 3] |>
- _[start >= as.Date("1950-01-01")] |>
- ggplot(aes(
-  x = peak_to_peak
- )) +
- geom_rect(xmin = 6, xmax = 32, ymin = -Inf, ymax = +Inf, fill = "lightgray")+
- geom_boxplot() +
- scale_y_continuous(expand = c(0.2,0.2), breaks = NULL) +
- scale_x_continuous(limits = c(0,50), breaks = seq(0,50,10), expand = c(0,0)) +
- labs(
-  x = "Peak-to-Peak Business Cycle Length",
-  title = "NBER Cycle Lengths since 1950"
- ) +
- theme_pres
-```
 
+[[Business Cycle Lengths]{.button}](#app-bussiness-cycle-lengths)
 
 ## Co-movement in Macro Variables
 
-Angeletos, Collard, and Dellas (2020) run a large VAR with 10 macro variables:
+Angeletos, Collard, and Dellas (2020) run a VAR with 10 macro variables:
 
 . . .
 
@@ -313,7 +311,7 @@ Angeletos, Collard, and Dellas (2020) run a large VAR with 10 macro variables:
 
 ## Max Share Identification Method
 
-Choose the single shock that explains the largest share of the unforecasted variation in 
+Choose the single shock that explains the largest share of the forecast error variance (FEV) for 
 
 **(1) unemployment** at the 
 
@@ -331,7 +329,7 @@ They call this shock the "main business cycle shock".
 
 ## The Main Business Cycle Shock
 
-The shock looks like a roughly homoskedastic, mean-zero shock.
+The shock looks like a usual VAR innovation.
 
 ```{r}
 #| echo: false
@@ -343,12 +341,6 @@ p1_df <- hs_df[target == "unemployment"]
 p1 <- 
   ggplot() +
   geom_hline(yintercept = 0, color = "gray50") +
-  geom_line(
-    data = p1_df,
-    aes(
-    x = date,
-    y = hs
-  )) + 
   geom_rect(
     data = rec[start >= as.Date("1962-01-01")],
     aes(
@@ -360,7 +352,13 @@ p1 <-
     fill = "gray70",
     color = NA,
     alpha = 0.5
-    ) +
+  ) +
+  geom_line(
+    data = p1_df,
+    aes(
+    x = date,
+    y = hs
+  )) + 
   labs(
     x = "",
     y = "Business Cycle Shock"
@@ -404,12 +402,6 @@ p3_df <- hd_df |>
 p3 <- 
   ggplot() +
   geom_hline(yintercept = 0, color = "gray50") +
-  geom_line(
-    data = p3_df,
-    aes(
-    x = date,
-    y = hd
-  )) +
   geom_rect(
     data = rec[start >= as.Date("1962-01-01")],
     aes(
@@ -421,7 +413,13 @@ p3 <-
     fill = "gray70",
     color = NA,
     alpha = 0.5
-    ) +
+  ) +
+  geom_line(
+    data = p3_df,
+    aes(
+    x = date,
+    y = hd
+  )) +
   labs(
     x = NULL,
     y = "Business Cycle Shock\nContribution to Unemployment"
@@ -438,7 +436,7 @@ p3
 
 ## The Main Business Cycle Shock
 
-This business cycle shock also explains a large amount of the unforecasted variation in:
+This business cycle shock also explains a large amount of the forecast error variance (FEV) in:
 
 - Output, Investment, Hours Worked, and Consumption
 
@@ -454,7 +452,7 @@ fevdid::fevdfd(mv_u)$fevdfd |>
  _[, response := factor(response, levels = var_order, labels = names(var_order))] |>
  _[, value := round(value, 4)] |>
  dt_pivot_wider(names_from = response, values_from = value) |>
- _[, name := "Explained Unforecasted Variation"] |>
+ _[, name := "Explained FEV"] |>
  setnames("name", " ") |>
  gt() |>
  fmt_markdown(columns = 1) |>
@@ -530,7 +528,7 @@ This is not the case for either
 
 . . .
 
-Thus the empirical business cycle does not align well with
+Thus the authors conclude that the empirical business cycle does not align well with
 
 - RBC productivity shocks or
 - New Keynesian demand shocks.
@@ -552,21 +550,23 @@ There are two possibilities:
 
 Angeletos, Collard, and Dellas (2020) suggest it could be driven by a single shock to "higher order beliefs".
 
+- A type of confidence shock
+
 . . .
 
-We will show evidence for preferring financial conditions as a common propagation mechanism.
+We will instead show that financial conditions are a common propagation mechanism.
 
 
 ## Introducing the VFCI
 
-Our preferred measure is the **volatility financial conditions index** constructed in Adrian, Duarte, and Iyer (2023).
+Our preferred measure is the **volatility financial conditions index** (VFCI) constructed in Adrian, Duarte, and Iyer (2023).
 
 . . .
 
 The VFCI...
 
-- can be interpreted as the *price of risk*
-  - equivalent to the level of risk aversion of the aggregate housheold
+- is a measure of the *price of risk*
+  - can be interpreted as the level of risk aversion of the aggregate housheold
 
 ```{r}
 #| echo: false
@@ -618,20 +618,33 @@ p
 
 ## Theory Behind the VFCI
 
-The VFCI can be modeled with financial institutions that have a **value-at-risk** constraint.
+In a NK model with financial intermediaries with a value-at-risk constraint...
 
 . . .
 
-- This constraint binds risk-taking in bad times, but not in good, creating a nonlinearity in the model.
+- the market price of risk is a natural measure of financial conditions
 
 . . .
 
-- This nonlinearity links the mean and volatility in the model
-  - This mean-vol relationship is also observed in the data
+- the constraint is tighter in bad times, a nonlinearity in the model.
 
 . . .
 
-**Key:** The value-at-risk constraint aggregates all types of shocks in the model into a single constraint.
+The value-at-risk constraint links the mean and volatility of intermediaries' net worth.
+
+. . .
+
+- Which, in equilibrium, links the mean and volatility of output.
+
+. . .
+
+
+**Key:** The value-at-risk constraint aggregates and propagates diverse shocks into one channel.
+
+. . .
+
+- Any shock changes the volatility of net worth and thus of output.
+
 
 
 ## Empirical Construction of the VFCI
@@ -642,10 +655,10 @@ $$
 \Delta \text{gdp}_{t+h} = \theta R_t + \epsilon_t
 $$
 
-Then the variance of the residual, $\sigma_t^2 = \text{Var}\left(\widehat{\epsilon}_t\right)$ can be estimated as,
+Then the variance of the residual can be estimated as,
 
 $$
-\sigma_t^2 = \exp( \delta R_t) + e_t
+\log(\widehat{\epsilon}_t^2) = \delta R_t + e_t
 $$
 
 Then the VFCI is defined as,
@@ -700,7 +713,7 @@ p
 
 ## Targeting VFCI Identifies Same Shock
 
-The dynamics of the two shocks are also the same.
+The impulse response functions (IRFs) are also the same.
 
 ```{r}
 #| echo: false
@@ -714,7 +727,7 @@ p <-
     color = model
   )) +
   geom_hline(yintercept = 0) +
-  geom_line(linewidth = 1.5) +
+  geom_line() +
   facet_wrap(
     vars(response),
     nrow = 3,
@@ -743,20 +756,79 @@ p <-
 p
 ```
 
+## Targeting VFCI Identifies Same Shock
+
+And if we look at the contribution of each shock to unemployment,
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3.5
+p_df <- mv_hd_df |>
+  _[response == "unemployment"]
+
+p <- 
+  ggplot() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_rect(
+    data = rec[start >= as.Date("1962-01-01")],
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = -Inf,
+      ymax = +Inf
+    ),
+    fill = "gray70",
+    color = NA,
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = p_df,
+    aes(
+    x = date,
+    y = hd,
+    color = model
+  )) +
+  labs(
+    x = NULL,
+    y = "Shock Contribution to Unemployment"
+  ) +
+  scale_x_date(
+    expand = c(0.02, 0),
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, by = 10)
+  ) +
+  scale_color_manual(
+    name = "Targeted Variable",
+    values = c(
+      vfci = vfci_color,
+      u = u_color
+    ),
+    labels = c(
+      vfci = "VFCI",
+      u = "Unemployment"
+    )
+  ) +
+  theme_pres
+
+p
+```
+
+
 ## VFCI Co-moves with the Business Cycle
 
-We can conclude that financial conditions are co-moving with the business cycle.
+We conclude that financial conditions co-move with the business cycle.
 
 . . .
 
-But why is a financial propagation more compelling than a single belief shock?
+Why is a financial propagation more compelling than a single belief shock?
 
 . . .
 
-Because we also see evidence in the VAR of a strong mean-vol relationship.
+We also see evidence in the VAR of a strong mean-volatility relationship.
 
-- This is present in a model with a value-at-risk constraint,
-- but it is not present in a model of higher order belief shocks (needs to be confirmed).
+- This is present in the model with a value-at-risk constraint,
+- but is not present in a model of higher order belief shocks (needs to be proven formally).
 
 
 ## Mean-Vol Relationship in the VAR
@@ -791,10 +863,11 @@ Using unemployment, we can see a strong linear relationship between the conditio
 #| fig-align: center
 #| fig-height: 4
 #| fig-width: 4.25
+
 meanvol_data |>
   _[variable == "unemployment"] |>
   ggplot(aes(
-    x = sqrt(exp(fitted_log_var)),
+    x = scale(fitted_log_var),
     y = fitted_adj
   )) +
   geom_point() +
@@ -812,13 +885,13 @@ meanvol_data |>
 
 ## Financial Conditions Propagating the Business Cycle
 
-We have seen
+There exists a general equilibrium structural model that is consistent with
 
 - the existence of the mean-vol relationship in the empirical data,
 
 - and that financial conditions move strongly with the business cycle,
 
-suggesting financial conditions could be the propagation mechanism.
+implying financial conditions are a likely propagation mechanism.
 
 . . .
 
@@ -887,7 +960,7 @@ plot <-
     color = model
   )) +
   geom_hline(yintercept = 0) +
-  geom_line(linewidth = 1.5) +
+  geom_line() +
   facet_wrap(
     vars(response),
     nrow = 3,
@@ -919,18 +992,18 @@ plot
 
 ## Conclusion
 
-Empirical facts of the business cycle are best explained by a common propagation mechanism through the financial sector.
+Empirical facts of the business cycle are better explained by a common propagation mechanism through the financial sector.
 
 - financial conditions move with the business cycle
 
-- models with value-at-risk contstraint generate the empirically observed mean-volatility relationship
+- model with value-at-risk contstraint generates the empirically observed mean-volatility relationship
 
-- shocks directly to financial conditions generate the same busines cycle
+- financial condition shocks generate the same busines cycle
 
 
-# Appendix
+# Appendix {.appendix visibility="uncounted"}
 
-## Appendix: Max-Share Method Details
+## Appendix: Max-Share Method Details {visibility="uncounted"}
 
 A SVAR(p) model with $p$ lags, for a vector of variables, $x_t$,
 
@@ -950,7 +1023,7 @@ $$
  \nu_t = B_0^{-1} \epsilon_t
 $$
 
-## Appendix: Max-Share Method Details
+## Appendix: Max-Share Method Details {visibility="uncounted"}
 
 Compute the forecast error for one target variable (i.e. $u$) for target horizon, $h$
 
@@ -973,7 +1046,37 @@ $$
 For business cycle shock, calculate forecast errors over a frequency range, 6 to 32 quarters.
 
 
-## Appendix: Mean-Vol Relationship in VAR {#app-mean-vol-output}
+## Appendix: Business Cycle Lengths {#app-bussiness-cycle-lengths visibility="uncounted"}
+
+The shaded area shows the defined business cycle range of 6 to 32 quarters.
+
+The box plot shows the actual distribution of business cycle lengths since 1950.
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 3
+
+rec |>
+ _[,peak_to_peak := lubridate::interval(shift(start, 1, "lag"), start) %/% months(1) / 3] |>
+ _[start >= as.Date("1950-01-01")] |>
+ ggplot(aes(
+  x = peak_to_peak
+ )) +
+ geom_rect(xmin = 6, xmax = 32, ymin = -Inf, ymax = +Inf, fill = "lightgray")+
+ geom_boxplot() +
+ scale_y_continuous(expand = c(0.2,0.2), breaks = NULL) +
+ scale_x_continuous(limits = c(0,50), breaks = seq(0,50,10), expand = c(0,0)) +
+ labs(
+  x = "Peak-to-Peak Business Cycle Length",
+  title = "NBER Cycle Lengths since 1950"
+ ) +
+ theme_pres
+```
+
+[[Back]{.button}](#bussiness-cycle-def)
+
+## Appendix: Mean-Vol Relationship in VAR {#app-mean-vol-output visibility="uncounted"}
 
 Using output instead.
 
@@ -985,7 +1088,7 @@ Using output instead.
 meanvol_data |>
   _[variable == "output"] |>
   ggplot(aes(
-    x = sqrt(exp(fitted_log_var)),
+    x = scale(fitted_log_var),
     y = fitted_adj
   )) +
   geom_point() +
