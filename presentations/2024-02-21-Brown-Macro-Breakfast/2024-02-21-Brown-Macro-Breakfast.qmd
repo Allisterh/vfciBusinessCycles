@@ -758,7 +758,7 @@ p
 
 ## Targeting VFCI Identifies Same Shock
 
-And if we look at the contribution of each shock to unemployment,
+And the contribution of each shock to unemployment are also similar.
 
 ```{r}
 #| echo: false
