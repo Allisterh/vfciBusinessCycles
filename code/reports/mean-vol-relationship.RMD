@@ -157,7 +157,8 @@ fitted_log_var_data <-
       setnames("V1", "fitted_log_var") |>
       _[, variable := n] |>
       _[, t := .I] |>
-      _[, resid_log_var := residuals(het_model)]
+      _[, resid_log_var := residuals(het_model)] |>
+      _[, rescaled_fitted_log_var := scale(fitted_log_var)]
   }))
 
 data <- data |>
@@ -239,7 +240,7 @@ p1 | p2
 ```{r, include = TRUE, fig.height = 8, out.width = "100%"}
 data |>
   ggplot(aes(
-    x = sqrt(exp(fitted_log_var)),
+    x = rescaled_fitted_log_var,
     y = fitted_adj
   )) +
   geom_point() +
@@ -346,7 +347,8 @@ fitted_log_var_data <-
       setnames("V1", "fitted_log_var") |>
       _[, variable := n] |>
       _[, t := .I] |>
-      _[, resid_log_var := residuals(het_model)]
+      _[, resid_log_var := residuals(het_model)] |>
+      _[, rescaled_fitted_log_var := scale(fitted_log_var)]
   }))
 
 data <- data |>
@@ -364,7 +366,7 @@ data[variable %in% diff_vars, fitted_adj := fitted - shift(fitted, n = 1, type =
 ```{r, include = TRUE, fig.height = 8, out.width = "100%"}
 data |>
   ggplot(aes(
-    x = sqrt(exp(fitted_log_var)),
+    x = rescaled_fitted_log_var,
     y = fitted_adj
   )) +
   geom_point() +
@@ -501,7 +503,8 @@ fitted_log_var_data <-
       setnames("V1", "fitted_log_var") |>
       _[, variable := n] |>
       _[, t := .I] |>
-      _[, resid_log_var := residuals(het_model)]
+      _[, resid_log_var := residuals(het_model)] |>
+      _[, rescaled_fitted_log_var := scale(fitted_log_var)]
   }))
 
 data <- data |>
@@ -515,7 +518,7 @@ data <- data |>
 ```{r, include = TRUE, fig.height = 8, out.width = "100%"}
 data |>
   ggplot(aes(
-    x = sqrt(exp(fitted_log_var)),
+    x = rescaled_fitted_log_var,
     y = fitted
   )) +
   geom_point() +
@@ -660,7 +663,7 @@ het_models <- lapply(het_data, function(h) {
 pred_log_var <- rbindlist(lapply(seq_along(het_data), function(i) {
   het_data[[i]][, predicted_log_var := predict(het_models[[i]])]
 }))
-
+pred_log_var[, rescaled_predicted_log_var := scale(predicted_log_var), by = .(impulse, model)]
 
 ## Merge mean and vol data
 mv_data <- merge(
@@ -722,7 +725,7 @@ mv_data |>
   _[response %in% c("unemployment", "output", "interest", "inflation", "vfci")] |>
   _[impulse == "Main"] |>
   ggplot(aes(
-    x = sqrt(exp(log_var)),
+    x = rescaled_predicted_log_var,
     y = hd
   )) +
   geom_point() +
