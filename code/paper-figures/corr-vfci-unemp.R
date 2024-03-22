@@ -13,7 +13,7 @@ p <-
     y = hs.y
   )) +
   geom_point(size = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE) +
   labs(
     x = "VFCI-targeted",
     y = "Unemployment-targeted"

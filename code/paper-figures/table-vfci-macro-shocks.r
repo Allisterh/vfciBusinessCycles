@@ -26,9 +26,6 @@ t1 <- corr_tb |>
   fmt_number(
     columns = 2:7,
     decimals = 2
-  ) |>
-  tab_header(
-    title = "Correlation Matrix of Each Variable-targeted Shocks"
   )
 
 t2 <- corr_tb |>
@@ -45,11 +42,12 @@ t2 <- corr_tb |>
 
 t1 |>
   as_latex() |>
-  stringr::str_replace("caption\\*", "caption") |>
+  stringr::str_extract("\\\\begin\\{longtable\\}[\\S\\s]*\\\\end\\{longtable\\}") |>
   write(file = "./paper-Overleaf/tables/all_var_corr_table1.tex")
 
 t2 |>
   as_latex() |>
+  stringr::str_extract("\\\\begin\\{longtable\\}[\\S\\s]*\\\\end\\{longtable\\}") |>
   write(file = "./paper-Overleaf/tables/all_var_corr_table2.tex")
 
 
@@ -78,9 +76,6 @@ t1 <-
   fmt_percent(
     columns = 2:7,
     decimals = 0
-  ) |>
-  tab_header(
-    title = "Average BC Frequency FEVD of Each Variable Targeted Shock"
   )
 
 t2 <-
@@ -99,9 +94,10 @@ t2 <-
 
 t1 |>
   as_latex() |>
-  stringr::str_replace("caption\\*", "caption") |>
+  stringr::str_extract("\\\\begin\\{longtable\\}[\\S\\s]*\\\\end\\{longtable\\}") |>
   write(file = "./paper-Overleaf/tables/all_var_fevdfd_table1.tex")
 
 t2 |>
   as_latex() |>
+  stringr::str_extract("\\\\begin\\{longtable\\}[\\S\\s]*\\\\end\\{longtable\\}") |>
   write(file = "./paper-Overleaf/tables/all_var_fevdfd_table2.tex")

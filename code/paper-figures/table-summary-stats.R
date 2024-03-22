@@ -1,8 +1,10 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(gt)
+library(xtable)
 library(tidyfast)
 
 source("./code/vfci-bc/target-all-var-bc-freqs.R")
+source("./code/paper-figures/theme-paper.r")
 
 summ <-
   data |>
@@ -16,7 +18,8 @@ summ <-
     `Standard Deviation` = sd(value)
   ),
   by = .(name)
-  ]
+  ] |>
+  _[, name := factor(name, levels = var_labels, labels = labels(var_labels), ordered = T)]
 
 t <-
   summ |>
@@ -39,11 +42,8 @@ t <-
   ) |>
   fmt_number(
     columns = c("Minimum", "Mean", "Median", "Maximum", "Standard Deviation"),
-    rows = c("output", "investment", "consumption", "hours_worked", "labor_share", "productivity", "TFP"),
+    rows = factor(c("Output", "Investment", "Consumption", "Hours Worked", "Labor Share", "Labor Prod.", "TFP")),
     decimals = 0
-  ) |>
-  tab_header(
-    title = "Summary Statistics for VAR Data"
   ) |>
   tab_footnote(paste0(
     "All data series are measured quarterly from ",
@@ -53,8 +53,13 @@ t <-
     "."
   ))
 
+# t |>
+#   as_latex() |>
+#   stringr::str_replace("\\\\caption\\*", "\\\\caption") |>
+#   stringr::str_replace("\\} \\\\\\\\", "\\}\\\\label\\{tab\\:summary-stats\\} \\\\\\\\") |>
+#   write(file = "./paper-Overleaf/tables/data-summary-stats.tex")
+
 t |>
   as_latex() |>
-  stringr::str_replace("\\\\caption\\*", "\\\\caption") |>
-  stringr::str_replace("\\} \\\\\\\\", "\\}\\\\label\\{tab\\:summary-stats\\} \\\\\\\\") |>
+  stringr::str_extract("\\\\begin\\{longtable\\}[\\S\\s]*\\\\end\\{longtable\\}") |> 
   write(file = "./paper-Overleaf/tables/data-summary-stats.tex")
