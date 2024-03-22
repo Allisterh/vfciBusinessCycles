@@ -2,7 +2,7 @@
 library(ggplot2)
 
 source("./code/vfci-bc/target-all-var-bc-freqs.R")
-
+source("./code/paper-figures/theme-paper.r")
 
 p <-
   cross_dt |>
@@ -12,15 +12,15 @@ p <-
     x = hs.x,
     y = hs.y
   )) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(size = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
   labs(
-    x = "VFCI-targeted Shock",
-    y = "Unemployment-targeted Shock"
+    x = "VFCI-targeted",
+    y = "Unemployment-targeted"
   ) +
-  theme_classic()
+  theme_paper
 
-p + theme_classic(base_size = 30)
+p
 
 ggsave(
   "./paper-Overleaf/figs/corr-vfci-unemp-shocks.pdf",

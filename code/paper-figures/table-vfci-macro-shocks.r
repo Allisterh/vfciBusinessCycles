@@ -16,23 +16,41 @@ corr_tb <-
   corr_dt[, .(target_variable.y, target_variable.x, corr)] |>
   dt_pivot_wider(names_from = target_variable.x, values_from = corr)
 
-t <- corr_tb |>
+t1 <- corr_tb |>
+  _[, c("target_variable.y", vars), with = FALSE] |>
+  _[, target_variable.y := factor(target_variable.y, levels = vars, ordered = TRUE)] |>
+  _[, 1:7] |>
   gt(
     rowname_col = "target_variable.y"
   ) |>
   fmt_number(
-    columns = 2:12,
-    decimals = 3
+    columns = 2:7,
+    decimals = 2
   ) |>
   tab_header(
     title = "Correlation Matrix of Each Variable-targeted Shocks"
-  ) |>
-  tab_options(table.font.size = 10)
+  )
 
-t |>
+t2 <- corr_tb |>
+  _[, c("target_variable.y", vars), with = FALSE] |>
+  _[, target_variable.y := factor(target_variable.y, levels = vars, ordered = TRUE)] |>
+  _[, c(1, 8:12)] |>
+  gt(
+    rowname_col = "target_variable.y"
+  ) |>
+  fmt_number(
+    columns = 2:6,
+    decimals = 2
+  )
+
+t1 |>
   as_latex() |>
   stringr::str_replace("caption\\*", "caption") |>
-  write(file = "./paper-Overleaf/tables/all_var_corr_table.tex")
+  write(file = "./paper-Overleaf/tables/all_var_corr_table1.tex")
+
+t2 |>
+  as_latex() |>
+  write(file = "./paper-Overleaf/tables/all_var_corr_table2.tex")
 
 
 #####
@@ -48,21 +66,42 @@ fevdfd_tb <-
   _[, .(response, target_variable, avg_bc_fevdfd)] |>
   dt_pivot_wider(names_from = response, values_from = avg_bc_fevdfd)
 
-t <-
+t1 <-
   fevdfd_tb |>
+  _[, c("target_variable", vars), with = FALSE] |>
+  _[, target_variable := factor(target_variable, levels = vars, ordered = TRUE)] |>
+  setorder(target_variable) |>
+  _[, c(1:7)] |>
   gt(
     rowname_col = "target_variable"
   ) |>
   fmt_percent(
-    columns = 2:12,
+    columns = 2:7,
     decimals = 0
   ) |>
   tab_header(
     title = "Average BC Frequency FEVD of Each Variable Targeted Shock"
-  ) |>
-  tab_options(table.font.size = 10)
+  )
 
-t |>
+t2 <-
+  fevdfd_tb |>
+  _[, c("target_variable", vars), with = FALSE] |>
+  _[, target_variable := factor(target_variable, levels = vars, ordered = TRUE)] |>
+  setorder(target_variable) |>
+  _[, c(1, 8:12)] |>
+  gt(
+    rowname_col = "target_variable"
+  ) |>
+  fmt_percent(
+    columns = 2:6,
+    decimals = 0
+  )
+
+t1 |>
   as_latex() |>
-  stringr::str_replace("caption\\*", "caption") |> cat()
-  write(file = "./paper-Overleaf/tables/all_var_fevdfd_table.tex")
+  stringr::str_replace("caption\\*", "caption") |>
+  write(file = "./paper-Overleaf/tables/all_var_fevdfd_table1.tex")
+
+t2 |>
+  as_latex() |>
+  write(file = "./paper-Overleaf/tables/all_var_fevdfd_table2.tex")

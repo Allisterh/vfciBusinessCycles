@@ -59,4 +59,41 @@ cv_irf_dt <-
   }) |>
   list_rbind() |>
   setDT()
- 
+
+## Compute the Shocks
+## Compute the FEVD in Frequency Domain
+cv_fevdfd_dt <-
+  var_variables |>
+  map(function(x) {
+    res <- fevdfd(cv_l[[x]])$fevdfd
+    res$target_variable <- x
+    res$response <- as.character(res$response)
+    res
+  }) |>
+  list_rbind() |>
+  setDT()
+
+## Compute the Shocks
+cv_shock_dt <-
+  var_variables |>
+  map(function(x) {
+    res <- hs(cv_l[[x]])$hs
+    res$target_variable <- x
+    res$date <- rep(data[-c(1:lags), "date"][[1]], length(var_variables))
+    res
+  }) |>
+  list_rbind() |>
+  setDT()
+
+## Compute the Contribution of the Shocks
+cv_contr_dt <-
+  var_variables |>
+  map(function(x) {
+    res <- hd(cv_l[[x]])$hd
+    res$target_variable <- x
+    res$date <- rep(data[-c(1:lags), "date"][[1]], length(var_variables))
+    res$response <- as.character(res$response)
+    res
+  }) |>
+  list_rbind() |>
+  setDT()

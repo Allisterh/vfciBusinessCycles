@@ -1,6 +1,5 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(gt)
-library(modelsummary)
 library(tidyfast)
 
 source("./code/vfci-bc/target-all-var-bc-freqs.R")
@@ -44,7 +43,7 @@ t <-
     decimals = 0
   ) |>
   tab_header(
-    title = "Summary Statisitics for VAR Data"
+    title = "Summary Statistics for VAR Data"
   ) |>
   tab_footnote(paste0(
     "All data series are measured quarterly from ",
@@ -56,5 +55,6 @@ t <-
 
 t |>
   as_latex() |>
-  stringr::str_replace("caption\\*", "caption") |>
+  stringr::str_replace("\\\\caption\\*", "\\\\caption") |>
+  stringr::str_replace("\\} \\\\\\\\", "\\}\\\\label\\{tab\\:summary-stats\\} \\\\\\\\") |>
   write(file = "./paper-Overleaf/tables/data-summary-stats.tex")
