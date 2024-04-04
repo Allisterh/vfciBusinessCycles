@@ -1,6 +1,5 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(gt)
-library(xtable)
 library(tidyfast)
 
 source("./code/vfci-bc/target-all-var-bc-freqs.R")
