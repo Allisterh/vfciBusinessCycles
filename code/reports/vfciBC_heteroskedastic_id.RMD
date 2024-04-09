@@ -1,0 +1,177 @@
+---
+title: "All VAR Charts"
+output: 
+    pdf_document
+---
+
+```{r setup, include = FALSE}
+require(here)
+require(data.table)
+require(dplyr)
+require(vars)
+require(svars)
+require(fevdid)
+require(ggplot2)
+```
+
+```{r fitModels, include = T}
+x <- fread(here::here("./data/vfciBC_data.csv")) |>
+  filter(date <= as.Date("2017-01-01")) |>
+  dplyr::select(
+    date,
+    output,
+    investment,
+    consumption,
+    hours_worked,
+    unemployment,
+    labor_share,
+    interest,
+    inflation,
+    productivity,
+    TFP,
+    vfci = vfci_fgr10gdpc1
+  )
+
+
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+v <- VAR(x[, -"date"], p = lags, type = "const")
+
+
+mv <- id_fevdfd(v, "unemployment", bc_freqs, sign = "neg")
+mv2 <- id_fevdfd(v, "vfci", bc_freqs, sign = "pos")
+hv <- id.cv(v, SB = which(x$date == as.Date("1990-01-01")))
+
+
+colors <- c(
+    `hv_1` = "red",
+    `hv_7` = "lightpink",
+    u0632 = "lightblue",
+    v0632 = "steelblue",
+    Other = "gray50"
+  )
+```
+
+
+```{r, include = T, echo = F, fig.heght = 4}
+hv_fevdfd <- fevdfd(hv)$fevdfd |> setDT()
+mv_fevdfd <- fevdfd(mv)$fevdfd |> filter(impulse == "Main")
+mv2_fevdfd <- fevdfd(mv2)$fevdfd |> filter(impulse == "Main")
+
+hv_fevdfd[, impulse := paste0("hv_", match(impulse, unique(impulse)))]
+
+rbindlist(list(hv_fevdfd)) |>
+filter(f <= pi) |>
+#filter(impulse %in% c("output", "interest")) |>
+ggplot(aes(
+  x = f,
+  y = fevdfd,
+  color = impulse
+)) +
+geom_vline(xintercept = c(2 * pi / 6, 2 * pi / 32), color = "black") +
+geom_line(linewidth = 1) +
+geom_line(
+  data = filter(mv_fevdfd, f <= pi),
+  aes(color = "u0632"),
+  linewidth = 1
+) +
+geom_line(
+  data = filter(mv2_fevdfd, f <= pi),
+  aes(color = "v0632"),
+  linewidth = 1
+) +
+facet_wrap(vars(response)) +
+scale_y_continuous(limits = c(0, 1)) +
+scale_color_manual(
+  values = colors,
+  limits = c("hv_1", "hv_7", "u0632", "v0632", "Other")
+) +
+theme_bw()
+```
+
+
+```{r, include = T, echo = F, fig.heght = 4}
+mv_irf <- irf(mv, n.ahead = 40, impulse = "Main")$irf |> setDT()
+mv2_irf <- irf(mv2, n.ahead = 40, impulse = "Main")$irf |> setDT()
+hv_irf <- irf(hv, n.ahead = 40)$irf |>
+      tidyr::pivot_longer(-V1) |>
+      mutate(
+        response = stringr::str_extract(name, "(?<=% ).*$"),
+        impulse = stringr::str_extract(name, "(?<=\\[ ).*(?= \\])"),
+        name = NULL
+      ) |>
+      mutate(
+        impulse = paste0("hv_", match(impulse, unique(impulse)))
+      ) |>
+      rename(c(
+        h = "V1",
+        irf = "value"
+      )) |>
+  dplyr::select(h, impulse, response, irf)
+
+rbindlist(list(
+  mv_irf[, impulse := "u0632"],
+  mv2_irf[, impulse := "v0632"],
+  hv_irf
+  )) |>
+  mutate(
+    response = factor(response, levels = c(
+    "vfci", "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
+), ordered = TRUE)
+  ) |>
+  filter(impulse %in% c("hv_1", "hv_7", "u0632", "v0632")) |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = impulse
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line(linewidth = 1) +
+  facet_wrap(vars(response), scales = "free_y") +
+  scale_color_manual(
+  values = colors,
+  limits = c("Other", "hv_1", "hv_7", "u0632", "v0632")
+) 
+```
+
+```{r, include = T, echo = F, fig.height = 3}
+b_df <- rbindlist(list(
+  data.frame(
+    weights = solve(hv$B)[1, ],
+    variables = colnames(hv$y),
+    model = "hv_1"
+  ),
+  data.frame(
+    weights = solve(hv$B)[7, ],
+    variables = colnames(hv$y),
+    model = "hv_7"
+  ),
+  data.frame(
+    weights = solve(mv$B)[1, ],
+    variables = colnames(mv$y),
+    model = "u0632"
+  ),
+  data.frame(
+    weights = solve(mv2$B)[1, ],
+    variables = colnames(mv2$y),
+    model = "v0632"
+  )
+)) |>
+mutate(variables = factor(variables, levels = c(
+    "vfci", "unemployment", "output", "hours_worked", "investment", "consumption", "TFP", "productivity", "labor_share", "inflation", "interest"
+), ordered = TRUE))
+
+
+b_df |>
+ggplot(aes(
+  x = variables,
+  y = weights,
+  fill = model
+)) +
+geom_col(position = position_dodge(width = 0.7), width = 0.7) +
+scale_fill_manual(
+  values = colors,
+  limits = c("hv_1", "hv_7", "u0632", "v0632", "Other")
+)
+```

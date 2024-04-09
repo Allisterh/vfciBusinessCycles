@@ -110,8 +110,8 @@ p_scatter <-
   geom_point(alpha = 0.5) +
   annotate(
     "text",
-    x = -9.75,
-    y = 4,
+    x = 0.9 * min(df$u, na.rm = T),
+    y = 0.9 * max(df$vfci, na.rm = T),
     label = paste0("Corr:\n", round(cor(df$vfci, df$u, use = "pairwise.complete.obs"), digits = 3)),
     color = "firebrick",
     size = 2.5
