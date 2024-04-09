@@ -48,6 +48,8 @@ rmarkdown::render("./code/reports/business_cycle_frequencies.RMD", "pdf_document
 rmarkdown::render("./code/reports/vfciBC_choleskey_id.RMD", "pdf_document", "CholeskeyIDVARS.pdf", "./reports")
 rmarkdown::render("./code/reports/vfciBC_heteroskedastic_id.RMD", "pdf_document", "HeteroskedasticIDVARS.pdf", "./reports")
 rmarkdown::render("./code/reports/vfciBC_tdistribution_id.RMD", "pdf_document", "tDistributionIDVARS.pdf", "./reports")
+rmarkdown::render("./code/reports/mean-vol-relationship.RMD", "pdf_document", "MeanVolRelationship.pdf", "./reports")
+rmarkdown::render("./code/reports/estimate-vfci-from-VAR.RMD", "pdf_document", "EstimateVFCIfromVAR.pdf", "./reports")
 
 ## Run tests
 testthat::test_dir("tests")

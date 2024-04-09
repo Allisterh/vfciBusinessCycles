@@ -1,9 +1,17 @@
 [![Run Main.R](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml/badge.svg?event=pull_request)](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/main.yml)
 [![Run Tests](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml/badge.svg)](https://github.com/VFCI/vfciBusinessCycles/actions/workflows/test.yml)
+
 # vfciBusinessCycles Summary
 Research project exploring the relationship between financial conditions and business cycles.
 
 Makes use of two helper packages: [bcadata](https://github.com/VFCI/bcadata) and [fevdid](https://github.com/VFCI/fevdid).
+
+# Paper on Overleaf
+
+[Click here to edit the paper on Overleaf](https://www.overleaf.com/project/65c64a11a7f7bc75b6e6a20a) (requires permission).
+
+This makes use of Overleaf's [Git Integration](https://www.overleaf.com/learn/how-to/Git_integration) where the Overleaf project serves as a git reepository and is then cloned as a submodule to this project.
+This allows us to write output files (charts, tables, etc) directly to the paper submodule from our analysis, and push those to Overleaf.
 
 # Running this Project
 Running `main.R` will recreate all output of the project, relying only upon `data-raw` and packages.
