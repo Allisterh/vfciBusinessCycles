@@ -6,3 +6,6 @@ options(
   datatable.print.keys = TRUE,
   datatable.print.trunc.cols = TRUE
 )
+
+## Radian terminal options
+options(radian.complete_while_typing = FALSE)
