@@ -30,4 +30,4 @@ jobs:
 
       - name: Run R CMD Check
         run: |
-        Rscript -e 'devtools::check("./code/vfciBCHelpers")'
+          Rscript -e 'devtools::check("./code/vfciBCHelpers")'
