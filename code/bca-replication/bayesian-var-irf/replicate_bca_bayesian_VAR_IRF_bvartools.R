@@ -2,23 +2,22 @@
 ##  Uses the package `bvartools` to create a Bayesian VAR
 ##  Then identify the main shock with the `fevdid` package
 ##
-require(data.table)
-require(bcadata)
-require(bvartools)
-require(vars)
-require(fevdid)
+library(data.table)
+library(bcadata)
+library(bvartools)
+library(vars)
+library(fevdid)
+library(vfciBCHelpers)
 
-## sources `estimate_bvartools` and `bca_mn_priors`
-source("./code/helpers/estimate_bvartools.R")
-source("./code/helpers/bca_mn_priors.R")
 
 ## Business cycle frequency
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 tv <- "unemployment"
 
 ## Load data
-bcadata <- fread("./data/bca_replication_data.csv")[
-    date <= as.Date("2017-10-01"), ]
+bcadata <- fread("./data-raw/bca_replication_data.csv") |>
+  _[date <= as.Date("2017-10-01")]
+
 data <- ts(bcadata[, -"date"], start = year(bcadata[[1, "date"]]), frequency = 4)
 
 ## Read in original variance priors
