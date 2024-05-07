@@ -1,3 +1,5 @@
+on: [push]
+
 name: R-CMD-check-vfciBCHelpers
 
 jobs:
