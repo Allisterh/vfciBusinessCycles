@@ -34,9 +34,9 @@ jobs:
       - name: dependencies on MacOS
         if: runner.os == 'Macos'
         run: |
-          brew install harfbuzz fribidi openssl
+          brew install harfbuzz fribidi openssl@1.1
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 
