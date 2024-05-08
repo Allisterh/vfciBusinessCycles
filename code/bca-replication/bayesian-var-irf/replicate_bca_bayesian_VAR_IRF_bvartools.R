@@ -47,24 +47,25 @@ irf_df_rep_td632[, version := "replication"][, model := "bayesian_td632"]
 
 ## Read in comparison data
 ## Read in original IRF df (for comparison later)
-bca_irf_df <- fread("./data/bca_original_var_results.csv")[, .(
-        model,
-        response,
-        h,
-        median,
-        lower = pctl_16,
-        upper = pctl_84,
-        version = "original"
-        )]
+bca_irf_df <- fread("./data-raw/bca_original_var_results.csv") |>
+  _[, .(
+    model,
+    response,
+    h,
+    median,
+    lower = pctl_16,
+    upper = pctl_84,
+    version = "original"
+  )]
 
 ## Combind data.frames
 df <- rbindlist(list(
-    irf_df_rep_fd[impulse == "Main"],
-    irf_df_rep_td4[impulse == "Main"],
-    irf_df_rep_td32[impulse == "Main"],
-    irf_df_rep_td632[impulse == "Main"],
-    bca_irf_df
-    ), use.names = TRUE, fill = TRUE)
+  irf_df_rep_fd[impulse == "Main"],
+  irf_df_rep_td4[impulse == "Main"],
+  irf_df_rep_td32[impulse == "Main"],
+  irf_df_rep_td632[impulse == "Main"],
+  bca_irf_df
+), use.names = TRUE, fill = TRUE)
 
 
-fwrite(df, "./data/replicated_bca_bayesian_VAR_IRF_bvartools.csv")
+fwrite(df, "./data/bca-replication/replicated_bca_bayesian_VAR_IRF_bvartools.csv")

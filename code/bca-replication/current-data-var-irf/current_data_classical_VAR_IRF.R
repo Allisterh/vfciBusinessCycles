@@ -1,12 +1,11 @@
 require(data.table)
-require(dplyr)
 require(vars)
 require(svars)
 require(bcadata)
 require(fevdid)
 
 ## Pull the correct vintage of the BCA data
-bcadata <- fread("./data/bca_current_data.csv")
+bcadata <- fread("./data-raw/bca_current_data.csv")
 x <- bcadata[, -"date"]
 
 ## Target the BC frequency and umemployment variable
@@ -24,22 +23,21 @@ mv_irf <- vars::irf(mv, impulse = "Main", n.ahead = 40)$irf
 
 ## Bootstraps
 boot_df_resample_ba <-
-    bootstrap(
-        mv,
-        id_fevdfd,
-        nboot = 1000,
-        n_ahead = 40,
-        method = "resample", design = "recursive", bias_adjust = TRUE,
-        target = "unemployment", freqs = bc_freqs
-    )$IRF_df |>
-    filter(impulse == "Main") |>
-    mutate(
-        model = "classical_fd",
-        version = "Current"
-    )
+  bootstrap(
+    mv,
+    id_fevdfd,
+    nboot = 1000,
+    n_ahead = 40,
+    method = "resample", design = "recursive", bias_adjust = TRUE,
+    target = "unemployment", freqs = bc_freqs
+  )$IRF_df |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  _[, model := "classical_fd"] |>
+  _[, version := "Current"]
 
 
 comb_df <-
-    merge(boot_df_resample_ba, mv_irf, by = c("h", "impulse", "response"))
+  merge(boot_df_resample_ba, mv_irf, by = c("h", "impulse", "response"))
 
-fwrite(comb_df, "./data/current_bca_classical_VAR_IRF_boot.csv")
+fwrite(comb_df, "./data/bca-replication/current_data/current_bca_classical_VAR_IRF_boot.csv")
