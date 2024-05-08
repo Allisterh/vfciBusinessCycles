@@ -34,7 +34,7 @@ jobs:
       - name: dependencies on MacOS
         if: runner.os == 'Macos'
         run: |
-          brew install harfbuzz fribidi
+          brew install harfbuzz fribidi openssl
 
       - uses: actions/checkout@v3
 
