@@ -3,7 +3,7 @@ on:
     paths:
       - code/vfciBCHelpers/**
 
-name: R-CMD-check-vfciBCHelpers
+name: Check vfciBCHelpers
 
 jobs:
   R-CMD-check:
