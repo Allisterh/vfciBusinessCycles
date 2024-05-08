@@ -32,4 +32,4 @@ jobs:
 
       - name: Run R CMD Check
         run: |
-          Rscript -e 'renv::install(c("devtools", "bvartools", "data.table", "tidyfast", and "vars")); renv::install("vfci/fevdid"); devtools::check("./code/vfciBCHelpers")'
+          Rscript -e 'renv::install(c("devtools", "bvartools", "data.table", "tidyfast", "vars")); renv::install("vfci/fevdid"); devtools::check("./code/vfciBCHelpers")'
