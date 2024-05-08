@@ -30,7 +30,7 @@ growth_rate_df <- function(data, var_list, delta, ...) {
     if(!("future_growth" %in% names(args))) {
       args$future_growth <- FALSE
     }
-    data %>% 
+    data %>%
       dplyr::mutate(
         dplyr::across(
           dplyr::all_of(var_list),

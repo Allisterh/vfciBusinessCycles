@@ -10,10 +10,8 @@ library(tidyr)
 library(tidyquant)
 
 ## Source helper scripts for constructing VFCI
-for (i in list.files("./code/clean-data-raw/vfci_data_helpers/",
-  "*.R",
-  full.names = TRUE
-)) source(i)
+files <- list.files("./code/clean-raw-data/vfci-data-helpers/", full.names = TRUE)
+for (i in files) source(i)
 
 # FRED data ---------------------------------------------------------------
 fred_raw <- data.table::fread("./data-raw/vfci_data_fred.csv") %>%
