@@ -16,11 +16,7 @@ jobs:
         sudo apt-get install -y make libicu-dev libxml2-dev libssl-dev pandoc librdf0-dev libnode-dev libcurl4-gnutls-dev
         sudo apt install libharfbuzz-dev libfribidi-dev
 
-    - uses: actions/checkout@v3
-
-    - uses: r-lib/actions/setup-pandoc@v2
-
-    - uses: r-lib/actions/setup-tinytex@v2
+    - uses: actions/checkout@v4
     
     - uses: r-lib/actions/setup-r@v2
 

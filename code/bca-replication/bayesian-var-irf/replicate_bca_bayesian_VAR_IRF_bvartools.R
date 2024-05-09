@@ -2,23 +2,22 @@
 ##  Uses the package `bvartools` to create a Bayesian VAR
 ##  Then identify the main shock with the `fevdid` package
 ##
-require(data.table)
-require(bcadata)
-require(bvartools)
-require(vars)
-require(fevdid)
+library(data.table)
+library(bcadata)
+library(bvartools)
+library(vars)
+library(fevdid)
+library(vfciBCHelpers)
 
-## sources `estimate_bvartools` and `bca_mn_priors`
-source("./code/helpers/estimate_bvartools.R")
-source("./code/helpers/bca_mn_priors.R")
 
 ## Business cycle frequency
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 tv <- "unemployment"
 
 ## Load data
-bcadata <- fread("./data/bca_replication_data.csv")[
-    date <= as.Date("2017-10-01"), ]
+bcadata <- fread("./data-raw/bca_replication_data.csv") |>
+  _[date <= as.Date("2017-10-01")]
+
 data <- ts(bcadata[, -"date"], start = year(bcadata[[1, "date"]]), frequency = 4)
 
 ## Read in original variance priors
@@ -48,24 +47,25 @@ irf_df_rep_td632[, version := "replication"][, model := "bayesian_td632"]
 
 ## Read in comparison data
 ## Read in original IRF df (for comparison later)
-bca_irf_df <- fread("./data/bca_original_var_results.csv")[, .(
-        model,
-        response,
-        h,
-        median,
-        lower = pctl_16,
-        upper = pctl_84,
-        version = "original"
-        )]
+bca_irf_df <- fread("./data-raw/bca_original_var_results.csv") |>
+  _[, .(
+    model,
+    response,
+    h,
+    median,
+    lower = pctl_16,
+    upper = pctl_84,
+    version = "original"
+  )]
 
 ## Combind data.frames
 df <- rbindlist(list(
-    irf_df_rep_fd[impulse == "Main"],
-    irf_df_rep_td4[impulse == "Main"],
-    irf_df_rep_td32[impulse == "Main"],
-    irf_df_rep_td632[impulse == "Main"],
-    bca_irf_df
-    ), use.names = TRUE, fill = TRUE)
+  irf_df_rep_fd[impulse == "Main"],
+  irf_df_rep_td4[impulse == "Main"],
+  irf_df_rep_td32[impulse == "Main"],
+  irf_df_rep_td632[impulse == "Main"],
+  bca_irf_df
+), use.names = TRUE, fill = TRUE)
 
 
-fwrite(df, "./data/replicated_bca_bayesian_VAR_IRF_bvartools.csv")
+fwrite(df, "./data/bca-replication/replicated_bca_bayesian_VAR_IRF_bvartools.csv")

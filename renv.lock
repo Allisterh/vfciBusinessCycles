@@ -23,36 +23,6 @@
       "Repository": "CRAN",
       "Hash": "68122010f01c4dcfbe58ce7112f2433d"
     },
-    "BVAR": {
-      "Package": "BVAR",
-      "Version": "1.0.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "grDevices",
-        "graphics",
-        "mvtnorm",
-        "stats",
-        "utils"
-      ],
-      "Hash": "7e5eb1b38e282f446f1ac7e61ade59b9"
-    },
-    "BVARverse": {
-      "Package": "BVARverse",
-      "Version": "0.0.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "BVAR",
-        "R",
-        "generics",
-        "ggplot2",
-        "rlang",
-        "tidyr"
-      ],
-      "Hash": "146a03229028af829cb69306e4cecddc"
-    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.1.3",
@@ -74,31 +44,6 @@
         "parallel"
       ],
       "Hash": "3d75dd10e7228c9d734237dda013ed90"
-    },
-    "GGally": {
-      "Package": "GGally",
-      "Version": "2.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "RColorBrewer",
-        "dplyr",
-        "ggplot2",
-        "ggstats",
-        "grDevices",
-        "grid",
-        "gtable",
-        "lifecycle",
-        "magrittr",
-        "plyr",
-        "progress",
-        "rlang",
-        "scales",
-        "tidyr",
-        "utils"
-      ],
-      "Hash": "5da89b9b10d98a7820adb426939900a7"
     },
     "KernSmooth": {
       "Package": "KernSmooth",
@@ -420,13 +365,6 @@
       ],
       "Hash": "40415719b5a479b87949f3aa0aee737c"
     },
-    "brew": {
-      "Package": "brew",
-      "Version": "1.0-8",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d69a786e85775b126bddbee185ae6084"
-    },
     "brio": {
       "Package": "brio",
       "Version": "1.1.3",
@@ -454,27 +392,6 @@
         "tidyr"
       ],
       "Hash": "fd25391c3c4f6ecf0fa95f1e6d15378c"
-    },
-    "broom.helpers": {
-      "Package": "broom.helpers",
-      "Version": "1.14.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "broom",
-        "cli",
-        "dplyr",
-        "labelled",
-        "lifecycle",
-        "purrr",
-        "rlang",
-        "stats",
-        "stringr",
-        "tibble",
-        "tidyr"
-      ],
-      "Hash": "ea30eb5d9412a4a5c2740685f680cd49"
     },
     "broom.mixed": {
       "Package": "broom.mixed",
@@ -735,23 +652,6 @@
       ],
       "Hash": "2c3f6cf83149cc0a7762f01a83fbd191"
     },
-    "cowplot": {
-      "Package": "cowplot",
-      "Version": "1.1.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "ggplot2",
-        "grDevices",
-        "grid",
-        "gtable",
-        "methods",
-        "rlang",
-        "scales"
-      ],
-      "Hash": "b418e8423699d11c7f2087c2bfd07da2"
-    },
     "cpp11": {
       "Package": "cpp11",
       "Version": "0.4.6",
@@ -998,7 +898,7 @@
       "RemoteUsername": "VFCI",
       "RemoteRepo": "fevdid",
       "RemoteRef": "main",
-      "RemoteSha": "7bfeec36a9d0d78001ee5592cf8b1f872c825eb0",
+      "RemoteSha": "7ff0535dc361a3be19a7bb1dec3cf2f76be3864d",
       "RemoteHost": "api.github.com",
       "Requirements": [
         "expm",
@@ -1008,7 +908,7 @@
         "svars",
         "vars"
       ],
-      "Hash": "a05de30eae9d5757ac076224c0299856"
+      "Hash": "ea694a45a58fd94b23ada50a4e1cb235"
     },
     "fontawesome": {
       "Package": "fontawesome",
@@ -1177,28 +1077,9 @@
       ],
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86"
     },
-    "ggformula": {
-      "Package": "ggformula",
-      "Version": "0.12.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "ggplot2",
-        "ggridges",
-        "grid",
-        "labelled",
-        "mosaicCore",
-        "rlang",
-        "scales",
-        "stringr",
-        "tibble"
-      ],
-      "Hash": "1dc0a70a8f8ddb3435368835d7ab6511"
-    },
     "ggplot2": {
       "Package": "ggplot2",
-      "Version": "3.4.4",
+      "Version": "3.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1219,44 +1100,7 @@
         "vctrs",
         "withr"
       ],
-      "Hash": "313d31eff2274ecf4c1d3581db7241f9"
-    },
-    "ggridges": {
-      "Package": "ggridges",
-      "Version": "0.5.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "ggplot2",
-        "grid",
-        "scales",
-        "withr"
-      ],
-      "Hash": "c76ee8fe60939384b9726128e38caea0"
-    },
-    "ggstats": {
-      "Package": "ggstats",
-      "Version": "0.5.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "broom.helpers",
-        "cli",
-        "dplyr",
-        "forcats",
-        "ggplot2",
-        "lifecycle",
-        "magrittr",
-        "patchwork",
-        "purrr",
-        "rlang",
-        "scales",
-        "stats",
-        "stringr",
-        "tidyr"
-      ],
-      "Hash": "006a64911e79a7dc7cbf839a57baaff4"
+      "Hash": "44c6a2f8202d5b7e878ea274b1092426"
     },
     "globals": {
       "Package": "globals",
@@ -1608,23 +1452,6 @@
       ],
       "Hash": "b64ec208ac5bc1852b285f665d6368b3"
     },
-    "labelled": {
-      "Package": "labelled",
-      "Version": "2.12.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "dplyr",
-        "haven",
-        "lifecycle",
-        "rlang",
-        "stringr",
-        "tidyr",
-        "vctrs"
-      ],
-      "Hash": "1ec27c624ece6c20431e9249bd232797"
-    },
     "later": {
       "Package": "later",
       "Version": "1.3.1",
@@ -1809,56 +1636,6 @@
       ],
       "Hash": "4f50122dc256b1b6996a4703fecea821"
     },
-    "mosaic": {
-      "Package": "mosaic",
-      "Version": "1.9.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "MASS",
-        "Matrix",
-        "R",
-        "dplyr",
-        "ggformula",
-        "ggplot2",
-        "grid",
-        "lattice",
-        "methods",
-        "mosaicCore",
-        "mosaicData",
-        "purrr",
-        "rlang",
-        "tibble",
-        "tidyr",
-        "utils"
-      ],
-      "Hash": "1c82b7fcde51b1a33d33d8d56a11fa01"
-    },
-    "mosaicCore": {
-      "Package": "mosaicCore",
-      "Version": "0.9.4.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "MASS",
-        "R",
-        "dplyr",
-        "rlang",
-        "stats",
-        "tidyr"
-      ],
-      "Hash": "92f421e9c13e5c306541fa212adc4f3c"
-    },
-    "mosaicData": {
-      "Package": "mosaicData",
-      "Version": "0.20.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "a3119fa171b29024fca33dce6c70bad9"
-    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
@@ -1919,13 +1696,13 @@
     },
     "openssl": {
       "Package": "openssl",
-      "Version": "2.1.1",
+      "Version": "2.1.2",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "askpass"
       ],
-      "Hash": "2a0dc8c6adfb6f032e4d4af82d258ab5"
+      "Hash": "ea2475b073243d9d338aa8f086ce973e"
     },
     "openxlsx": {
       "Package": "openxlsx",
@@ -1972,9 +1749,9 @@
     },
     "patchwork": {
       "Package": "patchwork",
-      "Version": "1.1.3",
+      "Version": "1.2.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "cli",
         "ggplot2",
@@ -1986,7 +1763,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "c5754106c02e8e019941100c81149431"
+      "Hash": "9c8ab14c00ac07e9e04d1664c0b74486"
     },
     "pbapply": {
       "Package": "pbapply",
@@ -2519,32 +2296,6 @@
       ],
       "Hash": "d65e35823c817f09f4de424fcdfa812a"
     },
-    "roxygen2": {
-      "Package": "roxygen2",
-      "Version": "7.2.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "R6",
-        "brew",
-        "cli",
-        "commonmark",
-        "cpp11",
-        "desc",
-        "knitr",
-        "methods",
-        "pkgload",
-        "purrr",
-        "rlang",
-        "stringi",
-        "stringr",
-        "utils",
-        "withr",
-        "xml2"
-      ],
-      "Hash": "7b153c746193b143c14baa072bae4e27"
-    },
     "rpart": {
       "Package": "rpart",
       "Version": "4.1.21",
@@ -2717,17 +2468,6 @@
         "stats"
       ],
       "Hash": "dfd9740f06248fb6721d38df2e14ed7b"
-    },
-    "stargazer": {
-      "Package": "stargazer",
-      "Version": "5.2.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "stats",
-        "utils"
-      ],
-      "Hash": "d313fa83180f3376229f98633813cd31"
     },
     "steadyICA": {
       "Package": "steadyICA",
@@ -3235,6 +2975,22 @@
         "rlang"
       ],
       "Hash": "266c1ca411266ba8f365fcc726444b87"
+    },
+    "vfciBCHelpers": {
+      "Package": "vfciBCHelpers",
+      "Version": "0.0.0.9000",
+      "Source": "Local",
+      "RemoteType": "local",
+      "RemoteUrl": "./code/vfciBCHelpers",
+      "Requirements": [
+        "bvartools",
+        "data.table",
+        "fevdid",
+        "purrr",
+        "tidyfast",
+        "vars"
+      ],
+      "Hash": "d7b10db7be11e1c100911c922d0e6453"
     },
     "viridisLite": {
       "Package": "viridisLite",

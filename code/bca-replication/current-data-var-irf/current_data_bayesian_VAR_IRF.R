@@ -7,17 +7,14 @@ require(bcadata)
 require(bvartools)
 require(vars)
 require(fevdid)
-
-## sources `estimate_bvartools` and `bca_mn_priors`
-source("./code/helpers/estimate_bvartools.R")
-source("./code/helpers/bca_mn_priors.R")
+library(vfciBCHelpers)
 
 ## Business cycle frequency
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 tv <- "unemployment"
 
 ## Load data
-bcadata <- fread("./data/bca_current_data.csv")
+bcadata <- fread("./data-raw/bca_current_data.csv")
 data <- ts(bcadata[, -"date"], start = year(bcadata[[1, "date"]]), frequency = 4)
 
 ## Read in original variance priors
@@ -42,14 +39,11 @@ irf_df_rep_fd[, version := "current"][, model := "bayesian_fd"]
 irf_df_rep_td4[, version := "current"][, model := "bayesian_td4"]
 irf_df_rep_td632[, version := "current"][, model := "bayesian_td632"]
 
-
-
 ## Combind data.frames
 df <- rbindlist(list(
-    irf_df_rep_fd[impulse == "Main"],
-    irf_df_rep_td4[impulse == "Main"],
-    irf_df_rep_td632[impulse == "Main"]
-    ), use.names = TRUE, fill = TRUE)
+  irf_df_rep_fd[impulse == "Main"],
+  irf_df_rep_td4[impulse == "Main"],
+  irf_df_rep_td632[impulse == "Main"]
+), use.names = TRUE, fill = TRUE)
 
-
-fwrite(df, "./data/current_bca_bayesian_VAR_IRF.csv")
+fwrite(df, "./data//bca-replication/current_data/current_bca_bayesian_VAR_IRF.csv")

@@ -4,9 +4,6 @@ Provides information on how to acquire each of the raw data files in this folder
 
 ---
 
-- `variables.RData`
-
-    - Downloaded from the [macro_dynamics](https://github.com/VFCI/macro_dynamics) repository.
 
 - `bca_original_var_results/*.mat`
 
