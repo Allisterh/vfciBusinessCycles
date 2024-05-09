@@ -3,10 +3,6 @@ library(ggplot2)
 library(data.table)
 library(vfciBCHelpers)
 
-source("./code/vfci-bc/target-all-var-bc-freqs.R")
-source("./code/vfci-bc/vfci-cholesky.R")
-source("./code/paper-figures/theme-paper.r")
-
 data <- fread("./data/paper-figures/charts/irf-chol-vfci-max-share-vfci.csv")
 
 #####
