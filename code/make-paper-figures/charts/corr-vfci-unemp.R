@@ -1,16 +1,15 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/target-all-var-bc-freqs.R")
-source("./code/paper-figures/theme-paper.r")
+data <- fread("./data/paper-figures/charts/hs-max-share-vfci-unemployment.csv")
 
 p <-
-  cross_dt |>
-  _[target_variable.y == "unemployment"] |>
-  _[target_variable.x == "vfci"] |>
+  data |>
   ggplot(aes(
-    x = hs.x,
-    y = hs.y
+    x = vfci,
+    y = unemployment
   )) +
   geom_point(size = 0.5) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -23,6 +22,6 @@ p <-
 p
 
 ggsave(
-  "./paper-Overleaf/figs/corr-vfci-unemp-shocks.pdf",
+  "./paper-figures/charts/hs-max-share-vfci-unemployment.pdf",
   p, width = 2, height = 2, units = "in"
 )

@@ -1,19 +1,28 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
 source("./code/vfci-bc/target-all-var-bc-freqs.R")
 source("./code/vfci-bc/vfci-cholesky.R")
 source("./code/paper-figures/theme-paper.r")
 
+data <- fread("./data/paper-figures/charts/irf-chol-vfci-max-share-vfci.csv")
+
 #####
-irf_dt[, response := factor(response, levels = var_labels, labels = labels(var_labels), ordered = T)]
-cv_irf_dt[, response := factor(response, levels = var_labels, labels = labels(var_labels), ordered = T)]
+data[, response :=
+  factor(
+    response,
+    levels = variable_labels,
+    labels = labels(variable_labels),
+    ordered = TRUE
+  )]
 
 p <-
   ggplot() +
   geom_hline(yintercept = 0, color = "gray") +
   geom_line(
-    data = irf_dt[impulse == "Main" & target_variable == "vfci"],
+    data = data[identification == "fevdfd"],
     aes(
       x = h,
       y = irf,
@@ -21,7 +30,7 @@ p <-
     )
   ) +
   geom_line(
-    data = cv_irf_dt[impulse == "Main" & target_variable == "vfci"],
+    data = data[identification == "chol"],
     aes(
       x = h,
       y = irf,
@@ -51,6 +60,6 @@ p <-
 p
 
 ggsave(
-  "./paper-Overleaf/figs/irf-vfci-targeted-vfci-chol.pdf",
+  "./paper-figures/charts/irf-chol-vfci-max-share-vfci.pdf",
   p, width = 5.5, height = 4, units = "in"
 )

@@ -12,6 +12,7 @@ Imports:
     bvartools,
     data.table,
     fevdid,
+    ggplot2,
     purrr,
     tidyfast,
     vars

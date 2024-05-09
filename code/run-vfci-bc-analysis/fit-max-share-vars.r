@@ -8,6 +8,7 @@ library(vfciBCHelpers)
 ## Settings
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
+flip_signs <- c("unemployment", "TFP", "productivity")
 
 ## Make VAR
 data <- get_var_data()
@@ -17,8 +18,12 @@ all_variables <- data[, -"date"] |> colnames() |> set_names()
 data[, t := .I - lags]
 
 ## Use max share identification method
-fevdfd_vars <- map(all_variables, id_fevdfd, x = var, freqs = bc_freqs)
-
+fevdfd_vars <- map(all_variables, ~ id_fevdfd(
+  x = var,
+  target = .x,
+  freqs = bc_freqs,
+  sign = ifelse(.x %in% flip_signs, "pos", "neg")
+))
 
 ## Construct VAR IRFs, HDs, etc.
 

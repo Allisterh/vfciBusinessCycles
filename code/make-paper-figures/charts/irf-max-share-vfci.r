@@ -1,16 +1,20 @@
 ## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/target-all-var-bc-freqs.R")
-source("./code/paper-figures/theme-paper.r")
+data <- fread("./data/paper-figures/charts/irf-max-share-vfci.csv")
 
 p <-
-  irf_dt |>
-  _[impulse == "Main"] |>
-  _[target_variable == "vfci"] |>
-  _[, response := factor(response, levels = var_labels, labels = labels(var_labels), ordered = T)] |>
+  data |>
+  _[, response := factor(
+    response,
+    levels = variable_labels,
+    labels = labels(variable_labels),
+    ordered = TRUE
+  )] |>
   ggplot(aes(
-     x = h,
+    x = h,
     y = irf
   )) +
   geom_hline(yintercept = 0, color = "gray50") +
@@ -33,6 +37,6 @@ p <-
 p
 
 ggsave(
-  "./paper-Overleaf/figs/irf-vfci-max-share.pdf",
+  "./paper-figures/charts/irf-max-share-vfci.pdf",
   p, width = 5.5, height = 4, units = "in"
 )

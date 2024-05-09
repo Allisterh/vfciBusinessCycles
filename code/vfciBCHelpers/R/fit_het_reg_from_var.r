@@ -14,7 +14,7 @@ fit_het_reg_from_var <- function(
   lags = 0
 ) {
   ## Set visible global binding to make R CMD check happy
-  log_var <- t <- residuals <- NULL
+  log_var <- t <- residual <- NULL
 
   ## Get the data
   original_data_wide <-

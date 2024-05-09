@@ -1,24 +1,24 @@
-## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(ggplot2)
 library(patchwork)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/calc-mean-vol.R")
-source("./code/paper-figures/theme-paper.r")
-
+data <- fread("./data/paper-figures/charts/mean-vol-estimate-var.csv")
 
 make_plot <- function(x) {
+  variable <- log_var_fitted <- fitted <- NULL
   data |>
     _[variable == x] |>
     ggplot(aes(
-      x = scale(fitted_log_var),
-      y = fitted_adj
+      x = scale(log_var_fitted),
+      y = fitted
     )) +
     geom_point() +
     geom_smooth(method = "lm", se = FALSE) +
     labs(
       y = "Condtional Mean",
       x = "Conditional Volatility",
-      title = labels(var_labels[var_labels == x])
+      title = labels(variable_labels[variable_labels == x])
     ) +
     theme_paper +
     theme(
@@ -33,6 +33,6 @@ p <- wrap_plots(p_l)
 p
 
 ggsave(
-  "./paper-Overleaf/figs/mean-vol-vfci-unemp.pdf",
+  "./paper-figures/charts/mean-vol-estimate-var-vfci-unemployment.pdf",
   p, width = 5, height = 2.5, units = "in"
 )

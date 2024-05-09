@@ -1,15 +1,15 @@
-## Plot for IRFs of VFCI-targeted and 5 Macro Targets
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/calc-mean-vol.R")
-source("./code/paper-figures/theme-paper.r")
+data <- fread("./data/paper-figures/charts/mean-vol-estimate-var.csv")
 
 p <-
   data |>
-  _[, variable := factor(variable, levels = var_labels, labels = labels(var_labels), ordered = T)] |>
+  _[, variable := factor(variable, levels = variable_labels, labels = labels(variable_labels), ordered = TRUE)] |>
   ggplot(aes(
-    x = scale(fitted_log_var),
-    y = fitted_adj
+    x = scale(log_var_fitted),
+    y = fitted
   )) +
   geom_point(size = 0.5) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -27,6 +27,6 @@ p <-
 p
 
 ggsave(
-  "./paper-Overleaf/figs/mean-vol.pdf",
+  "./paper-figures/charts/mean-vol-estimate-var.pdf",
   p, width = 5.5, height = 4, units = "in"
 )

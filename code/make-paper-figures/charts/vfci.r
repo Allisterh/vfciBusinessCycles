@@ -1,11 +1,11 @@
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/target-all-var-bc-freqs.R")
-source("./code/paper-figures/get-recession-dt.R")
-source("./code/paper-figures/theme-paper.r")
+data <- fread("./data/paper-figures/charts/vfci.csv")
 
-recessions <- recessions |>
-  _[start %between% as.Date(c("1962-01-01", "2019-01-01"))]
+recessions <- get_recession_dt() |>
+  _[start %between% as.Date(c("1962-01-01", "2021-01-01"))]
 
 
 p <-
@@ -25,7 +25,7 @@ p <-
   geom_hline(
     yintercept = mean(data$vfci),
     color = "gray50"
-    ) +
+  ) +
   geom_line(
     data = data,
     aes(
@@ -43,8 +43,7 @@ p <-
   ) +
   theme_paper
 
-
 ggsave(
-  "./paper-Overleaf/figs/vfci-time-series.pdf",
+  "./paper-figures/charts/vfci.pdf",
   p, width = 5, height = 2, units = "in"
 )

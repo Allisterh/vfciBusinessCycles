@@ -1,16 +1,12 @@
 library(ggplot2)
+library(data.table)
+library(vfciBCHelpers)
 
-source("./code/vfci-bc/target-all-var-bc-freqs.R")
-source("./code/paper-figures/get-recession-dt.R")
-source("./code/paper-figures/theme-paper.r")
-
-recessions <- recessions |>
+recessions <- get_recession_dt() |>
   _[start %between% as.Date(c("1962-01-01", "2019-01-01"))]
 
-p_data <- contr_dt |>
-  _[impulse == "Main"] |>
-  _[response == "unemployment"] |>
-  _[target_variable %in% c("vfci", "unemployment")]
+p_data <-
+  fread("./data/paper-figures/charts/hd-max-share-vfci-unemployment-response-unemployment.csv")
 
 p <-
   ggplot() +
@@ -32,7 +28,7 @@ p <-
     aes(
       x = date,
       y = hd,
-      color = target_variable
+      color = target
     )
   ) +
   scale_x_date(
@@ -56,6 +52,6 @@ p <-
 p
 
 ggsave(
-  "./paper-Overleaf/figs/vfci-unemployment-contribution-unemployment.pdf",
+  "./paper-figures/charts/hd-max-share-vfci-unemployment-response-unemployment.pdf",
   p, width = 5, height = 2.5, units = "in"
 )
