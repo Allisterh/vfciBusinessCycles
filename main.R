@@ -4,7 +4,7 @@
 
 ## Reinstantiate Renv Environment
 renv::restore()
-renv::install("./code/vfciBCHelpers/") ## Helper functions in a local package
+renv::install("./code/vfciBCHelpers/", prompt = FALSE) ## Helper functions in a local package
 
 ## Data Construction
 source("./code/clean-raw-data/construct_vfci_data.r")
