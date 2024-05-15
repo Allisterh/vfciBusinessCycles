@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - code/vfciBCHelpers/**
+  workflow_dispatch:
 
 name: Check vfciBCHelpers
 
