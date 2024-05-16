@@ -84,3 +84,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 *.json
+
+/.quarto/
