@@ -1,0 +1,4475 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+
+\usepackage{csquotes}
+\usepackage{pdfpages}
+\usepackage{float}
+
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2953}
+%TCIDATA{Codepage=1252}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Wednesday, September 15, 2021 02:31:37}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+
+\usepackage{parskip}
+%\setlength{\parskip}{0pt} % 1ex plus 0.5ex minus 0.2ex}
+%\setlength{\parindent}{0pt}
+
+\usepackage{setspace}
+\setstretch{1.5}
+
+\renewcommand{\arraystretch}{2}
+
+\usepackage{caption}
+\captionsetup[table]{labelsep=space}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+\end_preamble
+\use_default_options true
+\begin_modules
+theorems-ams
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+PackageOptions url hyphens
+Requires url
+\end_local_layout
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 2
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style econ-econometrica
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+VAR preliminaries
+\end_layout
+
+\begin_layout Standard
+Consider the following structural VAR
+\begin_inset Formula 
+\[
+B_{0}y_{t}=B_{1}y_{t-1}+\ldots+B_{p}y_{t-p}+w_{t},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is a zero-mean 
+\begin_inset Formula $K\times1$
+\end_inset
+
+ vector, 
+\begin_inset Formula $B_{i}$
+\end_inset
+
+ are 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ matrices of coefficients and 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ is a 
+\begin_inset Formula $K\times1$
+\end_inset
+
+ vector of mutually uncorrelated structural shocks with covariance matrix
+ equal to the identity matrix 
+\begin_inset Formula $\mathbb{E}[w_{t}w_{t}^{\prime}]=I_{K}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ is invertible, the reduced form is 
+\begin_inset Formula 
+\begin{align}
+y_{t} & =A_{1}y_{t-1}+\ldots+A_{p}y_{t-p}+u_{t}\label{eq:red}
+\end{align}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align}
+A_{p} & :=B_{0}^{-1}B_{p},\nonumber \\
+u_{t} & :=B_{0}^{-1}w_{t}.\label{eq:u_def}
+\end{align}
+
+\end_inset
+
+The covariance matrix of 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+\Sigma_{u}:=\mathbb{E}[u_{t}u_{t}^{\prime}]=B_{0}^{-1}B_{0}^{-1\prime}.\label{eq:sigma_u}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The VAR(1) representation of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:red"
+
+\end_inset
+
+) is
+\begin_inset Formula 
+\begin{equation}
+Y_{t}=\mathbf{A}Y_{t-1}+U_{t},\label{eq:var_ar1}
+\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+Y_{t}:=\left(\begin{array}{c}
+y_{t}\\
+\vdots\\
+y_{t-p+1}
+\end{array}\right),\quad\mathbf{A}:=\left[\begin{array}{ccccc}
+A_{1} & A_{2} & \cdots & A_{p-1} & A_{p}\\
+I_{K} & 0 &  & 0 & 0\\
+0 & I_{K} &  & 0 & 0\\
+\vdots &  & \ddots & \vdots & \vdots\\
+0 & 0 & \cdots & I_{K} & 0
+\end{array}\right],\quad U_{t}:=\left(\begin{array}{c}
+u_{t}\\
+0\\
+\vdots\\
+0
+\end{array}\right)
+\]
+
+\end_inset
+
+The vector 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ is 
+\begin_inset Formula $pK\times1$
+\end_inset
+
+, the matrix 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is 
+\begin_inset Formula $pK\times pK$
+\end_inset
+
+, and 
+\begin_inset Formula $U_{t}$
+\end_inset
+
+ is 
+\begin_inset Formula $pK\times1$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula 
+\[
+\underset{K\times pK}{J}:=[I_{K},0_{K\times(p-1)K}].
+\]
+
+\end_inset
+
+Then
+\begin_inset Formula 
+\begin{align}
+JJ^{\prime} & :=I_{K}\label{eq:JJp}\\
+JY_{t} & =y_{t},\label{eq:JY}\\
+JU_{t} & =u_{t},\label{eq:JU}
+\end{align}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+y_{t+i}=J\mathbf{A}^{i+1}Y_{t-1}+\sum_{j=0}^{i}J\mathbf{A}^{j}J^{\prime}u_{t+i-j}.
+\]
+
+\end_inset
+
+The response of variable 
+\begin_inset Formula $j=1,\ldots,K$
+\end_inset
+
+ to a unit shock 
+\begin_inset Formula $u_{kt}=1,\ldots,K$
+\end_inset
+
+ that occurred 
+\begin_inset Formula $i$
+\end_inset
+
+ periods ago, denoted by 
+\begin_inset Formula $\phi_{jk,i}$
+\end_inset
+
+, can be collected in a matrix 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ that has 
+\begin_inset Formula $\phi_{jk,i}$
+\end_inset
+
+ in its 
+\begin_inset Formula $j^{th}$
+\end_inset
+
+ row and 
+\begin_inset Formula $k^{th}$
+\end_inset
+
+ column, and is given by
+\begin_inset Formula 
+\[
+\underset{K\times K}{\Phi_{i}}:=J\mathbf{A}^{i}J^{\prime}.
+\]
+
+\end_inset
+
+We can compute 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ according to the recursion
+\begin_inset Formula 
+\begin{align*}
+\Phi_{0} & =I_{K}\\
+\Phi_{i} & =\sum_{j=1}^{i}\Phi_{i-j}A_{j},\quad i=1,2,\ldots\\
+A_{j} & =0\text{ for \ensuremath{j>p}.}
+\end{align*}
+
+\end_inset
+
+If 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is covariance stationary, its MA representation is
+\begin_inset Formula 
+\begin{equation}
+y_{t}=\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}=\sum_{i=0}^{\infty}\Theta_{i}w_{t-i},\label{eq:ma}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+\Theta_{i}:=\Phi_{i}B_{0}^{-1}.
+\]
+
+\end_inset
+
+Under stationarity, the IRF can be computed
+\begin_inset Formula 
+\[
+\frac{\partial y_{t}}{\partial w_{t-i}^{\prime}}=\frac{\partial y_{t+i}}{\partial w_{t}^{\prime}}=\Theta_{i}.
+\]
+
+\end_inset
+
+The IRF of variable 
+\begin_inset Formula $j$
+\end_inset
+
+ with respect to shock 
+\begin_inset Formula $k$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\[
+\theta_{jk,i}=\frac{\partial y_{j,t+i}}{\partial w_{kt}}
+\]
+
+\end_inset
+
+so 
+\begin_inset Formula $\Theta_{i}=[\theta_{jk,i}]$
+\end_inset
+
+.
+ If the VAR is not stable, the same approach works to compute 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Theta_{i}$
+\end_inset
+
+ but the IRF may not approach zero as 
+\begin_inset Formula $i\to\infty$
+\end_inset
+
+ and will no longer represent the coefficients of the MA representation.
+\end_layout
+
+\begin_layout Standard
+The second moments of the VAR process are
+\begin_inset Formula 
+\[
+\Gamma_{y}(h):=Cov(y,y_{t-h})=\sum_{i=0}^{\infty}\Phi_{h+i}\Sigma_{u}\Phi_{i}^{\prime}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $h$
+\end_inset
+
+-step ahead forecast error is
+\begin_inset Formula 
+\[
+FE_{t}(h):=y_{t+h}-y_{t+h\mid t}=\sum_{i=0}^{h-1}\Phi_{i}u_{t+h-i}=\sum_{i=0}^{h-1}\Theta_{i}w_{t+h-i},
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+y_{t+h\mid t} & :=\mathbb{E}[y_{t+h}\mid y_{t},y_{t-1},\ldots]\\
+ & =A_{1}y_{t+h-1\mid t}+\ldots+A_{p}y_{t+h-p\mid t},\\
+y_{t+j\mid t} & =y_{t+j}\text{ for }j\leq0
+\end{align*}
+
+\end_inset
+
+The forecast error variance is
+\begin_inset Formula 
+\begin{align}
+FEV(h) & :=\mathbb{E}[(y_{t+h}-y_{t+h\mid t})(y_{t+h}-y_{t+h\mid t})^{\prime}]=\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}=\sum_{i=0}^{h-1}\Theta_{i}\Theta_{i}^{\prime}.\label{eq:fev}
+\end{align}
+
+\end_inset
+
+The contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{align}
+FEV_{j}^{k}(h) & =\theta_{kj,0}^{2}+\ldots+\theta_{kj,h-1}^{2},\label{eq:fev_jkh}
+\end{align}
+
+\end_inset
+
+and the total 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+FEV^{k}(h)=\sum_{j=1}^{K}FEV_{j}^{k}(h)=\sum_{j=1}^{K}(\theta_{kj,0}^{2}+\ldots+\theta_{kj,h-1}^{2}).
+\]
+
+\end_inset
+
+The contribution of the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ shock to FEV(h) of variable 
+\begin_inset Formula $k$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+\frac{FEV_{j}^{k}(h)}{FEV^{k}(h)},
+\]
+
+\end_inset
+
+which add up to one when summed over 
+\begin_inset Formula $j=1,\ldots,K$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+1=\frac{FEV_{1}^{k}(h)}{FEV^{k}(h)}+\frac{FEV_{2}^{k}(h)}{FEV^{k}(h)}+\ldots+\frac{FEV_{K}^{k}(h)}{FEV^{k}(h)}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Write (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:var_ar1"
+
+\end_inset
+
+) as 
+\begin_inset Formula 
+\[
+(I_{pK}-\mathbf{A}L)Y_{t}=U_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $L$
+\end_inset
+
+ is the lag operator, or more compactly as
+\begin_inset Formula 
+\[
+\mathcal{A}(L)Y_{t}=U_{t}
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+\mathcal{A}(L):=I_{pK}-\mathbf{A}L.
+\]
+
+\end_inset
+
+Then, the MA representation in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ma"
+
+\end_inset
+
+) can be written as
+\begin_inset Formula 
+\begin{align}
+Y_{t} & =\mathcal{A}(L)^{-1}U_{t}\label{eq:MA_inv}\\
+ & =(I_{pK}-\mathbf{A}L)^{-1}U_{t}\nonumber \\
+ & =\sum_{i=0}^{\infty}(\mathbf{A}L)^{i}U_{t}\nonumber \\
+ & =\sum_{i=0}^{\infty}\mathbf{A}^{i}U_{t-i}\nonumber 
+\end{align}
+
+\end_inset
+
+or, in terms of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+JY_{t} & =\sum_{i=0}^{\infty}J\mathbf{A}^{i}JJ^{\prime}U_{t-i}\\
+y_{t} & =\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $P$
+\end_inset
+
+ be the 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ unique lower triangular matrix with positive main diagonal that is the
+ Cholesky factor of the symmetric positive definite matrix 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\Sigma_{u}=PP^{\prime}.
+\]
+
+\end_inset
+
+We can orthogonalize the reduced form shocks 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+ by
+\begin_inset Formula 
+\[
+u_{t}=PP^{-1}u_{t}=Pv_{t}
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+v_{t}:=P^{-1}u_{t}
+\]
+
+\end_inset
+
+are orthogonal:
+\begin_inset Formula 
+\begin{align*}
+Var(v_{t}) & =Var(P^{-1}u_{t})\\
+ & =P^{-1}Var(u_{t})(P^{-1})^{\prime}\\
+ & =P^{-1}\Sigma_{u}(P^{-1})^{\prime}\\
+ & =P^{-1}PP^{\prime}(P^{-1})^{\prime}\\
+ & =I_{K}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Recursive Identification
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $P$
+\end_inset
+
+ be the 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ unique lower triangular matrix with positive main diagonal that is the
+ Cholesky factor of the symmetric positive definite matrix 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\Sigma_{u}=PP^{\prime}.
+\]
+
+\end_inset
+
+Equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sigma_u"
+
+\end_inset
+
+) holds with 
+\begin_inset Formula 
+\[
+P=B_{0}^{-1},
+\]
+
+\end_inset
+
+so 
+\begin_inset Formula $P=B_{0}^{-1}$
+\end_inset
+
+ is one possible way to identify the matrix 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+.
+ A lower triangular 
+\begin_inset Formula $B_{0}^{-1}$
+\end_inset
+
+ implies that 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ is lower triangular as well.
+\end_layout
+
+\begin_layout Standard
+Given estimates 
+\begin_inset Formula $\hat{u}_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\Sigma_{u}}$
+\end_inset
+
+ (which can be obtained, for example, by estimating the reduced-form VAR
+ in equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:red"
+
+\end_inset
+
+) by OLS), we can retrieve the identified structural shocks by 
+\begin_inset Formula 
+\[
+w_{t}=P^{-1}\hat{u}_{t},
+\]
+
+\end_inset
+
+where we have used that 
+\begin_inset Formula $P$
+\end_inset
+
+ is invertible, which follows from invertibility of 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Orthogonal Transformations
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $Q$
+\end_inset
+
+ be a 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ orthogonal matrix, that is, a matrix such that 
+\begin_inset Formula $Q^{\prime}Q=QQ^{\prime}=I_{K}$
+\end_inset
+
+ or, equivalently, such that 
+\begin_inset Formula $Q^{\prime}=Q^{-1}$
+\end_inset
+
+.
+ Then we can write
+\begin_inset Formula 
+\[
+B_{0}=Q^{\prime}P^{-1}.
+\]
+
+\end_inset
+
+Inverting both sides, we get
+\begin_inset Formula 
+\begin{equation}
+B_{0}^{-1}=P(Q^{\prime})^{-1}=PQ.\label{eq:B0inv_PQ}
+\end{equation}
+
+\end_inset
+
+Post-multiplying by 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ and using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:u_def"
+
+\end_inset
+
+) gives
+\begin_inset Formula 
+\begin{equation}
+u_{t}=PQw_{t}.\label{eq:u_PQw}
+\end{equation}
+
+\end_inset
+
+Solving for 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{align}
+w_{t} & =(PQ)^{-1}u_{t}\nonumber \\
+ & =Q^{-1}P^{-1}u_{t}\nonumber \\
+ & =Q^{\prime}P^{-1}u_{t}\label{eq:w_PQu}\\
+ & =Q^{\prime}v_{t}
+\end{align}
+
+\end_inset
+
+The MA representation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ma"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) can be written as
+\begin_inset Formula 
+\begin{align}
+y_{t} & =\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}=\sum_{i=0}^{\infty}\Phi_{i}Pv_{t-i}=\sum_{i=0}^{\infty}\Phi_{i}PQw_{t-i}=\sum_{i=0}^{\infty}\Theta_{i}w_{t-i}\label{eq:ma_PQ}
+\end{align}
+
+\end_inset
+
+with
+\begin_inset Formula 
+\[
+\Phi_{i}PQ=\Theta_{i}.
+\]
+
+\end_inset
+
+Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sigma_u"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:B0inv_PQ"
+
+\end_inset
+
+), we can rewrite (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fev"
+
+\end_inset
+
+) as
+\begin_inset Formula 
+\begin{align*}
+FEV(h) & =\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}B_{0}^{-1}B_{0}^{-1\prime}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}PQ(\Phi_{i}PQ)^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}PP^{\prime}\Phi_{i}^{\prime}\\
+FEV(h) & =\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}=\sum_{i=0}^{h-1}\Phi_{i}B_{0}^{-1}B_{0}^{-1\prime}\Phi_{i}^{\prime}=\sum_{i=0}^{h-1}\Theta_{i}\Theta_{i}^{\prime}
+\end{align*}
+
+\end_inset
+
+We can also rewrite the contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fev_jkh"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) as
+\begin_inset Formula 
+\begin{align}
+FEV_{j}^{k}(h) & =e_{k}^{\prime}\left[\sum_{i=0}^{h-1}\Phi_{i}Pq_{j}(\Phi_{i}Pq_{j})^{\prime}\right]e_{k}\nonumber \\
+ & =\underset{1\times K}{\underbrace{e_{k}^{\prime}}}\left[\sum_{i=0}^{h-1}\underset{K\times K}{\underbrace{\Phi_{i}}}\underset{K\times K}{\underbrace{P}}\underset{K\times1}{\underbrace{q_{j}}}\underset{1\times K}{\underbrace{q_{j}^{\prime}}}\underset{K\times K}{\underbrace{P^{\prime}}}\underset{K\times K}{\underbrace{\Phi_{i}^{\prime}}}\right]\underset{K\times1}{\underbrace{e_{k}}}\nonumber \\
+ & =\sum_{i=0}^{h-1}\underset{1\times1}{\underbrace{e_{k}^{\prime}\Phi_{i}Pq_{j}}}\underset{1\times1}{\underbrace{q_{j}^{\prime}P^{\prime}\Phi_{i}^{\prime}e_{k}}}\nonumber \\
+ & =\sum_{i=0}^{h-1}\underset{1\times1}{\underbrace{q_{j}^{\prime}P^{\prime}\Phi_{i}^{\prime}e_{k}}}\underset{1\times1}{\underbrace{e_{k}^{\prime}\Phi_{i}Pq_{j}}}\nonumber \\
+ & =\underset{1\times K}{\underbrace{q_{j}^{\prime}}}\left[\sum_{i=0}^{h-1}\underset{K\times1}{\underbrace{P^{\prime}\Phi_{i}^{[k]\prime}}}\underset{1\times K}{\underbrace{\Phi_{i}^{[k]}P}}\right]\underset{K\times1}{\underbrace{q_{j}}}\nonumber \\
+ & =q_{j}^{\prime}\Lambda_{k}(h)q_{j}\label{eq:FEV_jkh}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $e_{k}$
+\end_inset
+
+ is the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $I_{K}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{j}$
+\end_inset
+
+ is the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $Q$
+\end_inset
+
+, 
+\begin_inset Formula $\Phi_{i}^{[k]}$
+\end_inset
+
+ is the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ row of 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+, and 
+\begin_inset Formula 
+\[
+\underset{K\times K}{\underbrace{\Lambda_{k}(h)}}:=\sum_{i=0}^{h-1}\underset{K\times1}{\underbrace{P^{\prime}\Phi_{i}^{[k]\prime}}}\underset{1\times K}{\underbrace{\Phi_{i}^{[k]}P}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Max-Share Identification
+\end_layout
+
+\begin_layout Subsection
+Time Domain
+\end_layout
+
+\begin_layout Standard
+Pick a set of horizons 
+\begin_inset Formula $\mathcal{H}$
+\end_inset
+
+ and compute the sum over horizons 
+\begin_inset Formula $h\in\mathcal{H}$
+\end_inset
+
+ of the contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+FEV_{j}^{k}(\mathcal{H}) & :=\sum_{h\in\mathcal{H}}FEV_{j}^{k}(h)
+\end{align*}
+
+\end_inset
+
+By equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:FEV_jkh"
+
+\end_inset
+
+), we can write
+\begin_inset Formula 
+\begin{align*}
+FEV_{j}^{k}(\mathcal{H}) & =\sum_{h\in\mathcal{H}}[q_{j}^{\prime}\Lambda_{k}(h)q_{j}]\\
+ & =q_{j}^{\prime}\left[\sum_{h\in\mathcal{H}}\Lambda_{k}(h)\right]q_{j}\\
+ & =q_{j}^{\prime}\Lambda_{k}(\mathcal{H})q_{j}
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+\underset{K\times K}{\underbrace{\Lambda_{k}(\mathcal{H})}}:=\sum_{h\in\mathcal{H}}\Lambda_{k}(h).
+\]
+
+\end_inset
+
+The matrices 
+\begin_inset Formula $\Lambda_{k}(h)$
+\end_inset
+
+ are symmetric, and therefore 
+\begin_inset Formula $\Lambda_{k}(\mathcal{H})$
+\end_inset
+
+ is symmetric as well.
+ The max-share identification determines a vector 
+\begin_inset Formula $q$
+\end_inset
+
+ through the following maximization problem:
+\begin_inset Formula 
+\[
+q_{k}^{*}(\mathcal{H})=\arg\max_{q}q^{\prime}\Lambda_{k}(\mathcal{H})q
+\]
+
+\end_inset
+
+Then one structural shock, which we denote by 
+\begin_inset Formula $w_{t}(k,\mathcal{H})$
+\end_inset
+
+, is identified by
+\begin_inset Formula 
+\[
+w_{t}(k,\mathcal{H})=q_{k}^{*}(\mathcal{H})^{\prime}P^{-1}u_{t}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Proxy VAR
+\end_layout
+
+\begin_layout Standard
+We are interested in estimating responses of the 
+\begin_inset Formula $K$
+\end_inset
+
+ model variables to structural shock 
+\begin_inset Formula $j,h$
+\end_inset
+
+ periods ahead 
+\begin_inset Formula 
+\[
+\theta_{j,h}=\Phi_{h}B_{0}^{-1}e_{j},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $e_{j}$
+\end_inset
+
+ denotes the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $I_{K}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{0}^{-1}e_{j}$
+\end_inset
+
+ is the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $B_{0}^{-1}$
+\end_inset
+
+, and 
+\begin_inset Formula $\Phi_{h}$
+\end_inset
+
+ refers to the 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ matrix of 
+\begin_inset Formula $h$
+\end_inset
+
+-step ahead reduced-form impulse responses.
+ Since 
+\begin_inset Formula $B_{0}^{-1}e_{j}=\theta_{j,0}$
+\end_inset
+
+, 
+\begin_inset Formula $\theta_{j,h}=\Phi_{h}\theta_{j,0}$
+\end_inset
+
+.
+ Without loss of generality, let the structural shock of interest be 
+\begin_inset Formula $w_{1t}$
+\end_inset
+
+.
+ Thus, we focus on the estimation of 
+\begin_inset Formula $\theta_{1,h}$
+\end_inset
+
+.
+ Suppose that there is only one external instrument, 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The key assumption for estimating 
+\begin_inset Formula $\theta_{1,0}$
+\end_inset
+
+ is that the external instrument 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ is correlated with 
+\begin_inset Formula $w_{1t}$
+\end_inset
+
+ and uncorrelated with all other structural shocks 
+\begin_inset Formula 
+\begin{align*}
+\mathbb{E}[z_{t}w_{1t}] & =a\neq0\\
+\mathbb{E}[z_{t}w_{kt}] & =0\text{ for }k=2,\ldots,K.
+\end{align*}
+
+\end_inset
+
+Except for the fact that 
+\begin_inset Formula $w_{1t}$
+\end_inset
+
+ is unobserved, these are the standard conditions required for conventional
+ IV analysis.
+ Using 
+\begin_inset Formula $u_{t}=B_{0}^{-1}w_{t}$
+\end_inset
+
+, it follows that 
+\begin_inset Formula 
+\[
+\mathbb{E}[z_{t}u_{t}]=\mathbb{E}[B_{0}^{-1}z_{t}w_{t}]=a\theta_{1,0}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can impose the normalization that the 
+\begin_inset Formula $(1,1)$
+\end_inset
+
+ element of the structural impact multiplier matrix 
+\begin_inset Formula $B_{0}^{-1}$
+\end_inset
+
+ is unity.
+ Under this normalization, the scalar structural parameter 
+\begin_inset Formula $a$
+\end_inset
+
+ and the 
+\begin_inset Formula $K\times1$
+\end_inset
+
+ vector of structural responses 
+\begin_inset Formula $\theta_{1,0}=B_{0}^{-1}e_{1}$
+\end_inset
+
+ are identified by the moment condition 
+\begin_inset Formula 
+\[
+\mathbb{E}[z_{t}u_{t}]=a\theta_{1,0}
+\]
+
+\end_inset
+
+ or, equivalently, by 
+\begin_inset Formula 
+\[
+\mathbb{E}[z_{t}(y_{t}-A_{1}y_{t-1}-\cdots-A_{p}y_{t-p})-a\theta_{1,0}]=0.
+\]
+
+\end_inset
+
+In addition, the VAR slope parameters 
+\begin_inset Formula $\boldsymbol{\alpha}=vec(A_{1},\ldots,A_{p})$
+\end_inset
+
+ satisfy the moment conditions 
+\begin_inset Formula 
+\[
+\mathbb{E}\left[\left(y_{t-1}^{\prime},\ldots,y_{t-p}^{\prime}\right)^{\prime}\otimes\left(y_{t}-A_{1}y_{t-1}-\cdots-A_{p}y_{t-p}\right)\right]=0.
+\]
+
+\end_inset
+
+The GMM estimator corresponding to these two sets of moment conditions is
+ given by 
+\begin_inset Formula 
+\[
+\begin{aligned}\widehat{\boldsymbol{\alpha}} & =\left[\left(\frac{1}{T}\sum_{t=1}^{T}Y_{t-1}Y_{t-1}^{\prime}\right)^{-1}\otimes I_{pK}\right]\frac{1}{T}\sum_{t=1}^{T}\left(Y_{t-1}\otimes y_{t}\right),\\
+\widehat{a} & =\frac{1}{T}\sum_{t=1}^{T}z_{t}\widehat{u}_{1t},\\
+\widehat{\theta}_{1,0} & =\frac{1}{\widehat{a}}\frac{1}{T}\sum_{t=1}^{T}z_{t}\widehat{u}_{t},
+\end{aligned}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $Y_{t-1}:=\left(y_{t-1}^{\prime},\ldots,y_{t-p}^{\prime}\right)^{\prime}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widehat{u}_{t}=y_{t}-\left(Y_{t-1}^{\prime}\otimes I_{pK}\right)\widehat{\boldsymbol{\alpha}}$
+\end_inset
+
+, such that the 
+\begin_inset Formula $K$
+\end_inset
+
+-dimensional vector of structural responses to shock 1 at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ is 
+\begin_inset Formula 
+\[
+\widehat{\theta}_{1,h}=\widehat{\Phi}_{h}\widehat{\theta}_{1,0},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\widehat{\Phi}_{h}$
+\end_inset
+
+ is obtained from 
+\begin_inset Formula $\widehat{\boldsymbol{\alpha}}$
+\end_inset
+
+ in the usual way for any VAR.
+ The estimator is 
+\begin_inset Formula $\sqrt{T}$
+\end_inset
+
+-consistent and asymptotically normal.
+\end_layout
+
+\begin_layout Section
+VFCI
+\end_layout
+
+\begin_layout Standard
+We model the heteroskedasticity of the reduced-form VAR residuals by
+\begin_inset Formula 
+\begin{align}
+\log u_{t}^{2} & =C_{0}y_{t}+C_{1}y_{t-1}+\ldots+C_{p}y_{t-p}+\varepsilon_{t}\label{eq:het_def}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\log[(u_{t}^{[k]})^{2}] & =C_{0}^{[k]}y_{t}+C_{1}^{[k]}y_{t-1}+\ldots+C_{p}^{[k]}y_{t-p}+\varepsilon_{t}^{[k]}\\
+\text{Assume } & C_{i}^{[k]}=0\text{ for }i\geq1\\
+\log[(u_{t}^{[k]})^{2}] & =C_{0}^{[k]}y_{t}+\varepsilon_{t}^{[k]}\\
+\text{Stack the equations}\\
+\underset{T\times1}{\log[(u^{[k]})^{2}]} & =\underset{T\times K}{y}\underset{K\times1}{C_{0}^{[k]}{}^{\prime}}+\underset{T\times1}{\varepsilon^{[k]}}\\
+\underset{K\times K}{H} & :=\underset{K\times T}{y^{\prime}}\underset{T\times K}{y},\\
+\underset{K\times1}{g} & :=-\underset{K\times T}{y^{\prime}}\underset{T\times1}{\log[(u^{[k]})^{2}]},\\
+\beta & :=\frac{1}{2}\left\Vert \log[(u^{[k]})^{2}]\right\Vert _{2}^{2}.\\
+\min_{C_{0}^{[k]}}\frac{1}{2}\left\Vert \log[(u^{[k]})^{2}]-yC_{0}^{[k]}{}^{\prime}\right\Vert _{2}^{2} & =\min_{C_{0}^{[k]}}\left\{ \frac{1}{2}\underset{1\times K}{C_{0}^{[k]}}\underset{K\times K}{H}\underset{K\times1}{C_{0}^{[k]}{}^{\prime}}+\underset{1\times K}{g^{\prime}}\underset{K\times1}{C_{0}^{[k]}{}^{\prime}}\right\} +\beta\\
+ & =\min_{\left\Vert q_{h}\right\Vert =1}\left\{ \frac{1}{2}\underset{1\times K}{q_{h}^{\prime}P{}^{-1}}\underset{K\times K}{H}\underset{K\times1}{(P^{\prime})^{-1}q_{h}}+\underset{1\times K}{g^{\prime}}\underset{K\times1}{(P^{\prime})^{-1}q_{h}}\right\} +\beta\\
+\underset{K\times1}{q_{h}} & =\frac{1}{a}\underset{K\times K}{P^{\prime}}\underset{K\times1}{C_{0}^{[k]}{}^{\prime}}\\
+C_{0}^{[k]}{}^{\prime} & =a(P^{\prime})^{-1}q_{h}\\
+C_{0}^{[k]} & =aq_{h}^{\prime}P{}^{-1}\\
+\min_{\left\Vert q_{h}\right\Vert =1}\left\{ \frac{1}{2}\underset{1\times K}{q_{h}^{\prime}P{}^{-1}}\underset{K\times K}{H}\underset{K\times1}{(P^{\prime})^{-1}q_{h}}+\underset{1\times K}{g^{\prime}}\underset{K\times1}{(P^{\prime})^{-1}q_{h}}\right\}  & =\min_{q_{h}}\left\{ \frac{1}{2}q_{h}^{\prime}P{}^{-1}H(P^{-1})^{\prime}q_{h}+g^{\prime}(P^{-1})^{\prime}q_{h}\right\} \\
+ & =\min_{q_{h}}\left\{ \frac{1}{2}q_{h}^{\prime}H_{q}q_{h}+g_{q}^{\prime}q_{h}\right\} \\
+ & =\min_{z}\left\{ \frac{1}{2}(z^{\prime}+\Gamma_{0}^{\prime})H_{q}(z+\Gamma_{0})+g_{q}^{\prime}(z+\Gamma_{0})\right\} \\
+ & =\min_{z}\left\{ \frac{1}{2}z^{\prime}H_{q}z\right\} +\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0}\\
+H_{q} & :=P^{-1}H(P^{-1})^{\prime}\\
+g_{q}^{\prime} & :=g^{\prime}(P^{-1})^{\prime}\\
+\underset{K\times1}{\Gamma_{0}} & :=-H_{q}^{-1}g_{q}=-P^{\prime}H^{-1}g\\
+q_{h} & :=\underset{K\times1}{z}+\underset{K\times1}{\Gamma_{0}}=z-P^{\prime}H^{-1}g\\
+\lambda_{\min}(H) & =\min_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu\\
+\text{eigenvector for }\lambda_{\min}(H) & =\arg\min_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu\\
+\Sigma_{u} & =PP^{\prime}\\
+\Sigma_{u}=\mathbb{E}[u_{t}u_{t}^{\prime}]=\mathbb{E}[FE_{t}(1)FE_{t}(1)^{\prime}] & =FEV(1)\\
+y_{t}-(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p}) & =u_{t}\\
+u_{t}u_{t}^{\prime} & =[y_{t}-(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})][y_{t}^{\prime}-(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})^{\prime}]\\
+ & =y_{t}y_{t}^{\prime}-y_{t}(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})^{\prime}-(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})y_{t}^{\prime}+(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})(A_{1}y_{t-1}+\ldots+A_{p}y_{t-p})^{\prime}\\
+FEV(h) & :=\mathbb{E}[(y_{t+h}-y_{t+h\mid t})(y_{t+h}-y_{t+h\mid t})^{\prime}]=\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}=\sum_{i=0}^{h-1}\Theta_{i}\Theta_{i}^{\prime}.\\
+\underset{K\times K}{H} & :=\underset{K\times T}{y^{\prime}}\underset{T\times K}{y}=\\
+\\
+y_{t} & =\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}\\
+y_{t}y_{t}^{\prime} & =\left(\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}\right)\left(\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}\right)^{\prime}\\
+ & =\left(\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}\right)\left(\sum_{j=0}^{\infty}(\Phi_{j}u_{t-j})^{\prime}\right)\\
+ & =\sum_{k=0}^{\infty}\varUpsilon_{k}\text{ \ensuremath{\quad}where }\varUpsilon_{k}=\sum_{l=0}^{k}\Phi_{l}u_{t-l}(\Phi_{k-l}u_{t-(k-l)})^{\prime}\\
+\varUpsilon_{k} & =\sum_{l=0}^{k}\Phi_{l}u_{t-l}u_{t-(k-l)}^{\prime}\Phi_{k-l}^{\prime}\\
+\\
+\min_{\|z\|_{2}=1}\left\{ \frac{1}{2}z^{\prime}H_{q}z\right\} +\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0} & =\frac{1}{2}\lambda_{\min}(H_{q})+\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0}\\
+ & =\frac{1}{2}\lambda_{\min}(P^{-1}H(P^{-1})^{\prime})+\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0}\\
+ & =\frac{1}{2}\lambda_{\min}(H[PP^{\prime}]^{-1})+\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0}\\
+ & =\frac{1}{2}\lambda_{\min}(H\Sigma_{u}^{-1})+\frac{1}{2}\Gamma_{0}^{\prime}H_{q}\Gamma_{0}+g_{q}^{\prime}\Gamma_{0}\\
+z & =\text{eigenvector for }\lambda_{\min}(H_{q})\\
+ & =\text{eigenvector for }\lambda_{\min}(P^{-1}H(P^{-1})^{\prime})\\
+q_{h} & =z-P^{\prime}H^{-1}g\\
+ & =z+P^{\prime}H^{-1}y^{\prime}\log[(u^{[k]})^{2}]
+\end{align*}
+
+\end_inset
+
+where, letting 
+\begin_inset Formula $u_{t}^{[k]}$
+\end_inset
+
+ be the reduced-form residual of the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ equation of the VAR, the 
+\begin_inset Formula $K\times1$
+\end_inset
+
+ vector 
+\begin_inset Formula $\log u_{t}^{2}$
+\end_inset
+
+ is computed component-wise
+\begin_inset Formula 
+\[
+\log u_{t}^{2}:=[\log[(u_{t}^{[1]})^{2}],\log[(u_{t}^{[2]})^{2}],...,\log(u_{t}^{[K]})^{2}]^{\prime},
+\]
+
+\end_inset
+
+
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ are 
+\begin_inset Formula $K\times K$
+\end_inset
+
+ matrices of coefficient, 
+\begin_inset Formula $\varepsilon_{t}=[\varepsilon_{1t},...,\varepsilon_{Kt}]$
+\end_inset
+
+ is a 
+\begin_inset Formula $K\times1$
+\end_inset
+
+ error term.
+ Equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:het_def"
+
+\end_inset
+
+) can be written as
+\begin_inset Formula 
+\begin{align}
+\log u_{t}^{2} & =C_{0}y_{t}+C_{1}y_{t-1}+\ldots+C_{p}y_{t-p}+\varepsilon_{t}\nonumber \\
+ & =(C_{0}L^{0}+C_{1}L^{1}+\ldots+C_{p}L^{p})y_{t}+\varepsilon_{t}\nonumber \\
+ & =\mathbf{C}(L)y_{t}+\varepsilon_{t}\label{eq:het_cL}
+\end{align}
+
+\end_inset
+
+The MA representation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:MA_inv"
+
+\end_inset
+
+) together with (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:JY"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:JU"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) give
+\begin_inset Formula 
+\begin{equation}
+y_{t}=J\mathcal{A}(L)^{-1}J^{\prime}u_{t}.\label{eq:MAyu}
+\end{equation}
+
+\end_inset
+
+Plugging (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:MAyu"
+
+\end_inset
+
+) into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:het_cL"
+
+\end_inset
+
+), we get
+\begin_inset Formula 
+\begin{align*}
+\log u_{t}^{2} & =\mathbf{C}(L)y_{t}+\varepsilon_{t}\\
+ & =\mathbf{C}(L)J\mathcal{A}(L)^{-1}J^{\prime}u_{t}+\varepsilon_{t}\\
+ & =\mathbf{g}(L)u_{t}+\varepsilon_{t}
+\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+\boldsymbol{g}(L):=\mathbf{C}(L)J\mathcal{A}(L)^{-1}J^{\prime}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define
+\begin_inset Formula 
+\[
+V_{t}:=\mathbf{C}(L)y_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denote by 
+\begin_inset Formula $c_{i}^{[j]}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{c}^{[j]}(L)$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{g}^{[j]}(L)$
+\end_inset
+
+, 
+\begin_inset Formula $V_{t}^{[k]}$
+\end_inset
+
+ the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ row of 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{C}(L)$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{g}(L)$
+\end_inset
+
+, 
+\begin_inset Formula $V_{t}$
+\end_inset
+
+, respectively.
+ Then the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ row of 
+\begin_inset Formula $V_{t}$
+\end_inset
+
+ can be written as
+\begin_inset Formula 
+\begin{align}
+V_{t}^{[k]} & =(c_{0}^{[k]}L^{0}+c_{1}^{[k]}L^{1}+\ldots+c_{p}^{[k]}L^{p})y_{t}\nonumber \\
+ & =\boldsymbol{c}^{[k]}(L)y_{t}\nonumber \\
+ & =\mathbf{g}^{[k]}(L)u_{t}\label{eq:het_g}\\
+ & =\mathbf{g}^{[k]}(L)PQw_{t}\label{eq:het_g_w}
+\end{align}
+
+\end_inset
+
+where the last line follows by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:u_PQw"
+
+\end_inset
+
+).
+ 
+\begin_inset Formula 
+\begin{align*}
+V_{t} & =\mathbf{g}(L)PQw_{t}\\
+ & =(C_{0}L^{0}+C_{1}L^{1}+\ldots+C_{p}L^{p})J\left[\sum_{i=0}^{\infty}(\mathbf{A}L)^{i}\right]J^{\prime}PQw_{t}\\
+ & =\left[\sum_{i=0}^{\infty}(J\mathbf{A}^{i}J^{\prime})(C_{0}L^{i}+C_{1}L^{1+i}+\ldots+C_{p}L^{p+i})\right]PQw_{t}\\
+ & =C_{0}PQw_{t}+\left[C_{1}L^{1}+\ldots+C_{p}L^{p}+\sum_{i=1}^{\infty}(J\mathbf{A}^{i}J^{\prime})(C_{0}L^{i}+C_{1}L^{1+i}+\ldots+C_{p}L^{p+i})\right]PQw_{t}\\
+ & =C_{0}PQw_{t}+(\mathbf{g}(L)-C_{0})PQw_{t}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathbb{E}[V_{t}w_{t}^{\prime}] & =\mathbb{E}[(C_{0}PQw_{t}+(\mathbf{g}(L)-C_{0})PQw_{t})w_{t}^{\prime}]\\
+ & =C_{0}PQ\mathbb{E}[w_{t}w_{t}^{\prime}]+\mathbb{E}[(\mathbf{g}(L)-C_{0})PQw_{t}w_{t}^{\prime}]\\
+ & =C_{0}PQ
+\end{align*}
+
+\end_inset
+
+If we want to use 
+\begin_inset Formula $V_{t}^{[k]}$
+\end_inset
+
+ as an instrument for the 
+\begin_inset Formula $h^{\text{th}}$
+\end_inset
+
+ shock of the VAR, the two conditions are:
+\begin_inset Formula 
+\begin{align*}
+\mathbb{E}[V_{t}^{[k]}w_{jt}] & \neq0\text{ for }j=h\\
+\mathbb{E}[V_{t}^{[k]}w_{jt}] & =0\text{ for }j\neq h
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathbb{E}[V_{t}^{[k]}w_{t}^{\prime}] & =\mathbb{E}[(e_{k}^{\prime}V_{t})w_{t}^{\prime}]\\
+ & =e_{k}^{\prime}\mathbb{E}[V_{t}w_{t}^{\prime}]\\
+ & =e_{k}^{\prime}C_{0}PQ\\
+ & =c_{0}^{[k]}PQ\\
+ & =[0,0,...,\underset{h^{\text{th}}\text{ position}}{\underbrace{a}},...,0]
+\end{align*}
+
+\end_inset
+
+for some 
+\begin_inset Formula $a\neq0$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $Q^{-1}=Q^{\prime}$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align*}
+c_{0}^{[k]}P & =[0,0,...,a,...,0]Q^{-1}\\
+ & =[0,0,...,a,...,0]Q^{\prime}\\
+ & =aq_{h}^{\prime}
+\end{align*}
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\[
+q_{h}=\frac{1}{a}P^{\prime}(c_{0}^{[k]})^{\prime}
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula $a$
+\end_inset
+
+ such that 
+\begin_inset Formula $\left\Vert q_{h}\right\Vert _{2}=1$
+\end_inset
+
+ since 
+\begin_inset Formula $Q$
+\end_inset
+
+ is orthogonal, which gives 
+\begin_inset Formula 
+\[
+\left\Vert q_{h}a\right\Vert _{2}=\left\Vert q_{h}\right\Vert _{2}|a|=|a|=\left\Vert c_{0}^{[k]}P\right\Vert _{2}=\sqrt{c_{0}^{[k]}PP^{\prime}(c_{0}^{[k]})^{\prime}}
+\]
+
+\end_inset
+
+The structural shock to 
+\begin_inset Formula $V_{t}^{[k]}$
+\end_inset
+
+ is 
+\begin_inset Formula $\frac{1}{a}c_{0}^{[k]}u_{t}$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $w_{ht}=...$
+\end_inset
+
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\end_layout
+
+\begin_layout Standard
+Now consider the relation
+\begin_inset Formula 
+\begin{align*}
+c_{0}^{[k]} & =aq_{h}^{\prime}P^{-1}
+\end{align*}
+
+\end_inset
+
+A linear regression can be written as a quadratic minimization problem
+\begin_inset Formula 
+\begin{align*}
+\min_{z}\left(\frac{1}{2}z^{\prime}\Gamma{}^{\prime}H\Gamma z\right) & =\min_{q_{h}}\left(\frac{1}{2}(aq_{h}^{\prime}P^{-1}+H^{-1}g_{k})^{\prime}H(aq_{h}^{\prime}P^{-1}+H^{-1}g_{k})\right)\\
+ & =\min_{\tilde{q}_{h}}\left(\frac{1}{2}(\tilde{q}_{h})^{\prime}H\tilde{q}_{h}+g_{k}^{\prime}\tilde{q}_{h}+\frac{1}{2}g_{k}^{\prime}(H^{-1})^{\prime}g_{k}\right)\\
+ & =\min_{\tilde{z}}\left(\frac{1}{2}(\Gamma\tilde{z}+\Gamma_{k0})^{\prime}H(\Gamma\tilde{z}+\Gamma_{k0})+g_{k}^{\prime}(\Gamma\tilde{z}+\Gamma_{k0})+\frac{1}{2}g_{k}^{\prime}(H^{-1})^{\prime}g_{k}\right)\\
+ & =\min_{\tilde{z}}\left(\frac{1}{2}\tilde{z}^{\prime}H\tilde{z}+(\tilde{\Gamma}_{k0}^{\prime}H+g_{k}^{\prime})\tilde{z}+\frac{1}{2}\tilde{\Gamma}_{k0}^{\prime}H\tilde{\Gamma}_{k0}+g_{k}^{\prime}\tilde{\Gamma}_{k0}+\frac{1}{2}g_{k}^{\prime}(H^{-1})^{\prime}g_{k}\right)\\
+ & =\min_{\tilde{z}}\left(\frac{1}{2}\tilde{z}^{\prime}H\tilde{z}\right)+\frac{1}{2}\tilde{\Gamma}_{k0}^{\prime}H\tilde{\Gamma}_{k0}+g_{k}^{\prime}\tilde{\Gamma}_{k0}+\frac{1}{2}g_{k}^{\prime}(H^{-1})^{\prime}g_{k}\\
+\tilde{q}_{h} & :=aq_{h}^{\prime}P^{-1}\\
+\tilde{q}_{h} & :=\tilde{z}+\tilde{\Gamma}_{k0}\\
+\tilde{\Gamma}_{k0}^{\prime}H+g_{k}^{\prime} & =0\\
+\tilde{\Gamma}_{k0}^{\prime} & =\Gamma_{k0}\\
+H & :=\mathbf{\mathbf{y}}\mathbf{\mathbf{y}}^{\prime}\\
+g_{k} & :=-\mathbf{\mathbf{y}}^{\prime}\log\boldsymbol{u}_{kt}^{2}\\
+\Gamma_{k0} & :=-H^{-1}g_{k}\\
+c_{0}^{[k]} & :=\Gamma z+\Gamma_{k0}\\
+z & =\Gamma^{-1}aq_{h}^{\prime}P^{-1}-\Gamma^{-1}\Gamma_{k0}\\
+\Gamma z & =aq_{h}^{\prime}P^{-1}+H^{-1}g_{k}\\
+\Gamma & \text{ an invertible matrix}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{c}_{k} & :=[c_{k0},c_{k1},\ldots,c_{kp}]\\
+\min_{\boldsymbol{c}_{k}}\varepsilon_{kt}^{2} & =\min_{\boldsymbol{c}_{k}}(\log u_{kt}^{2}-\boldsymbol{c}_{k}Y_{t})^{2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Horizons
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+FE_{t}(h) & :=y_{t+h}-y_{t+h\mid t}=\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}=\sum_{i=0}^{h-1}\Theta_{i}w_{t+h+i}\\
+FE_{t-1}(1) & =y_{t}-y_{t\mid t-1}=\Phi_{0}u_{t}=u_{t}\\
+FE_{t-1}(2) & =\Phi_{0}u_{t+1}+\Phi_{1}u_{t+2}=u_{t+1}+J\mathbf{A}J^{\prime}u_{t+2}\\
+FE_{t-1}(3) & =y_{t+2}-y_{t+2\mid t-1}=\Phi_{0}u_{t+2}+\Phi_{1}u_{t+3}+\Phi_{2}u_{t+4}=u_{t+2}+J\mathbf{A}J^{\prime}\Phi_{1}u_{t+3}+J\mathbf{A}^{2}J^{\prime}\Phi_{2}u_{t+4}\\
+FE_{t-1}(h)FE_{t-1}(h)^{\prime} & =\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t-1+h+i}\right)\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t-1+h+i}\right)^{\prime}\\
+ & =\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t-1+h+i}\right)\left(\sum_{j=0}^{h-1}u_{t-1+h+j}^{\prime}\Phi_{j}^{\prime}\right)\\
+ & =\sum_{i=0}^{h-1}\sum_{j=0}^{h-1}\Phi_{i}u_{t-1+h+i}u_{t-1+h+j}^{\prime}\Phi_{j}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}u_{t-1+h+i}u_{t-1+h+i}^{\prime}\Phi_{i}^{\prime}+\sum_{i=0}^{h-1}\sum_{j=0,j\neq i}^{h-1}\Phi_{i}u_{t-1+h+i}u_{t-1+h+j}^{\prime}\Phi_{j}^{\prime}\\
+FEV_{t}(h) & :=\mathbb{E}_{t}[(y_{t+h}-y_{t+h\mid t-1})(y_{t+h}-y_{t+h\mid t-1})^{\prime}]\\
+ & =\mathbb{E}_{t}[FE_{t}(h)FE_{t}(h)^{\prime}]\\
+ & =\mathbb{E}_{t}\left[\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}\right)\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}\right)^{\prime}\right]\\
+ & =\left[\sum_{i=0}^{h-1}\sum_{j=0}^{h-1}\Phi_{i}\mathbb{E}_{t}[u_{t+h+i}u_{t+h+j}^{\prime}]\Phi_{j}^{\prime}\right]\\
+ & =\left[\sum_{i=0}^{h-1}\sum_{j=0}^{h-1}\Phi_{i}\mathbb{E}_{t}[u_{t+h+i}u_{t+h+j}^{\prime}]\Phi_{j}^{\prime}\right]\\
+\mathbb{E}[(y_{t+1}-y_{t+1\mid t})(y_{t+1}-y_{t+1\mid t})^{\prime}] & =\Phi_{0}\Sigma_{u}\Phi_{0}^{\prime}\\
+\mathbb{E}[(y_{t+2}-y_{t+2\mid t})(y_{t+2}-y_{t+2\mid t})^{\prime}] & =\sum_{i=0}^{1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Appendix: Useful Theorems
+\end_layout
+
+\begin_layout Theorem*
+Let the symmetric matrix 
+\begin_inset Formula $H\in\mathbb{R}^{n\times n}$
+\end_inset
+
+ have smallest eigenvalue 
+\begin_inset Formula $\lambda_{\min}(H)$
+\end_inset
+
+ and largest eigenvalue 
+\begin_inset Formula $\lambda_{\max}(H)$
+\end_inset
+
+.
+ Then, for all 
+\begin_inset Formula $u\in\mathbb{R}^{n}$
+\end_inset
+
+, 
+\begin_inset Formula 
+\[
+\lambda_{\min}(H)\|u\|_{2}^{2}\leq u^{T}Hu\leq\lambda_{\max}(H)\|u\|_{2}^{2},
+\]
+
+\end_inset
+
+ with equality holding on the left for every eigenvector 
+\begin_inset Formula $u$
+\end_inset
+
+ for 
+\begin_inset Formula $\lambda_{\min}(H)$
+\end_inset
+
+ and equality holding on the right for every eigenvector 
+\begin_inset Formula $u$
+\end_inset
+
+ for 
+\begin_inset Formula $\lambda_{\max}(H)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A corollary is that
+\begin_inset Formula 
+\begin{align*}
+\lambda_{\max}(H) & =\max_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu\\
+\text{eigenvector for }\lambda_{\max}(H) & =\arg\max_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu
+\end{align*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{align*}
+\lambda_{\min}(H) & =\min_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu\\
+\text{eigenvector for }\lambda_{\min}(H) & =\arg\min_{u\text{ s.t. }\|u\|_{2}=1}u^{T}Hu
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Theorem*
+If 
+\begin_inset Formula $Q$
+\end_inset
+
+ is a real symmetric matrix, its eigenvectors corresponding to different
+ eigenvalues are orthogonal.
+ If 
+\begin_inset Formula $Q$
+\end_inset
+
+ is a symmetric matrix, then 
+\begin_inset Formula $Q$
+\end_inset
+
+ has 
+\begin_inset Formula $n$
+\end_inset
+
+ (distinct) eigenvectors that form an orthonormal basis for 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We denote the set of real 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ symmetric matrices by 
+\begin_inset Formula $\mathcal{S}^{n}$
+\end_inset
+
+, the set of positive semi-definite real 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ symmetric matrices by 
+\begin_inset Formula $\mathcal{S}_{+}^{n}$
+\end_inset
+
+, and the set of positive definite real 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ symmetric matrices by 
+\begin_inset Formula $\mathcal{S}_{++}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Theorem*
+Let 
+\begin_inset Formula $H\in\mathcal{S}_{+}^{n}$
+\end_inset
+
+ have rank 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ Then there is a lower triangular matrix 
+\begin_inset Formula $L\in\mathbb{R}^{n\times k}$
+\end_inset
+
+ such that 
+\begin_inset Formula $H=LL^{T}$
+\end_inset
+
+.
+ Moreover, if the rank of 
+\begin_inset Formula $H$
+\end_inset
+
+ is 
+\begin_inset Formula $n$
+\end_inset
+
+, then there is a positive diagonal matrix 
+\begin_inset Formula $D$
+\end_inset
+
+ and a lower triangular matrix 
+\begin_inset Formula $\widetilde{L}$
+\end_inset
+
+ with ones on it diagonal such that 
+\begin_inset Formula $H=\widetilde{L}D\widetilde{L}^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Spectral decomposition
+\end_layout
+
+\begin_layout Theorem*
+For any 
+\begin_inset Formula $k\times k$
+\end_inset
+
+ symmetric matrix 
+\begin_inset Formula $\boldsymbol{A}$
+\end_inset
+
+ the quadratic form defined by 
+\begin_inset Formula $\boldsymbol{A}$
+\end_inset
+
+ can be written using its spectral decomposition as 
+\begin_inset Formula 
+\[
+Q(\boldsymbol{x})=\boldsymbol{x}^{\prime}\boldsymbol{A}\boldsymbol{x}=\sum_{i=1}^{k}\lambda_{i}\left\Vert \boldsymbol{q}_{i}^{\prime}\boldsymbol{x}\right\Vert ^{2}
+\]
+
+\end_inset
+
+ where the eigendecomposition of 
+\begin_inset Formula $\boldsymbol{A}$
+\end_inset
+
+ is 
+\begin_inset Formula $\boldsymbol{Q}^{\prime}\boldsymbol{\Lambda}\boldsymbol{Q}$
+\end_inset
+
+ with 
+\begin_inset Formula $\boldsymbol{\Lambda}$
+\end_inset
+
+ diagonal with diagonal elements 
+\begin_inset Formula $\lambda_{i},i=1,\ldots,k,\boldsymbol{Q}$
+\end_inset
+
+ is the orthogonal matrix with the eigenvectors, 
+\begin_inset Formula $\boldsymbol{q}_{i},i=1,\ldots,k$
+\end_inset
+
+ as its columns.
+ (Be careful to distinguish the bold face 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+$, which is a matrix, from the unbolded 
+\begin_inset Formula $Q(\boldsymbol{x})$
+\end_inset
+
+, which is the quadratic form.)
+\end_layout
+
+\begin_layout Proof
+For any 
+\begin_inset Formula $\boldsymbol{x}\in\mathbb{R}^{k}$
+\end_inset
+
+ let 
+\begin_inset Formula $\boldsymbol{y}=\boldsymbol{Q}^{\prime}\boldsymbol{x}=\boldsymbol{Q}^{-1}\boldsymbol{x}$
+\end_inset
+
+.
+ Then 
+\begin_inset Formula 
+\begin{align*}
+Q(\boldsymbol{x}) & =\operatorname{tr}\left(\boldsymbol{x}^{\prime}\boldsymbol{A}\boldsymbol{x}\right)\\
+ & =\operatorname{tr}\left(\boldsymbol{x}^{\prime}\boldsymbol{Q}\boldsymbol{\Lambda}\boldsymbol{Q}^{\prime}\boldsymbol{x}\right)\\
+ & =\operatorname{tr}\left(\boldsymbol{y}^{\prime}\boldsymbol{\Lambda}\boldsymbol{y}\right)\\
+ & =\operatorname{tr}\left(\boldsymbol{\Lambda}\boldsymbol{y}\boldsymbol{y}^{\prime}\right)\\
+ & =\sum_{i=1}^{k}\lambda_{i}y_{i}^{2}\\
+ & =\sum_{i=1}^{k}\lambda_{i}\left\Vert \boldsymbol{q}_{i}^{\prime}\boldsymbol{x}\right\Vert ^{2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+The power method
+\end_layout
+
+\begin_layout Standard
+The dominant eigenvalue of the 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ is the unique eigenvalue of greatest absolute value, if such an eigenvalue
+ exists.
+ The power method iteratively computes the dominant eigenvalue of 
+\begin_inset Formula $A$
+\end_inset
+
+ and its corresponding eigenvector.
+ Begin by choosing a vector 
+\begin_inset Formula $\mathbf{x}_{0}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\left\Vert \mathbf{x}_{0}\right\Vert _{2}=1$
+\end_inset
+
+, and define 
+\begin_inset Formula 
+\[
+\mathbf{x}_{k+1}=\frac{A\mathbf{x}_{k}}{\left\Vert A\mathbf{x}_{k}\right\Vert _{2}}.
+\]
+
+\end_inset
+
+If 
+\begin_inset Formula $A$
+\end_inset
+
+ has a dominant eigenvalue 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, and if the projection of 
+\begin_inset Formula $\mathbf{x}_{0}$
+\end_inset
+
+ onto the subspace spanned by the eigenvectors corresponding to 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is nonzero, then the sequence of vectors 
+\begin_inset Formula $\left\{ x_{k}\right\} _{k=0}^{\infty}$
+\end_inset
+
+ converges to an eigenvector 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ of 
+\begin_inset Formula $A$
+\end_inset
+
+ corresponding to 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ is an eigenvector of 
+\begin_inset Formula $A$
+\end_inset
+
+, 
+\begin_inset Formula $A\mathbf{x}=\lambda\mathbf{x}$
+\end_inset
+
+.
+ Left multiplying by 
+\begin_inset Formula $\mathbf{x}^{\prime}$
+\end_inset
+
+ on each side results in 
+\begin_inset Formula $\mathbf{x}^{\prime}A\mathbf{x}=\lambda\mathbf{x}^{\prime}\mathbf{x}$
+\end_inset
+
+, and hence 
+\begin_inset Formula $\lambda=\frac{\mathbf{x}^{\prime}A\mathbf{x}}{\mathbf{x}^{\prime}\mathbf{x}}$
+\end_inset
+
+.
+ This ratio is called the Rayleigh quotient.
+ However, since each 
+\begin_inset Formula $\mathbf{x}_{k}$
+\end_inset
+
+ is normalized, 
+\begin_inset Formula $\mathbf{x}^{\prime}\mathbf{x}=\|\mathbf{x}\|_{2}^{2}=1$
+\end_inset
+
+, so 
+\begin_inset Formula $\lambda=\mathbf{x}^{\prime}A\mathbf{x}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Moments of quadratic forms
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\mathcal{X}$
+\end_inset
+
+ be a 
+\begin_inset Formula $k$
+\end_inset
+
+-dimensional random vector and 
+\begin_inset Formula $\boldsymbol{A}$
+\end_inset
+
+ be a constant 
+\begin_inset Formula $k\times k$
+\end_inset
+
+ symmetric matrix.
+ If 
+\begin_inset Formula $E(\mathcal{X})=\boldsymbol{\mu}$
+\end_inset
+
+ and 
+\begin_inset Formula $\operatorname{Var}(\mathcal{X})=\boldsymbol{\Sigma}$
+\end_inset
+
+, then 
+\begin_inset Formula 
+\[
+E\left(\mathcal{X}^{\prime}\boldsymbol{A}\mathcal{X}\right)=\operatorname{tr}(\boldsymbol{A}\boldsymbol{\Sigma})+\boldsymbol{\mu}^{\prime}\boldsymbol{A}\boldsymbol{\mu}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Appendix: Quadratic Optimization
+\end_layout
+
+\begin_layout Subsection
+Least Squares
+\end_layout
+
+\begin_layout Standard
+Consider a linear regression of a variable 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ on the 
+\begin_inset Formula $k$
+\end_inset
+
+ variables 
+\begin_inset Formula $(x_{1t},\ldots,x_{kt})$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+y_{t}=a+b_{1}x_{1t}+\ldots+b_{k}x_{kt}+\epsilon_{t},\quad t=1,2,\ldots,T,\label{eq:OLS_t}
+\end{equation}
+
+\end_inset
+
+where we observe the 
+\begin_inset Formula $T\times1$
+\end_inset
+
+ vector of dependent variables
+\begin_inset Formula 
+\[
+\mathbf{y}:=[y_{1},\ldots,y_{T}]^{\prime}
+\]
+
+\end_inset
+
+and the 
+\begin_inset Formula $T\times k$
+\end_inset
+
+ matrix of 
+\begin_inset Formula $k$
+\end_inset
+
+ independent variables
+\begin_inset Formula 
+\[
+\mathbf{x}:=[\boldsymbol{x}_{1},\ldots,\boldsymbol{x}_{k}],
+\]
+
+\end_inset
+
+where each 
+\begin_inset Formula $\boldsymbol{x}_{i}:=[x_{i1},x_{i2},\ldots,x_{iT}]^{\prime}$
+\end_inset
+
+ is a 
+\begin_inset Formula $T\times1$
+\end_inset
+
+ vector.
+ We seek to compute the least-squares estimates of the 
+\begin_inset Formula $(1+k)\times1$
+\end_inset
+
+ vector of parameters 
+\begin_inset Formula $\mathbf{b}:=[a,b_{1},\ldots,b_{k}]^{\prime}$
+\end_inset
+
+ as a function of the data 
+\begin_inset Formula $(\mathbf{y},\mathbf{x})$
+\end_inset
+
+ by minimizing the sum of squared errors
+\begin_inset Formula 
+\[
+\left\Vert {\normalcolor \boldsymbol{\epsilon}}\right\Vert _{2}^{2},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula ${\normalcolor \boldsymbol{\epsilon}}:=[\epsilon_{1},\ldots,\epsilon_{t}]^{\prime}$
+\end_inset
+
+ is a 
+\begin_inset Formula $T\times1$
+\end_inset
+
+ vector of residuals and 
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{2}$
+\end_inset
+
+ is the 
+\begin_inset Formula $2$
+\end_inset
+
+-norm (Euclidean norm).
+ Stacking (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:OLS_t"
+
+\end_inset
+
+), we can write it as
+\begin_inset Formula 
+\[
+\underset{T\times1}{\mathbf{y}}=\underset{T\times(1+k)}{\mathbf{X}}\underset{(1+k)\times1}{\mathbf{b}}+\underset{T\times1}{\boldsymbol{\epsilon}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ is the 
+\begin_inset Formula $T\times(1+k)$
+\end_inset
+
+ matrix obtained by adding a column of ones to 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+, i.e., if 
+\begin_inset Formula $\boldsymbol{1}=[1,...,1]^{\prime}$
+\end_inset
+
+ is the 
+\begin_inset Formula $T\times1$
+\end_inset
+
+ vector of ones,
+\begin_inset Formula 
+\[
+\mathbf{X}:=[\boldsymbol{1},\boldsymbol{x}_{1},\ldots,\boldsymbol{x}_{k}].
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The minimization problem is then
+\begin_inset Formula 
+\begin{equation}
+\min_{\mathbf{b}}\frac{1}{2}\left\Vert {\normalcolor \boldsymbol{\epsilon}}\right\Vert _{2}^{2}=\min_{\mathbf{b}}\frac{1}{2}\left\Vert \mathbf{y}-\mathbf{X}\mathbf{b}\right\Vert _{2}^{2}\label{eq:ls_opt}
+\end{equation}
+
+\end_inset
+
+We can write the objective as a quadratic in 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\frac{1}{2}\left\Vert \mathbf{y}-\mathbf{X}\mathbf{b}\right\Vert _{2}^{2} & =\frac{1}{2}\mathbf{b}^{\prime}(\mathbf{X}^{\prime}\mathbf{X})\mathbf{b}-(\mathbf{X}^{\prime}\mathbf{y})^{\prime}\mathbf{b}+\frac{1}{2}\left\Vert \mathbf{y}\right\Vert _{2}^{2}\nonumber \\
+ & =\frac{1}{2}\mathbf{b}^{\prime}H\mathbf{b}+g^{\prime}\mathbf{b}+\beta\label{eq:quad_b}
+\end{align}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+H & :=\mathbf{X}^{\prime}\mathbf{X},\\
+g & :=-\mathbf{X}^{\prime}\mathbf{y},\\
+\beta & :=\frac{1}{2}\left\Vert \mathbf{y}\right\Vert _{2}^{2}.
+\end{align*}
+
+\end_inset
+
+Then we have that:
+\end_layout
+
+\begin_layout Enumerate
+A solution 
+\begin_inset Formula $x^{*}$
+\end_inset
+
+ to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) exists iff 
+\begin_inset Formula $H$
+\end_inset
+
+ is positive semi-definite and there exists a solution 
+\begin_inset Formula $\bar{x}$
+\end_inset
+
+ to 
+\begin_inset Formula $Hx+g=0$
+\end_inset
+
+, in which case 
+\begin_inset Formula $x^{*}=\bar{x}$
+\end_inset
+
+ is a global solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Enumerate
+If 
+\begin_inset Formula $H$
+\end_inset
+
+ is positive definite, (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) has a unique global solution given by 
+\begin_inset Formula $x^{*}=-H^{-1}g$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+If 
+\begin_inset Formula $H$
+\end_inset
+
+ is not positive semi-definite or if there is no solution to 
+\begin_inset Formula $Hx+g=0$
+\end_inset
+
+ (or both), then there is no solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $H=\mathbf{X}^{\prime}\mathbf{X}$
+\end_inset
+
+ is positive semi-definite (because it is the product of a matrix and its
+ transpose), then a solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) always exists.
+\end_layout
+
+\begin_layout Standard
+Using Cholesky
+\end_layout
+
+\begin_layout Subsubsection
+A useful transformation
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula 
+\[
+\Gamma_{0}:=-H^{-1}g.
+\]
+
+\end_inset
+
+We transform (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:quad_b"
+
+\end_inset
+
+) into a quadratic function without a linear term on a new variable 
+\begin_inset Formula $z$
+\end_inset
+
+ defined by
+\begin_inset Formula 
+\begin{equation}
+\mathbf{b}:=\Gamma z+\Gamma_{0}\label{eq:z_def}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is any invertible matrix: 
+\begin_inset Formula 
+\[
+\frac{1}{2}\mathbf{b}^{\prime}H\mathbf{b}+g^{\prime}\mathbf{b}+\beta=\frac{1}{2}z^{\prime}\Gamma{}^{\prime}H\Gamma z-\frac{1}{2}g^{\prime}H^{-1}g+\beta.
+\]
+
+\end_inset
+
+The maximization problem (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+
+\end_inset
+
+) becomes
+\begin_inset Formula 
+\begin{align}
+\min_{\mathbf{b}}\left(\frac{1}{2}\mathbf{b}^{\prime}H\mathbf{b}+g^{\prime}\mathbf{b}+\beta\right) & =\min_{z}\left(\frac{1}{2}z^{\prime}\Gamma{}^{\prime}H\Gamma z-\frac{1}{2}g^{\prime}H^{-1}g+\beta\right)\nonumber \\
+ & =\min_{z}\left(\frac{1}{2}z^{\prime}\Gamma{}^{\prime}H\Gamma z\right)-\frac{1}{2}g^{\prime}H^{-1}g+\beta.\label{eq:ls_opt_z}
+\end{align}
+
+\end_inset
+
+Given a solution 
+\begin_inset Formula $z^{*}$
+\end_inset
+
+ to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt_z"
+
+\end_inset
+
+), a solution 
+\begin_inset Formula $\mathbf{b}^{*}$
+\end_inset
+
+ to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+
+\end_inset
+
+) can be found by using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:z_def"
+
+\end_inset
+
+):
+\begin_inset Formula 
+\[
+\mathbf{b^{*}}:=\Gamma z^{*}+\Gamma_{0}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Linearly Constrained Least Squares
+\end_layout
+
+\begin_layout Standard
+Consider the problem 
+\begin_inset Formula 
+\begin{align}
+\min_{\mathbf{b}}\frac{1}{2}\left\Vert \mathbf{y}-\mathbf{X}\mathbf{b}\right\Vert _{2}^{2} & =\min_{\mathbf{b}}\left\{ \frac{1}{2}\mathbf{b}^{\prime}H\mathbf{b}+g^{\prime}\mathbf{b}\right\} +\beta\nonumber \\
+s.t.\nonumber \\
+\Gamma\mathbf{b} & =\gamma,\label{eq:eq:ls_opt_lin_const}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is an 
+\begin_inset Formula $m\times(1+k)$
+\end_inset
+
+ matrix and 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is an an 
+\begin_inset Formula $m\times1$
+\end_inset
+
+ vector.
+ This is the same as (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ls_opt"
+
+\end_inset
+
+) but with 
+\begin_inset Formula $m$
+\end_inset
+
+ linear constraints.
+ We consider three cases:
+\end_layout
+
+\begin_layout Enumerate
+If there are no 
+\begin_inset Formula $\mathbf{b}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\Gamma\mathbf{b}=\gamma$
+\end_inset
+
+, then a solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+) does not exist
+\end_layout
+
+\begin_layout Enumerate
+If there is a unique 
+\begin_inset Formula $\hat{\mathbf{b}}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\Gamma\hat{\mathbf{b}}=\gamma$
+\end_inset
+
+, then 
+\begin_inset Formula $\mathbf{b}^{*}=\hat{\mathbf{b}}$
+\end_inset
+
+ is the unique solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Enumerate
+If there exists more than one 
+\begin_inset Formula $\hat{\mathbf{b}}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\Gamma\hat{\mathbf{b}}=\gamma$
+\end_inset
+
+, then
+\begin_inset Formula 
+\[
+\{\mathbf{b}\mid\Gamma\mathbf{b}=\gamma\}=\hat{\mathbf{b}}+\operatorname{Null}(\Gamma)
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula $\text{Null}(\Gamma)\neq\{0\}$
+\end_inset
+
+ and 
+\begin_inset Formula $m<1+k$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+A local solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+) exists if and only if 
+\begin_inset Formula $u^{\prime}Hu\geq0$
+\end_inset
+
+ for all 
+\begin_inset Formula $u\in\operatorname{Null}(\Gamma)$
+\end_inset
+
+ and there exists a vector pair 
+\begin_inset Formula $(\bar{\mathbf{b}},\bar{\mathbf{c}})\in\mathbb{R}^{k+1}\times\mathbb{R}^{m}$
+\end_inset
+
+ such that 
+\begin_inset Formula $H\bar{\mathbf{b}}+\Gamma^{\prime}\bar{\mathbf{c}}+g=0$
+\end_inset
+
+, in which case 
+\begin_inset Formula $\bar{\mathbf{b}}$
+\end_inset
+
+ is a global solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Quotation
+The problem (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+) has a unique global solution if and only if 
+\begin_inset Formula $u^{\prime}Hu>0$
+\end_inset
+
+ for all 
+\begin_inset Formula $u\in\operatorname{Null}(\Gamma)\backslash\{0\}$
+\end_inset
+
+.
+ If, in addition, 
+\begin_inset Formula $\operatorname{rank}(\Gamma)=m$
+\end_inset
+
+, the matrix 
+\begin_inset Formula 
+\[
+M:=\left[\begin{array}{cc}
+H & \Gamma^{\prime}\\
+\Gamma & 0
+\end{array}\right]\text{ is invertible, and the vector }\left[\begin{array}{l}
+\bar{\mathbf{b}}\\
+\bar{\mathbf{c}}
+\end{array}\right]=M^{-1}\left[\begin{array}{c}
+-g\\
+\gamma
+\end{array}\right]
+\]
+
+\end_inset
+
+has 
+\begin_inset Formula $\bar{\mathbf{b}}$
+\end_inset
+
+ as the unique global solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+).
+ Note that 
+\begin_inset Formula $\operatorname{rank}(\Gamma)=m$
+\end_inset
+
+ can always be satisfied by replacing 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ by first row reducing 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ to echelon form.
+\end_layout
+
+\begin_layout Quotation
+If either there exists 
+\begin_inset Formula $\bar{u}\in\operatorname{Null}(\Gamma)$
+\end_inset
+
+ such that 
+\begin_inset Formula $\bar{u}^{\prime}H\bar{u}<0$
+\end_inset
+
+ or there does not exist a vector pair 
+\begin_inset Formula $(\bar{\mathbf{b}},\bar{\mathbf{c}})\in\mathbb{R}^{k+1}\times\mathbb{R}^{m}$
+\end_inset
+
+ such that 
+\begin_inset Formula $H\bar{\mathbf{b}}+\Gamma^{\prime}\bar{\mathbf{c}}+g=0$
+\end_inset
+
+ (or both), then there is no solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq:ls_opt_lin_const"
+
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Quotation
+Least Squares with Norm Constraint
+\end_layout
+
+\begin_layout Section
+Small Model
+\end_layout
+
+\begin_layout Standard
+Consider the following structural VAR
+\begin_inset Formula 
+\[
+B_{0}y_{t}=\mu+B_{1}y_{t-1}+B_{2}y_{t-2}+w_{t},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is a zero-mean 
+\begin_inset Formula $2\times1$
+\end_inset
+
+ vector, 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is a 
+\begin_inset Formula $2\times1$
+\end_inset
+
+ vector of constants, 
+\begin_inset Formula $B_{i}$
+\end_inset
+
+ are 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrices of coefficients and 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ is a 
+\begin_inset Formula $2\times1$
+\end_inset
+
+ vector of mutually uncorrelated structural shocks with covariance matrix
+ equal to the identity matrix 
+\begin_inset Formula $\mathbb{E}[w_{t}w_{t}^{\prime}]=I_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ is invertible, the reduced form is 
+\begin_inset Formula 
+\begin{align}
+y_{t} & =\nu+A_{1}y_{t-1}+A_{2}y_{t-2}+u_{t}\label{eq:red-1}
+\end{align}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align}
+\nu & :=B_{0}^{-1}\mu\nonumber \\
+A_{p} & :=B_{0}^{-1}B_{p},\\
+u_{t} & :=B_{0}^{-1}w_{t}.\label{eq:u_def-1}
+\end{align}
+
+\end_inset
+
+The covariance matrix of 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+\Sigma_{u}:=\mathbb{E}[u_{t}u_{t}^{\prime}]=B_{0}^{-1}B_{0}^{-1\prime}.\label{eq:sigma_u-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The VAR(1) representation of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:red-1"
+
+\end_inset
+
+) is
+\begin_inset Formula 
+\begin{equation}
+Y_{t}=\boldsymbol{\nu}+\mathbf{A}Y_{t-1}+U_{t},\label{eq:var_ar1-1}
+\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+Y_{t}:=\left(\begin{array}{c}
+y_{t}\\
+y_{t-1}
+\end{array}\right),\quad\boldsymbol{\nu}:=\left(\begin{array}{c}
+\nu\\
+0
+\end{array}\right),\quad\mathbf{A}:=\left[\begin{array}{cc}
+A_{1} & A_{2}\\
+I_{2} & 0
+\end{array}\right],\quad U_{t}:=\left(\begin{array}{c}
+u_{t}\\
+0
+\end{array}\right)
+\]
+
+\end_inset
+
+The vector 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ is 
+\begin_inset Formula $4\times1$
+\end_inset
+
+, the vector 
+\begin_inset Formula $\boldsymbol{\nu}$
+\end_inset
+
+ is 
+\begin_inset Formula $4\times1$
+\end_inset
+
+, the matrix 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is 
+\begin_inset Formula $4\times4$
+\end_inset
+
+, and 
+\begin_inset Formula $U_{t}$
+\end_inset
+
+ is 
+\begin_inset Formula $4\times1$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula 
+\[
+\underset{2\times4}{J}:=[I_{2},0_{2\times2}].
+\]
+
+\end_inset
+
+Then
+\begin_inset Formula 
+\begin{align}
+J^{\prime}J & :=\left[\begin{array}{cc}
+I_{2} & 0_{2\times2}\\
+0_{2\times2} & 0_{2\times2}
+\end{array}\right]\label{eq:JJp-1}\\
+JJ^{\prime} & :=I_{2}\\
+JY_{t} & =y_{t},\label{eq:JY-1}\\
+JU_{t} & =u_{t},\label{eq:JU-1}\\
+J^{\prime}JU_{t} & =U_{t}\\
+J\boldsymbol{\nu} & =\nu,\\
+J^{\prime}J\boldsymbol{\nu} & =\boldsymbol{\nu}
+\end{align}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{align*}
+Y_{t+i} & =\sum_{j=0}^{i}\mathbf{A}^{j}\boldsymbol{\nu}+\mathbf{A}^{i+1}Y_{t-1}+\sum_{j=0}^{i}\mathbf{A}^{j}U_{t+i-j}\\
+JY_{t+i} & =\sum_{j=0}^{i}J\mathbf{A}^{j}J^{\prime}J\boldsymbol{\nu}+J\mathbf{A}^{i+1}Y_{t-1}+\sum_{j=0}^{i}J\mathbf{A}^{j}J^{\prime}JU_{t+i-j}\\
+y_{t+i} & =\sum_{j=0}^{i}(J\mathbf{A}^{j}J^{\prime})\nu+J\mathbf{A}^{i+1}Y_{t-1}+\sum_{j=0}^{i}(J\mathbf{A}^{j}J^{\prime})u_{t+i-j}
+\end{align*}
+
+\end_inset
+
+The response of variable 
+\begin_inset Formula $j$
+\end_inset
+
+ to a unit shock 
+\begin_inset Formula $u_{kt}$
+\end_inset
+
+ that occurred 
+\begin_inset Formula $i$
+\end_inset
+
+ periods ago is
+\begin_inset Formula 
+\[
+\underset{2\times2}{\Phi_{i}}:=J\mathbf{A}^{i}J^{\prime}.
+\]
+
+\end_inset
+
+where we note that 
+\begin_inset Formula $\Phi_{0}=I_{2}$
+\end_inset
+
+.
+ The 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ are given by
+\begin_inset Formula 
+\begin{align*}
+\Phi_{0} & =I_{2}\\
+\Phi_{1} & =A_{1}\\
+\Phi_{2} & =\Phi_{1}A_{1}+A_{2}=A_{1}^{2}+A_{2}\\
+\Phi_{3} & =\Phi_{2}A_{1}+\Phi_{1}A_{2}=A_{1}^{3}+A_{2}A_{1}+A_{1}A_{2}\\
+\vdots\\
+\Phi_{i} & =\Phi_{i-1}A_{1}+\Phi_{i-2}A_{2}\\
+\vdots
+\end{align*}
+
+\end_inset
+
+If 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is covariance stationary, its MA representation is
+\begin_inset Formula 
+\begin{equation}
+y_{t}=\mu+\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}=\mu+\sum_{i=0}^{\infty}\Theta_{i}w_{t-i},\label{eq:ma-1}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{align*}
+\Theta_{i} & :=\Phi_{i}B_{0}^{-1}.\\
+\boldsymbol{\mu} & :=\mathbb{E}Y_{t}=(I_{4}-A)^{-1}\boldsymbol{\nu}\\
+\mu & :=J\boldsymbol{\mu}
+\end{align*}
+
+\end_inset
+
+In terms of 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y_{t}=\boldsymbol{\mu}+\sum_{i=0}^{\infty}\mathbf{A}^{i}U_{t-i}
+\]
+
+\end_inset
+
+Under stationarity, the IRF can be computed
+\begin_inset Formula 
+\[
+\frac{\partial y_{t}}{\partial w_{t-i}^{\prime}}=\frac{\partial y_{t+i}}{\partial w_{t}^{\prime}}=\Theta_{i}.
+\]
+
+\end_inset
+
+The IRF of variable 
+\begin_inset Formula $j$
+\end_inset
+
+ with respect to shock 
+\begin_inset Formula $k$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\[
+\theta_{jk,i}=\frac{\partial y_{j,t+i}}{\partial w_{kt}}
+\]
+
+\end_inset
+
+so 
+\begin_inset Formula $\Theta_{i}=[\theta_{jk,i}]$
+\end_inset
+
+.
+ If the VAR is not stable, the same approach works to compute 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Theta_{i}$
+\end_inset
+
+ but the IRF may not approach zero as 
+\begin_inset Formula $i\to\infty$
+\end_inset
+
+ and will no longer represent the coefficients of the MA representation.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $h$
+\end_inset
+
+-step ahead forecast error is
+\begin_inset Formula 
+\[
+FE_{t}(h):=y_{t+h}-y_{t+h\mid t}=\sum_{i=0}^{h-1}\Phi_{i}u_{t+h-i}=\sum_{i=0}^{h-1}\Theta_{i}w_{t+h-i},
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+y_{t+h\mid t} & :=\mathbb{E}[y_{t+h}\mid y_{t},y_{t-1},\ldots]=\mathbb{E}_{t}[y_{t+h}]\\
+y_{t+j\mid t} & =y_{t+j}\text{ for }j\leq0
+\end{align*}
+
+\end_inset
+
+The forecast error variance is
+\begin_inset Formula 
+\begin{align}
+FEV(h) & :=\mathbb{E}[(y_{t+h}-y_{t+h\mid t})(y_{t+h}-y_{t+h\mid t})^{\prime}]=\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}=\sum_{i=0}^{h-1}\Theta_{i}\Theta_{i}^{\prime}.\label{eq:fev-1}
+\end{align}
+
+\end_inset
+
+The contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{align}
+FEV_{j}^{k}(h) & =\theta_{kj,0}^{2}+\ldots+\theta_{kj,h-1}^{2},\label{eq:fev_jkh-1}
+\end{align}
+
+\end_inset
+
+and the total 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+FEV^{k}(h)=\sum_{j=1}^{K}FEV_{j}^{k}(h)=\sum_{j=1}^{K}(\theta_{kj,0}^{2}+\ldots+\theta_{kj,h-1}^{2}).
+\]
+
+\end_inset
+
+The contribution of the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ shock to FEV(h) of variable 
+\begin_inset Formula $k$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+\frac{FEV_{j}^{k}(h)}{FEV^{k}(h)},
+\]
+
+\end_inset
+
+which add up to one when summed over 
+\begin_inset Formula $j=1,\ldots,K$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+1=\frac{FEV_{1}^{k}(h)}{FEV^{k}(h)}+\frac{FEV_{2}^{k}(h)}{FEV^{k}(h)}+\ldots+\frac{FEV_{K}^{k}(h)}{FEV^{k}(h)}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Write (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:var_ar1-1"
+
+\end_inset
+
+) as 
+\begin_inset Formula 
+\[
+(I_{4}-\mathbf{A}L)Y_{t}=\boldsymbol{\nu}+U_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $L$
+\end_inset
+
+ is the lag operator, or more compactly as
+\begin_inset Formula 
+\[
+\mathcal{A}(L)Y_{t}=\boldsymbol{\nu}+U_{t}
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+\mathcal{A}(L):=I_{4}-\mathbf{A}L.
+\]
+
+\end_inset
+
+Then, the MA representation in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ma-1"
+
+\end_inset
+
+) can be written as
+\begin_inset Formula 
+\begin{align}
+Y_{t} & =\mathcal{A}(L)^{-1}(\boldsymbol{\nu}+U_{t})\label{eq:MA_inv-1}\\
+ & =(I_{4}-\mathbf{A}L)^{-1}(\boldsymbol{\nu}+U_{t})\nonumber \\
+ & =\sum_{i=0}^{\infty}(\mathbf{A}L)^{i}(\boldsymbol{\nu}+U_{t})\nonumber \\
+ & =\sum_{i=0}^{\infty}(\mathbf{A}L)^{i}\boldsymbol{\nu}+\sum_{i=0}^{\infty}(\mathbf{A}L)^{i}U_{t}\\
+ & =\sum_{i=0}^{\infty}\mathbf{A}^{i}\boldsymbol{\nu}+\sum_{i=0}^{\infty}\mathbf{A}^{i}L^{i}U_{t}\\
+ & =(I_{4}-A)^{-1}\boldsymbol{\nu}+\sum_{i=0}^{\infty}\mathbf{A}^{i}U_{t-i}\\
+ & =\boldsymbol{\mu}+\sum_{i=0}^{\infty}\mathbf{A}^{i}U_{t-i}\nonumber 
+\end{align}
+
+\end_inset
+
+or, in terms of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+JY_{t} & =J\boldsymbol{\mu}+\sum_{i=0}^{\infty}J\mathbf{A}^{i}J^{\prime}JU_{t-i}\\
+y_{t} & =\mu+\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $P$
+\end_inset
+
+ be the 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ unique lower triangular matrix with positive main diagonal that is the
+ Cholesky factor of the symmetric positive definite matrix 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\Sigma_{u}=PP^{\prime}.
+\]
+
+\end_inset
+
+We can orthogonalize the reduced form shocks 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+ by
+\begin_inset Formula 
+\[
+u_{t}=PP^{-1}u_{t}=Pv_{t}
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+v_{t}:=P^{-1}u_{t}
+\]
+
+\end_inset
+
+are orthogonal:
+\begin_inset Formula 
+\begin{align*}
+Var(v_{t}) & =Var(P^{-1}u_{t})\\
+ & =P^{-1}Var(u_{t})(P^{-1})^{\prime}\\
+ & =P^{-1}\Sigma_{u}(P^{-1})^{\prime}\\
+ & =P^{-1}PP^{\prime}(P^{-1})^{\prime}\\
+ & =I_{2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Estimation
+\end_layout
+
+\begin_layout Standard
+Write the VAR (including a constant term 
+\begin_inset Formula $\nu$
+\end_inset
+
+) as
+\begin_inset Formula 
+\begin{align*}
+y_{t} & =\nu+A_{1}y_{t-1}+A_{2}y_{t-2}+u_{t}\\
+ & =[\nu,A_{1},A_{2}]Z_{t-1}+u_{t}\\
+ & =AZ_{t-1}+u_{t}
+\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times5}{A} & :=[\underset{2\times1}{\nu},\underset{2\times2}{A_{1}},\underset{2\times2}{A_{2}}]\\
+Z_{t-1} & :=(1,y_{t-1}^{\prime},y_{t-2}^{\prime})^{\prime}
+\end{align*}
+
+\end_inset
+
+Stacking the equations, we can write the VAR as
+\begin_inset Formula 
+\begin{align*}
+Y & =AZ+U
+\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times T}{Y} & :=[y_{1},\ldots,y_{T}]\\
+\underset{5\times T}{Z} & :=[Z_{0},\ldots,Z_{T-1}]\\
+\underset{2\times T}{U} & :=[u_{1},\ldots,u_{T}]
+\end{align*}
+
+\end_inset
+
+The parameters to be estimated are
+\begin_inset Formula 
+\[
+\underset{2\times5}{A}=[\underset{2\times1}{\nu},\underset{2\times2}{A_{1}},\underset{2\times2}{A_{2}}]
+\]
+
+\end_inset
+
+The OLS estimates are
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times5}{\hat{A}} & =[\underset{2\times1}{\hat{\nu}},\underset{2\times2}{\hat{A}_{1}},\underset{2\times2}{\hat{A}_{2}}]=\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}=\left(\sum_{t=1}^{T}y_{t}Z_{t-1}^{\prime}\right)\left(\sum_{t=1}^{T}Z_{t}Z_{t-1}^{\prime}\right)^{-1}
+\end{align*}
+
+\end_inset
+
+The fitted residuals are
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times T}{\hat{U}} & =\underset{2\times T}{Y}-\underset{2\times5}{\hat{A}}\underset{5\times T}{Z}
+\end{align*}
+
+\end_inset
+
+The estimated variance-covariance matrix of the residuals is
+\begin_inset Formula 
+\[
+\underset{2\times2}{\hat{\Sigma}_{u}}=\frac{1}{T-4-1}\underset{2\times T}{\hat{U}}\underset{T\times2}{\hat{U^{\prime}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the projection matrix
+\begin_inset Formula 
+\begin{align*}
+\underset{T\times T}{P[Z]} & :=\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times T}{Z}
+\end{align*}
+
+\end_inset
+
+The matrix 
+\begin_inset Formula $P[Z]$
+\end_inset
+
+ is symmetric.
+ Then we can write
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times T}{\hat{Y}} & =\underset{2\times5}{\hat{A}}\underset{5\times T}{Z}=\underset{2\times T}{Y}\underset{T\times T}{P[Z]}\\
+\underset{2\times T}{\hat{U}} & =\underset{2\times T}{Y}-\underset{2\times5}{\hat{A}}\underset{5\times T}{Z}=\underset{2\times T}{Y}-\underset{2\times T}{\hat{Y}}=\underset{2\times T}{Y}\left(I_{T}-\underset{T\times T}{P[Z]}\right)\\
+\underset{2\times T}{\hat{U}}\underset{T\times2}{\hat{U^{\prime}}} & =\underset{2\times T}{Y}\left(I_{T}-\underset{T\times T}{P[Z]}\right)\left(I_{T}-\underset{T\times T}{P[Z]}\right)^{\prime}\underset{T\times2}{Y^{\prime}}=\underset{2\times T}{Y}\left(I_{T}-\underset{T\times T}{P[Z]}\right)\underset{T\times2}{Y^{\prime}}\\
+\underset{2\times2}{\hat{\Sigma}_{u}} & =\frac{1}{T-4-1}\underset{2\times T}{Y}\left(I_{T}-\underset{T\times T}{P[Z]}\right)\underset{T\times2}{Y^{\prime}}
+\end{align*}
+
+\end_inset
+
+The Cholesky factors of 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+ can be computed explicitly.
+ Denote the entries of 
+\begin_inset Formula $P$
+\end_inset
+
+ as follows:
+\begin_inset Formula 
+\[
+P=\left[\begin{array}{cc}
+a & 0\\
+b & c
+\end{array}\right]
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $a,c>0$
+\end_inset
+
+.
+ Then
+\begin_inset Formula 
+\[
+\underset{2\times2}{P}\underset{2\times2}{P^{\prime}}=\left[\begin{array}{cc}
+a & 0\\
+b & c
+\end{array}\right]\left[\begin{array}{cc}
+a & b\\
+0 & c
+\end{array}\right]=\left[\begin{array}{cc}
+a^{2} & ab\\
+ab & b^{2}+c^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+Denote the entries of 
+\begin_inset Formula $\hat{\Sigma}_{u}$
+\end_inset
+
+ as follows
+\begin_inset Formula 
+\[
+\hat{\Sigma}_{u}=\left[\begin{array}{cc}
+\hat{\Sigma}_{u}^{11} & \hat{\Sigma}_{u}^{12}\\
+\hat{\Sigma}_{u}^{12} & \hat{\Sigma}_{u}^{22}
+\end{array}\right].
+\]
+
+\end_inset
+
+Then, 
+\begin_inset Formula $\hat{\Sigma}_{u}=PP^{\prime}$
+\end_inset
+
+ implies that
+\begin_inset Formula 
+\[
+\left[\begin{array}{cc}
+\hat{\Sigma}_{u}^{11} & \hat{\Sigma}_{u}^{12}\\
+\hat{\Sigma}_{u}^{12} & \hat{\Sigma}_{u}^{22}
+\end{array}\right]=\left[\begin{array}{cc}
+a^{2} & ab\\
+ab & b^{2}+c^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+which gives
+\begin_inset Formula 
+\begin{align*}
+a & =\sqrt{\hat{\Sigma}_{u}^{11}}\\
+b & =\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}}\\
+c & =\sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}
+\end{align*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+P=\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}} & 0\\
+\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}} & \sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let
+\begin_inset Formula 
+\[
+\underset{5\times1}{e_{i}}:=i^{\text{th}}\text{ column of }I_{5}
+\]
+
+\end_inset
+
+Then we have
+\begin_inset Formula 
+\begin{align*}
+\underset{2\times1}{\hat{\nu}}=\underset{2\times5}{\hat{A}}\underset{5\times1}{e_{1}} & =[\underset{2\times1}{\hat{\nu}},\underset{2\times2}{\hat{A}_{1}},\underset{2\times2}{\hat{A}_{2}}]\underset{5\times1}{e_{1}}=\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times1}{e_{1}}\\
+\underset{2\times2}{\hat{A}_{1}}=\underset{2\times5}{\hat{A}}\underset{5\times2}{[e_{2},e_{3}]} & =[\underset{2\times1}{\hat{\nu}},\underset{2\times2}{\hat{A}_{1}},\underset{2\times2}{\hat{A}_{2}}]\underset{5\times2}{[e_{2},e_{3}]}=\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\\
+\underset{2\times2}{\hat{A}_{2}}=\underset{2\times5}{\hat{A}}\underset{5\times2}{[e_{4},e_{5}]} & =[\underset{2\times1}{\hat{\nu}},\underset{2\times2}{\hat{A}_{1}},\underset{2\times2}{\hat{A}_{2}}]\underset{5\times2}{[e_{4},e_{5}]}=\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We compute
+\begin_inset Formula 
+\begin{align*}
+\hat{\Phi}_{0} & =I_{2}\\
+\hat{\Phi}_{1} & =\hat{A}_{1}\\
+ & =\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\\
+\hat{\Phi}_{2} & =\hat{\Phi}_{1}\hat{A}_{1}+\hat{\Phi}_{0}\hat{A}_{2}\\
+ & =\hat{A}_{1}^{2}+\hat{A}_{2}\\
+ & =\left\{ \underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\right\} ^{2}+\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}\\
+ & =\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\left\{ \underset{5\times2}{[e_{2},e_{3}]}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}+\underset{5\times2}{[e_{4},e_{5}]}\right\} \\
+\hat{\Phi}_{3} & =\hat{\Phi}_{2}\hat{A}_{1}+\hat{\Phi}_{1}\hat{A}_{2}\\
+ & =\hat{A}_{1}^{3}+\hat{A}_{2}\hat{A}_{1}+\hat{A}_{1}\hat{A}_{2}\\
+ & =\left\{ \underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\right\} ^{3}+\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}+\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}\\
+ & =\left\{ \underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}\right\} ^{2}+\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\left\{ \underset{5\times2}{[e_{4},e_{5}]}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}+\underset{5\times2}{[e_{2},e_{3}]}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}\right\} \\
+\vdots\\
+\hat{\Phi}_{i} & =\hat{\Phi}_{i-1}\hat{A}_{1}+\hat{\Phi}_{i-2}\hat{A}_{2}=\hat{\Phi}_{i-1}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{2},e_{3}]}+\hat{\Phi}_{i-2}\underset{2\times T}{Y}\underset{T\times5}{Z^{\prime}}(\underset{5\times T}{Z}\underset{T\times5}{Z^{\prime}})^{-1}\underset{5\times2}{[e_{4},e_{5}]}\\
+\vdots
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\Phi}_{0} & =I_{2}\\
+\hat{\Phi}_{1} & =\hat{A}_{1}\\
+\hat{\Phi}_{2} & =\hat{\Phi}_{1}\hat{A}_{1}+\hat{\Phi}_{0}\hat{A}_{2}\\
+\\
+\hat{\Phi}_{i} & =\hat{\Phi}_{i-1}\hat{A}_{1}+\hat{\Phi}_{i-2}\hat{A}_{2}\\
+\\
+\left[\begin{array}{cc}
+\hat{\Phi}_{i} & ,\hat{\Phi}_{i-1}\end{array}\right] & =\left[\begin{array}{cc}
+\hat{\Phi}_{i-1} & ,\hat{\Phi}_{i-2}\end{array}\right]\left[\begin{array}{cc}
+\hat{A}_{1} & I_{2}\\
+\hat{A}_{2} & 0_{2\times2}
+\end{array}\right]\\
+\Upsilon_{i} & :=\left[\begin{array}{cc}
+\hat{\Phi}_{i} & ,\hat{\Phi}_{i-1}\end{array}\right]\\
+\mathscr{A} & :=\left[\begin{array}{cc}
+\hat{A}_{1} & I_{2}\\
+\hat{A}_{2} & 0_{2\times2}
+\end{array}\right]\\
+\Upsilon_{i} & =\Upsilon_{i-1}\mathscr{A}\\
+\Upsilon_{i}^{\prime} & =\left[\begin{array}{cc}
+\hat{A}_{1} & \hat{A}_{2}\\
+I_{2} & 0_{2\times2}
+\end{array}\right]\Upsilon_{i-1}^{\prime}\\
+\Upsilon_{i}^{\prime} & =VD^{i-2}V^{-1}\Upsilon_{2}^{\prime}\\
+\left[\begin{array}{cc}
+\hat{\Phi}_{i} & ,\hat{\Phi}_{i-1}\end{array}\right]^{\prime} & =VD^{i-2}V^{-1}\left[\begin{array}{cc}
+\hat{A}_{1}^{2}+\hat{A}_{2} & ,\hat{A}_{1}\end{array}\right]^{\prime}\\
+\text{If }A_{2} & \equiv0\\
+D= & \text{diag}\left(0,0,\frac{1}{2}\left[\hat{A}_{1}^{11}+\hat{A}_{1}^{22}+\sqrt{\left(\hat{A}_{1}^{11}-\hat{A}_{1}^{22}\right)^{2}+4\hat{A}_{1}^{12}\hat{A}_{1}^{21}}\right],\frac{1}{2}\left[\hat{A}_{1}^{11}+\hat{A}_{1}^{22}-\sqrt{\left(\hat{A}_{1}^{11}-\hat{A}_{1}^{22}\right)^{2}+4\hat{A}_{1}^{12}\hat{A}_{1}^{21}}\right]\right)\\
+V^{-1} & =\left(\begin{array}{cccc}
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0\\
+\frac{\text{a11}^{2}-\text{a11}\left(\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}+\text{a22}\right)+2\text{a12}\text{a21}}{2\text{a21}} & \frac{1}{2}\left(-\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}+\text{a11}+\text{a22}\right) & -\frac{\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}-\text{a11}+\text{a22}}{2\text{a21}} & 1\\
+\frac{\text{a11}\left(\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}+\text{a11}-\text{a22}\right)}{2\text{a21}}+\text{a12} & \frac{1}{2}\left(\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}+\text{a11}+\text{a22}\right) & \frac{\sqrt{(\text{a11}-\text{a22})^{2}+4\text{a12}\text{a21}}+\text{a11}-\text{a22}}{2\text{a21}} & 1
+\end{array}\right)For\\
+\text{If \ensuremath{A} and \ensuremath{D} are invertible,} & \text{the inverse of a block matrix is:}\\
+\left[\begin{array}{cc}
+A & B\\
+C & D
+\end{array}\right]^{-1} & =\left[\begin{array}{cc}
+(A-BD^{-1}C)^{-1} & 0\\
+0 & (D-CA^{-1}B)^{-1}
+\end{array}\right]\left[\begin{array}{cc}
+I & -BD^{-1}\\
+-CA^{-1} & I
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+For the FEV we compute
+\begin_inset Formula 
+\begin{align*}
+P & =\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}} & 0\\
+\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}} & \sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}
+\end{array}\right]\\
+Q_{sin} & =\left[\begin{array}{cc}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{array}\right]\\
+Q_{cos} & =\left[\begin{array}{cc}
+\cos\theta & \sin\theta\\
+\sin\theta & -\cos\theta
+\end{array}\right]\\
+PQ_{sin} & =\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}} & 0\\
+\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}} & \sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}
+\end{array}\right]\left[\begin{array}{cc}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{array}\right]\\
+ & =\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}}\cos\theta & -\sqrt{\hat{\Sigma}_{u}^{11}}\sin\theta\\
+\left(\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}}\right)\cos\theta+\sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}\sin\theta & -\left(\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}}\right)\sin\theta+\sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}\cos\theta
+\end{array}\right]\\
+PQ_{cos} & =\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}} & 0\\
+\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}} & \sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}
+\end{array}\right]\left[\begin{array}{cc}
+\cos\theta & \sin\theta\\
+\sin\theta & -\cos\theta
+\end{array}\right]\\
+ & =\left[\begin{array}{cc}
+\sqrt{\hat{\Sigma}_{u}^{11}}\cos\theta & \sqrt{\hat{\Sigma}_{u}^{11}}\sin\theta\\
+\left(\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}}\right)\cos\theta+\sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}\sin\theta & \left(\hat{\Sigma}_{u}^{12}/\sqrt{\hat{\Sigma}_{u}^{11}}\right)\sin\theta-\sqrt{\hat{\Sigma}_{u}^{22}-\left(\hat{\Sigma}_{u}^{12}\right)^{2}/\hat{\Sigma}_{u}^{11}}\cos\theta
+\end{array}\right]\\
+i=0:\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime} & =\Phi_{0}PQ(PQ)^{\prime}\Phi_{0}^{\prime}=PQ(PQ)^{\prime}=PQQ^{\prime}P{}^{\prime}=\Sigma_{u}\\
+i=1:\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime} & =\Phi_{1}PQ(PQ)^{\prime}\Phi_{1}^{\prime}=\hat{A}_{1}PQ(PQ)^{\prime}\hat{A}_{1}^{\prime}\\
+i=2:\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime} & =\Phi_{2}PQ(PQ)^{\prime}\Phi_{2}^{\prime}=(\hat{A}_{1}^{2}+\hat{A}_{2})PQ(PQ)^{\prime}(\hat{A}_{1}^{2}+\hat{A}_{2})^{\prime}\\
+i=3:\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime} & =\Phi_{3}PQ(PQ)^{\prime}\Phi_{3}^{\prime}=(\hat{A}_{1}^{3}+\hat{A}_{2}\hat{A}_{1}+\hat{A}_{1}\hat{A}_{2})PQ(PQ)^{\prime}(\hat{A}_{1}^{3}+\hat{A}_{2}\hat{A}_{1}+\hat{A}_{1}\hat{A}_{2})^{\prime}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Orthogonal Transformations
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $Q$
+\end_inset
+
+ be a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ orthogonal matrix, that is, a matrix such that 
+\begin_inset Formula $Q^{\prime}Q=QQ^{\prime}=I_{2}$
+\end_inset
+
+ or, equivalently, such that 
+\begin_inset Formula $Q^{\prime}=Q^{-1}$
+\end_inset
+
+.
+ Then we can write
+\begin_inset Formula 
+\[
+B_{0}=Q^{\prime}P^{-1}.
+\]
+
+\end_inset
+
+Inverting both sides, we get
+\begin_inset Formula 
+\begin{equation}
+B_{0}^{-1}=P(Q^{\prime})^{-1}=PQ.\label{eq:B0inv_PQ-1}
+\end{equation}
+
+\end_inset
+
+Post-multiplying by 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ and using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:u_def-1"
+
+\end_inset
+
+) gives
+\begin_inset Formula 
+\begin{equation}
+u_{t}=PQw_{t}.\label{eq:u_PQw-1}
+\end{equation}
+
+\end_inset
+
+Solving for 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{align}
+w_{t} & =(PQ)^{-1}u_{t}\nonumber \\
+ & =Q^{-1}P^{-1}u_{t}\nonumber \\
+ & =Q^{\prime}P^{-1}u_{t}\label{eq:w_PQu-1}
+\end{align}
+
+\end_inset
+
+The MA representation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ma-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) can be written as
+\begin_inset Formula 
+\begin{equation}
+y_{t}=\sum_{i=0}^{\infty}\Phi_{i}PQw_{t-i}\label{eq:ma_PQ-1}
+\end{equation}
+
+\end_inset
+
+Using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sigma_u-1"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:B0inv_PQ-1"
+
+\end_inset
+
+), we can rewrite (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fev-1"
+
+\end_inset
+
+) as
+\begin_inset Formula 
+\begin{align*}
+FEV(h) & =\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}B_{0}^{-1}B_{0}^{-1\prime}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}PQ(PQ)^{\prime}\Phi_{i}^{\prime}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}PQ(\Phi_{i}PQ)^{\prime}.
+\end{align*}
+
+\end_inset
+
+We can also rewrite the contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fev_jkh-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) as
+\begin_inset Formula 
+\begin{align}
+FEV_{j}^{k}(h) & =e_{k}^{\prime}\left[\sum_{i=0}^{h-1}\Phi_{i}Pq_{j}(\Phi_{i}Pq_{j})^{\prime}\right]e_{k}\nonumber \\
+ & =\underset{1\times2}{\underbrace{e_{k}^{\prime}}}\left[\sum_{i=0}^{h-1}\underset{2\times2}{\underbrace{\Phi_{i}}}\underset{2\times2}{\underbrace{P}}\underset{2\times1}{\underbrace{q_{j}}}\underset{1\times2}{\underbrace{q_{j}^{\prime}}}\underset{2\times2}{\underbrace{P^{\prime}}}\underset{2\times2}{\underbrace{\Phi_{i}^{\prime}}}\right]\underset{2\times1}{\underbrace{e_{k}}}\nonumber \\
+ & =\sum_{i=0}^{h-1}\underset{1\times1}{\underbrace{e_{k}^{\prime}\Phi_{i}Pq_{j}}}\underset{1\times1}{\underbrace{q_{j}^{\prime}P^{\prime}\Phi_{i}^{\prime}e_{k}}}\nonumber \\
+ & =\sum_{i=0}^{h-1}\underset{1\times1}{\underbrace{q_{j}^{\prime}P^{\prime}\Phi_{i}^{\prime}e_{k}}}\underset{1\times1}{\underbrace{e_{k}^{\prime}\Phi_{i}Pq_{j}}}\nonumber \\
+ & =\underset{1\times2}{\underbrace{q_{j}^{\prime}}}\left[\sum_{i=0}^{h-1}\underset{2\times1}{\underbrace{P^{\prime}\Phi_{i}^{[k]\prime}}}\underset{1\times2}{\underbrace{\Phi_{i}^{[k]}P}}\right]\underset{2\times1}{\underbrace{q_{j}}}\nonumber \\
+ & =q_{j}^{\prime}\Lambda_{k}(h)q_{j}\label{eq:FEV_jkh-1}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $e_{k}$
+\end_inset
+
+ is the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $I_{2}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{j}$
+\end_inset
+
+ is the 
+\begin_inset Formula $j^{\text{th}}$
+\end_inset
+
+ column of 
+\begin_inset Formula $Q$
+\end_inset
+
+, 
+\begin_inset Formula $\Phi_{i}^{[k]}$
+\end_inset
+
+ is the 
+\begin_inset Formula $k^{\text{th}}$
+\end_inset
+
+ row of 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+, and 
+\begin_inset Formula 
+\[
+\underset{2\times2}{\underbrace{\Lambda_{k}(h)}}:=\sum_{i=0}^{h-1}\underset{2\times1}{\underbrace{P^{\prime}\Phi_{i}^{[k]\prime}}}\underset{1\times2}{\underbrace{\Phi_{i}^{[k]}P}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Recursive Identification
+\end_layout
+
+\begin_layout Standard
+Equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sigma_u-1"
+
+\end_inset
+
+) holds with 
+\begin_inset Formula 
+\[
+P=B_{0}^{-1},
+\]
+
+\end_inset
+
+so 
+\begin_inset Formula $P=B_{0}^{-1}$
+\end_inset
+
+ is one possible way to identify the matrix 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+.
+ A lower triangular 
+\begin_inset Formula $B_{0}^{-1}$
+\end_inset
+
+ implies that 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ is lower triangular as well.
+\end_layout
+
+\begin_layout Standard
+Given estimates 
+\begin_inset Formula $\hat{u}_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\Sigma_{u}}$
+\end_inset
+
+ (which can be obtained, for example, by estimating the reduced-form VAR
+ in equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:red-1"
+
+\end_inset
+
+) by OLS), we can retrieve the identified structural shocks by 
+\begin_inset Formula 
+\[
+w_{t}=P^{-1}\hat{u}_{t},
+\]
+
+\end_inset
+
+where we have used that 
+\begin_inset Formula $P$
+\end_inset
+
+ is invertible, which follows from invertibility of 
+\begin_inset Formula $\Sigma_{u}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Max-Share Identification
+\end_layout
+
+\begin_layout Subsubsection
+Time Domain
+\end_layout
+
+\begin_layout Standard
+Pick a set of horizons 
+\begin_inset Formula $\mathcal{H}$
+\end_inset
+
+ and compute the sum over horizons 
+\begin_inset Formula $h\in\mathcal{H}$
+\end_inset
+
+ of the contribution of shock 
+\begin_inset Formula $j$
+\end_inset
+
+ to the 
+\begin_inset Formula $FEV$
+\end_inset
+
+ of 
+\begin_inset Formula $y_{kt}$
+\end_inset
+
+ at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+FEV_{j}^{k}(\mathcal{H}) & :=\sum_{h\in\mathcal{H}}FEV_{j}^{k}(h)
+\end{align*}
+
+\end_inset
+
+By equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:FEV_jkh-1"
+
+\end_inset
+
+), we can write
+\begin_inset Formula 
+\begin{align*}
+FEV_{j}^{k}(\mathcal{H}) & =\sum_{h\in\mathcal{H}}[q_{j}^{\prime}\Lambda_{k}(h)q_{j}]\\
+ & =q_{j}^{\prime}\left[\sum_{h\in\mathcal{H}}\Lambda_{k}(h)\right]q_{j}\\
+ & =q_{j}^{\prime}\Lambda_{k}(\mathcal{H})q_{j}
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+\underset{2\times2}{\underbrace{\Lambda_{k}(\mathcal{H})}}:=\sum_{h\in\mathcal{H}}\Lambda_{k}(h).
+\]
+
+\end_inset
+
+The matrices 
+\begin_inset Formula $\Lambda_{k}(h)$
+\end_inset
+
+ are symmetric, and therefore 
+\begin_inset Formula $\Lambda_{k}(\mathcal{H})$
+\end_inset
+
+ is symmetric as well.
+ The max-share identification determines a vector 
+\begin_inset Formula $q$
+\end_inset
+
+ through the following maximization problem:
+\begin_inset Formula 
+\[
+q_{k}^{*}(\mathcal{H})=\arg\max_{q}q^{\prime}\Lambda_{k}(\mathcal{H})q
+\]
+
+\end_inset
+
+Then one structural shock, which we denote by 
+\begin_inset Formula $w_{t}(k,\mathcal{H})$
+\end_inset
+
+, is identified by
+\begin_inset Formula 
+\[
+w_{t}(k,\mathcal{H})=q_{k}^{*}(\mathcal{H})^{\prime}P^{-1}u_{t}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Frequency domain
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+Y_{t} & =\mathcal{A}(L)^{-1}(\boldsymbol{\nu}+U_{t})=\boldsymbol{\mu}+\sum_{i=0}^{\infty}\mathbf{A}^{i}U_{t-i}\\
+\mathcal{A}(L) & :=I_{4}-\mathbf{A}L\\
+Y_{t}:=\left(\begin{array}{c}
+y_{t}\\
+y_{t-1}
+\end{array}\right),\quad\boldsymbol{\nu}:=\left(\begin{array}{c}
+\nu\\
+0
+\end{array}\right), & \quad\mathbf{A}:=\left[\begin{array}{cc}
+A_{1} & A_{2}\\
+I_{2} & 0
+\end{array}\right],\quad U_{t}:=\left(\begin{array}{c}
+u_{t}\\
+0
+\end{array}\right)\\
+\Sigma_{u} & =PP^{\prime}\\
+u_{t} & :=B_{0}^{-1}w_{t}.\\
+W_{t}:=\left(\begin{array}{c}
+w_{t}\\
+0
+\end{array}\right) & =\left(\begin{array}{c}
+B_{0}u_{t}\\
+0
+\end{array}\right)=\left(\begin{array}{c}
+B_{0}u_{t}\\
+0
+\end{array}\right)\\
+\underset{2\times4}{J} & :=[I_{2},0_{2\times2}]\\
+Y_{t} & =\mathcal{A}(L)^{-1}(\boldsymbol{\nu}+U_{t})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Volatility
+\end_layout
+
+\begin_layout Standard
+We model the heteroskedasticity of the first equation by:
+\begin_inset Formula 
+\[
+\log h_{t}^{2}=C_{0}y_{t}+\varepsilon_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $h_{t}:=u_{1t}$
+\end_inset
+
+ is the residual of the first equation of the VAR.
+ Using the results above, we get
+\begin_inset Formula 
+\begin{align*}
+\log v_{t}^{2} & =C_{0}y_{t}+\varepsilon_{t}\\
+ & =C_{0}y_{t}+\varepsilon_{t}\\
+ & =C_{0}JY_{t}+\varepsilon_{t}\\
+ & =C_{0}\sum_{i=0}^{\infty}J\mathbf{A}^{i}JJ^{\prime}U_{t-i}+\varepsilon_{t}\\
+ & =\sum_{i=0}^{\infty}\Phi_{i}u_{t-i}+\varepsilon_{t}
+\end{align*}
+
+\end_inset
+
+To compute the least-squares estimate of 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ we proceed as followsTo compute the least squares estimates of 
+\begin_inset Formula $C_{0}$
+\end_inset
+
+ we proceed as follows:
+\begin_inset Formula 
+\begin{align*}
+\log u_{t}^{2} & =C_{0}y_{t}+\varepsilon_{t}\\
+\underset{2\times T}{g} & =\underset{2\times2}{C_{0}}\underset{2\times T}{Y}+\underset{2\times T}{\varepsilon}\\
+g & :=\left[\begin{array}{c}
+\log u_{11}^{2},\ldots,\log u_{1T}^{2}\\
+\log u_{21}^{2},\ldots,\log u_{2T}^{2}
+\end{array}\right]\\
+ & =\log(U\circ U)\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+Y^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]Y & =\left[\begin{array}{cc}
+y_{1}^{(1)} & y_{1}^{(2)}\\
+\vdots & \vdots\\
+y_{T}^{(1)} & y_{T}^{(2)}
+\end{array}\right]\left[\begin{array}{ccc}
+y_{1}^{(1)} & \ldots & y_{T}^{(1)}\\
+0 & \ldots & 0
+\end{array}\right]=\left[\begin{array}{cccc}
+(y_{1}^{(1)})^{2} & y_{1}^{(1)}y_{2}^{(1)} & \ldots & y_{1}^{(1)}y_{T}^{(1)}\\
+y_{2}^{(1)}y_{1}^{(1)} & (y_{2}^{(1)})^{2} & \ldots & y_{2}^{(1)}y_{T}^{(1)}\\
+\vdots & \vdots & \ddots & \vdots\\
+y_{T}^{(1)}y_{1}^{(1)} & y_{T}^{(1)}y_{2}^{(1)} & \ldots & (y_{T}^{(1)})^{2}
+\end{array}\right]\\
+\\
+\\
+\\
+\\
+A^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]A & =\left[\begin{array}{c}
+\underset{1\times2}{\nu^{\prime}}\\
+\underset{2\times2}{A_{1}^{\prime}}\\
+\underset{2\times2}{A_{2}^{\prime}}
+\end{array}\right]\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right][\underset{2\times1}{\nu},\underset{2\times2}{A_{1}},\underset{2\times2}{A_{2}}]=\left[\begin{array}{c}
+\underset{1\times2}{\nu^{\prime}}\\
+\underset{2\times2}{A_{1}^{\prime}}\\
+\underset{2\times2}{A_{2}^{\prime}}
+\end{array}\right]\left[\begin{array}{ccccc}
+\nu_{1} & A_{1}^{(11)} & A_{1}^{(12)} & A_{2}^{(11)} & A_{2}^{(12)}\\
+0 & 0 & 0 & 0 & 0
+\end{array}\right]=\left[\begin{array}{ccccc}
+\nu_{1}^{2} & \nu_{1}A_{1}^{(11)} & \nu_{1}A_{1}^{(12)} & \nu_{1}A_{2}^{(11)} & \nu_{1}A_{2}^{(12)}\\
+\nu_{1}A_{1}^{(11)} & (A_{1}^{(11)})^{2} & A_{1}^{(11)}A_{1}^{(12)} & A_{1}^{(11)}A_{2}^{(11)} & A_{1}^{(11)}A_{2}^{(12)}\\
+A_{1}^{(21)}\nu_{1} & A_{1}^{(21)}A_{1}^{(11)} & (A_{1}^{(12)})^{2} & A_{1}^{(21)}A_{2}^{(11)} & A_{1}^{(21)}A_{2}^{(12)}\\
+A_{2}^{(11)}\nu_{1} & A_{2}^{(11)}A_{1}^{(11)} & A_{2}^{(11)}A_{1}^{(12)} & (A_{2}^{(11)})^{2} & A_{2}^{(11)}A_{2}^{(12)}\\
+A_{2}^{(21)}\nu_{1} & A_{2}^{(21)}A_{1}^{(11)} & A_{2}^{(21)}A_{1}^{(12)} & A_{2}^{(21)}A_{2}^{(11)} & (A_{2}^{(12)})^{2}
+\end{array}\right]\\
+\varepsilon & :=[\varepsilon_{1},\ldots,\varepsilon_{T}]\\
+\underset{1\times2}{C_{0}} & =gY^{\prime}(YY^{\prime})^{-1}\\
+ & =\log\textrm{diag}\left(Y^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]Y-Y^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]YP[Z]-P[Z]Y^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]Y+P[Z]Y^{\prime}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]YP[Z]\right)Y^{\prime}(YY^{\prime})^{-1}\\
+\\
+\\
+\\
+\text{Without selection matrix:}\\
+g & =\log\textrm{diag}(h^{\prime}h)\\
+ & =\log\textrm{diag}(\underset{T\times2}{U^{\prime}}\underset{2\times T}{U})\\
+ & =\log\text{diag}(Y^{\prime}(I-P[Z])Y)\\
+\underset{2\times2}{C_{0}} & =gY^{\prime}(YY^{\prime})^{-1}\\
+ & =\log\text{diag}(Y^{\prime}(I-P[Z])Y)Y^{\prime}(YY^{\prime})^{-1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+q_{h} & =\frac{1}{a}P^{\prime}(\underset{1\times2}{C_{0}})^{\prime}\\
+q_{h} & =P^{\prime}(\underset{1\times2}{C_{0}})^{\prime}\\
+\\
+\text{Cholesky:} & q_{h}=e_{h}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\Sigma_{u} & :=\mathbb{E}[u_{t}u_{t}^{\prime}]=B_{0}^{-1}B_{0}^{-1\prime}\\
+\Sigma_{u} & =PP^{\prime}\\
+P\text{ lower triangular}\\
+\underset{2\times T}{\hat{U}} & :=Y-\hat{A}Z\\
+\hat{\Sigma}_{u} & =\frac{1}{T-4-1}\underset{2\times T}{\hat{U}}\underset{T\times2}{\hat{U^{\prime}}}\\
+ & =Y^{\prime}Y-Y^{\prime}YP[Z]-P[Z]Y^{\prime}Y+P[Z]Y^{\prime}YP[Z]\\
+\hat{\Sigma}_{u} & =\left[\begin{array}{cc}
+\hat{\sigma}_{u}^{11} & \hat{\sigma}_{u}^{12}\\
+\hat{\sigma}_{u}^{21} & \hat{\sigma}_{u}^{22}
+\end{array}\right]=\left[\begin{array}{cc}
+a & 0\\
+b & c
+\end{array}\right]\left[\begin{array}{cc}
+a & b\\
+0 & c
+\end{array}\right]=\left[\begin{array}{cc}
+a^{2} & ab\\
+ab & b^{2}+c^{2}
+\end{array}\right]\\
+a & =\sqrt{\hat{\sigma}_{u}^{11}}\\
+b & =\frac{\hat{\sigma}_{u}^{12}}{\sqrt{\hat{\sigma}_{u}^{11}}}\\
+c & =\sqrt{\hat{\sigma}_{u}^{22}-\frac{(\hat{\sigma}_{u}^{12})^{2}}{\hat{\sigma}_{u}^{11}}}\\
+P & =\left[\begin{array}{cc}
+\sqrt{\hat{\sigma}_{u}^{11}} & 0\\
+\hat{\sigma}_{u}^{12}/\sqrt{\hat{\sigma}_{u}^{11}} & \sqrt{\hat{\sigma}_{u}^{22}-\frac{(\hat{\sigma}_{u}^{12})^{2}}{\hat{\sigma}_{u}^{11}}}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Old
+\end_layout
+
+\begin_layout Quotation
+\begin_inset Formula 
+\begin{align*}
+y_{t} & =a_{1}y_{t-1}+u_{t}\\
+\log u_{t}^{2} & =c_{0}y_{t}+\varepsilon_{t}\\
+\\
+y_{t+i} & =a_{1}^{i+1}y_{t-1}+\sum_{j=0}^{i}J\mathbf{A}^{j}J^{\prime}u_{t+i-j}\\
+y_{t+i} & =a_{1}y_{t+i-1}+u_{t+i}\\
+ & =a_{1}(a_{1}y_{t+i-2}+u_{t+i-1})+u_{t+i}\\
+ & =a_{1}^{2}y_{t+i-2}+a_{1}u_{t+i-1}+u_{t+i}\\
+ & =a_{1}^{2}(a_{1}y_{t+i-3}+u_{t+i-2})+a_{1}u_{t+i-1}+u_{t+i}\\
+ & =a_{1}^{3}y_{t+i-3}+u_{t+i}+a_{1}u_{t+i-1}+a_{1}^{2}u_{t+i-2}\\
+ & =\ldots\\
+ & =a_{1}^{i+1}y_{t-1}+\sum_{j=0}^{i}a_{1}^{j}u_{t+i-j}\\
+\Phi_{i} & :=a_{1}^{i}\\
+y_{t+h\mid t} & :=\mathbb{E}[y_{t+h}\mid y_{t},y_{t-1},\ldots]\\
+ & =\mathbb{E}_{t}\left[a_{1}^{h}y_{t}+\sum_{j=0}^{h-1}a_{1}^{j}u_{t+h-j}\right]\\
+ & =a_{1}^{h}y_{t}+\sum_{j=0}^{h-1}a_{1}^{j}\mathbb{E}_{t}[u_{t+h-j}]\\
+ & =a_{1}^{h}y_{t}=\Phi_{h}y_{t}\\
+y_{t+j\mid t} & =y_{t+j}\text{ for }j\leq0\\
+FE_{t}(h) & :=y_{t+h}-y_{t+h\mid t}\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+FEV(h) & :=\mathbb{E}[(y_{t+h}-y_{t+h\mid t})(y_{t+h}-y_{t+h\mid t})^{\prime}]=\sum_{i=0}^{h-1}\Phi_{i}\Sigma_{u}\Phi_{i}^{\prime}=\Sigma_{u}\left(\sum_{i=0}^{h-1}\Phi_{i}^{2}\right)\\
+FEV_{t}(h) & :=\mathbb{E}_{t}[(y_{t+h}-y_{t+h\mid t})(y_{t+h}-y_{t+h\mid t})^{\prime}]\\
+ & =\mathbb{E}_{t}\left[\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}\right)^{2}\right]\\
+ & =\mathbb{E}_{t}\left[\sum_{i=0}^{h-1}\Phi_{i}^{2}u_{t+h+i}^{2}+\sum_{i=0}^{h-1}\sum_{j=0}^{i-1}\Phi_{i}\Phi_{j}u_{t+h+i}u_{t+h+j}\right]\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}^{2}\mathbb{E}_{t}u_{t+h+i}^{2}+\sum_{i=0}^{h-1}\sum_{j=0}^{i-1}\Phi_{i}\Phi_{j}\mathbb{E}_{t}[u_{t+h+i}u_{t+h+j}]\\
+ & =\sum_{i=0}^{h-1}\Phi_{i}^{2}\mathbb{E}_{t}u_{t+h+i}^{2}\\
+\mathbb{E}FEV_{t}(h) & =\mathbb{E}\left[\sum_{i=0}^{h-1}\Phi_{i}^{2}\mathbb{E}_{t}u_{t+h+i}^{2}\right]=\sum_{i=0}^{h-1}\Phi_{i}^{2}\mathbb{E}\mathbb{E}_{t}u_{t+h+i}^{2}=\sum_{i=0}^{h-1}\Phi_{i}^{2}\mathbb{E}u_{t+h+i}^{2}=FEV(h)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+FE_{t}(h)^{2} & =\left(\sum_{i=0}^{h-1}\Phi_{i}u_{t+h+i}\right)^{2}=\sum_{i=0}^{h-1}\Phi_{i}^{2}u_{t+h+i}^{2}+\sum_{i=0}^{h-1}\sum_{j=0}^{i-1}\Phi_{i}\Phi_{j}u_{t+h+i}u_{t+h+j}\\
+FE_{t-1}(1)^{2} & =\Phi_{0}^{2}u_{t}^{2}=u_{t}^{2}\\
+FE_{t-1}(2)^{2} & =\Phi_{0}^{2}u_{t+1}^{2}+\Phi_{1}^{2}u_{t+2}^{2}+\Phi_{1}\Phi_{0}u_{t+2}u_{t+1}\\
+ & =u_{t+1}^{2}+\Phi_{1}^{2}u_{t+2}^{2}+\Phi_{1}u_{t+2}u_{t+1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\log u_{t}^{2} & =c_{0}y_{t}+\varepsilon_{t}\\
+\log u_{t}^{2} & =c_{0}\log|y_{t}|+\varepsilon_{t}\\
+u_{t}^{2} & =\exp(c_{0}y_{t}+\varepsilon_{t})=\exp(c_{0}y_{t})\exp(\varepsilon_{t})\\
+u_{t}^{2} & =\exp(c_{0}\log|y_{t}|+\varepsilon_{t})=|y_{t}|^{c_{0}}\exp(\varepsilon_{t})\\
+\\
+\log u_{t+h+i}^{2} & =c_{0}y_{t+h+i}+\varepsilon_{t+h+i}\\
+ & =c_{0}\left(a_{1}^{h+i}y_{t}+\sum_{j=0}^{h+i-1}a_{1}^{j}u_{t+h+i-j}\right)+\varepsilon_{t+h+i}\\
+u_{t} & =(y_{t}-a_{1}y_{t-1})\\
+u_{t}^{2} & =(y_{t}-a_{1}y_{t-1})^{2}=(y_{t}^{2}+a_{1}^{2}y_{t-1}^{2}-2a_{1}y_{t}y_{t-1})\\
+q & =\Sigma_{u}^{1/2}c_{0}\\
+ & =\Sigma_{u}^{1/2}\frac{cov(\log u_{t}^{2},y_{t})}{var(y_{t})}\\
+ & =\Sigma_{u}^{1/2}\frac{cov(\log(y_{t}^{2}+a_{1}^{2}y_{t-1}^{2}-2a_{1}y_{t}y_{t-1}),y_{t})}{var(y_{t})}\\
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+q_{k}^{*}(\mathcal{H}) & =\arg\max_{q}q^{\prime}\underset{K\times K}{\underbrace{\Lambda_{k}(\mathcal{H})}}q\\
+ & =\arg\max_{q}q^{\prime}\left(\sum_{h\in\mathcal{H}}\underset{K\times K}{\underbrace{\Lambda_{k}(h)}}\right)q\\
+ & =\arg\max_{q}q^{\prime}\left(\sum_{h\in\mathcal{H}}\sum_{i=0}^{h-1}\underset{K\times1}{\underbrace{P^{\prime}\Phi_{i}^{[k]\prime}}}\underset{1\times K}{\underbrace{\Phi_{i}^{[k]}P}}\right)q\\
+q_{1}^{*}(\{1\}) & =\arg\max_{q}q^{\prime}\left(\underset{K\times1}{\underbrace{P^{\prime}\Phi_{0}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{0}^{[1]}P}}\right)q=\arg\max_{q}q^{\prime}\Sigma_{u}q=\arg\max_{q}\Sigma_{u}q^{\prime}q=1\\
+\max_{q}q^{\prime}\left(\underset{K\times1}{\underbrace{P^{\prime}\Phi_{0}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{0}^{[1]}P}}\right)q & =\Sigma_{u}\\
+q_{1}^{*}(\{2\}) & =\arg\max_{q}q^{\prime}\left(\underset{K\times1}{\underbrace{P^{\prime}\Phi_{0}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{0}^{[1]}P}}+\underset{K\times1}{\underbrace{P^{\prime}\Phi_{1}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{1}^{[1]}P}}\right)q\\
+ & =\arg\max_{q}q^{\prime}\Sigma_{u}^{1/2}\left(1+a_{1}^{2}\right)\Sigma_{u}^{1/2}q\\
+ & =\arg\max_{q}\Sigma_{u}(1+a_{1}^{2})q^{\prime}q\\
+ & =1\\
+\max_{q}q^{\prime}\left(\underset{K\times1}{\underbrace{P^{\prime}\Phi_{0}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{0}^{[1]}P}}+\underset{K\times1}{\underbrace{P^{\prime}\Phi_{1}^{[1]\prime}}}\underset{1\times K}{\underbrace{\Phi_{1}^{[1]}P}}\right)q & =\Sigma_{u}(1+a_{1}^{2})=\Sigma_{u}(1+a_{1}^{2})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
