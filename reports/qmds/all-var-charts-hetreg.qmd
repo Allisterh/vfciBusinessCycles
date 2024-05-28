@@ -20,27 +20,19 @@ library(vfciBCHelpers)
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
-x <- get_var_data()
+data <- get_var_data()
+x <- data[, -"vfci"] |> copy()
 v <- fit_var(x, lags = lags)
 
 mv_list <- list(
-  U = id_fevdfd(v, "unemployment", bc_freqs),
-  VFCI = id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
-  # VFCI_1 =
-  #   get_var_data(vfci = "vfci_fgr1gdpc1") |>
-  #   fit_var(lags = lags) |>
-  #   id_fevdfd("vfci", bc_freqs, sign = "neg"),
-  # Chol_vfci = v |>
-  #   reorder_var("vfci") |>
-  #   id_ordered_chol() |>
-  #   (\(.x){.x$B <- .x$B * -1; .x$Q <- .x$Q * -1 ; .x})()
+  max_share = id_fevdfd(v, "unemployment", bc_freqs, sign = "neg"),
+  het_reg = id_linear_het_reg(v, "unemployment")
 )
 
+
 colors <- c(
-  U = "firebrick",
-  VFCI = "steelblue",
-  VFCI_1 = "lightblue",
-  Chol_vfci = "goldenrod"
+  max_share = "firebrick",
+  het_reg = "steelblue"
 )
 ```
 
@@ -290,10 +282,7 @@ fevd_df |>
 
 ```{r plot_fevfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV FD"}
 fevfd_df[f <= pi] |>
-  _[f >= 0.15] |>
-  _[f <= 1.15] |>
   _[impulse == "Main" | impulse == "Chol_1"] |>
-  _[response %in% c("unemployment", "output", "consumption")] |>
   ggplot(aes(
     x = f,
     y = fevfd,
@@ -308,7 +297,6 @@ fevfd_df[f <= pi] |>
     color = NA
   ) +
   geom_line() +
-  geom_line(aes(y=total), color ="black")+
   facet_wrap(
     vars(response),
     nrow = 3,
@@ -317,7 +305,7 @@ fevfd_df[f <= pi] |>
   scale_color_manual(
     values = colors
   ) +
-  theme_bw(base_size = 20) +
+  theme_bw(base_size = 8) +
   theme(legend.position = "top")
 ```
 
