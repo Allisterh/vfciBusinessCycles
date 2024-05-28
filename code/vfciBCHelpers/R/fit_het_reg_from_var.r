@@ -3,6 +3,7 @@
 #'
 #' @param var a VAR, either vars::VAR or svars object
 #' @param lags integer, number of lags to use in het reg, defaults to 0 (just same period values)
+#' @param constant, boolean, default to false to not include a constant in estimating the het reg
 #'
 #' @return A list of a set of linear regressions
 #' @export
@@ -11,7 +12,8 @@
 #'
 fit_het_reg_from_var <- function(
   var,
-  lags = 0
+  lags = 0,
+  constant = FALSE
 ) {
   ## Set visible global binding to make R CMD check happy
   log_var <- t <- residual <- NULL
@@ -27,8 +29,6 @@ fit_het_reg_from_var <- function(
   original_data <-
     original_data_wide |>
     tidyfast::dt_pivot_longer(-t, names_to = "variable", values_to = "original")
-
-  data[, t := .I - var$p]
 
   resid_data <-
     stats::residuals(var) |>
@@ -74,7 +74,7 @@ fit_het_reg_from_var <- function(
     reg_data_list |>
     purrr::map(~ lm(
       data = .x,
-      formula = paste0("log_var ~ ", independent_vars)
+      formula = paste0("log_var ~ ", ifelse(constant, "", "0 + "), independent_vars)
     ))
 
   ## Get the predicted log variance values

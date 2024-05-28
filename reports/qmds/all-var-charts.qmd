@@ -1,0 +1,474 @@
+---
+title: "All VAR Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+x <- get_var_data()
+v <- fit_var(x, lags = lags)
+
+mv_list <- list(
+  U = id_fevdfd(v, "unemployment", bc_freqs),
+  VFCI = id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+  # VFCI_1 =
+  #   get_var_data(vfci = "vfci_fgr1gdpc1") |>
+  #   fit_var(lags = lags) |>
+  #   id_fevdfd("vfci", bc_freqs, sign = "neg"),
+  # Chol_vfci = v |>
+  #   reorder_var("vfci") |>
+  #   id_ordered_chol() |>
+  #   (\(.x){.x$B <- .x$B * -1; .x$Q <- .x$Q * -1 ; .x})()
+)
+
+colors <- c(
+  U = "firebrick",
+  VFCI = "steelblue",
+  VFCI_1 = "lightblue",
+  Chol_vfci = "goldenrod"
+)
+```
+
+```{r}
+#| include: false
+
+irf_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  irf <- irf(mv_list[[i]], n.ahead = 40)$irf |> setDT()
+  irf$model <- names(mv_list)[[i]]
+  irf[impulse == "Main" | impulse == "Chol_1"]
+}))
+
+## IRF FD
+irffd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  irffd <- irffd(mv_list[[i]], n.ahead = 40)$irffd |> setDT()
+  irffd$model <- names(mv_list)[[i]]
+  irffd[impulse == "Main" | impulse == "Chol_1"]
+}))
+
+## FEVDFD
+fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fevdfd <- fevdfd(mv_list[[i]])$fevdfd |> setDT()
+  fevdfd$model <- names(mv_list)[[i]]
+  fevdfd[impulse == "Main" | impulse == "Chol_1"]
+}))
+
+## FEVD
+fevd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fevd <- fevd(mv_list[[i]], n.ahead = 100)$fevd |> setDT()
+  fevd$model <- names(mv_list)[[i]]
+  fevd[impulse == "Main" | impulse == "Chol_1"]
+}))
+
+## FEVFD
+fevfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fevfd <- fevfd(mv_list[[i]])$fevfd |> setDT()
+  fevfd$model <- names(mv_list)[[i]]
+  fevfd
+  # fevfd[impulse == "Main" | impulse == "Chol_1"]
+}))
+fevfd_df[, total := sum(fevfd), by = .(model, f, response)]
+
+## FEV
+fev_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  fev <- fev(mv_list[[i]], n_ahead = 100)$fev |> setDT()
+  fev$model <- names(mv_list)[[i]]
+  fev[impulse == "Main" | impulse == "Chol_1"]
+}))
+
+## HS
+hs_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  hs <- hs(mv_list[[i]])$hs |> setDT()
+  hs$model <- names(mv_list)[[i]]
+  hs <- hs[impulse == "Main" | impulse == "Chol_1"]
+  hs$date <- x[-c(1:lags), "date"][[1]]
+  hs
+}))
+
+## HD
+hd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  hd <- hd(mv_list[[i]])$hd |> setDT()
+  hd$model <- names(mv_list)[[i]]
+  hd <- hd[impulse == "Main" | impulse == "Chol_1"]
+  hd$date <- rep(x[-c(1:lags), "date"][[1]], v$K)
+  hd
+}))
+
+hd_cross <- merge(
+  hd_df[, .(t, date, model, impulse, response, hd)],
+  hd_df[, .(t, date, model, impulse, response, hd)],
+  by = c("t", "date", "response"),
+  allow.cartesian = TRUE,
+  suffixes = c("_x", "_y")
+)
+
+hd_corrs <- hd_cross[, .(corr = cor(hd_x, hd_y)), by = .(response, model_x, model_y, impulse_x, impulse_y)]
+
+## Corrs
+hs_cross <- merge(
+  hs_df,
+  hs_df,
+  by = c("t", "date"),
+  allow.cartesian = TRUE,
+  suffixes = c("_x", "_y")
+)
+
+corrs <- hs_cross[, .(corr = cor(hs_x, hs_y)), by = .(model_x, model_y, impulse_x, impulse_y)]
+
+## Weights
+q_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  data.table(
+    variable = colnames(mv_list[[i]]$y),
+    weight = mv_list[[i]]$Q[, 1],
+    model = names(mv_list)[[i]]
+  )
+}))
+
+b_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
+  data.table(
+    variable = colnames(mv_list[[i]]$y),
+    weight = solve(mv_list[[i]]$B)[1, ],
+    model = names(mv_list)[[i]]
+  )
+}))
+
+```
+
+```{r plot_irf, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "IRF"}
+irf_df |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+\newpage
+
+```{r plot_irffd, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain"}
+irffd_df[f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_irffd2, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain (2 pi / 32 <= f <= 2 pi / 6)"}
+irffd_df |>
+  _[f >=  2 * pi / 32] |>
+  _[f <=  2 * pi / 6] |>
+  ggplot(aes(
+    x = f,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevdfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVDFD"}
+fevdfd_df[f <= pi] |>
+  ggplot(aes(
+    x = f,
+    y = fevdfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD"}
+fevd_df |>
+  ggplot(aes(
+    x = h,
+    y = fevd / 100,
+    color = model
+  )) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fevfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV FD"}
+fevfd_df[f <= pi] |>
+  _[f >= 0.15] |>
+  _[f <= 1.15] |>
+  _[impulse == "Main" | impulse == "Chol_1"] |>
+  _[response %in% c("unemployment", "output", "consumption")] |>
+  ggplot(aes(
+    x = f,
+    y = fevfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 2 * pi / 32,
+    xmax = 2 * pi / 6,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  geom_line(aes(y=total), color ="black")+
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 20) +
+  theme(legend.position = "top")
+```
+
+
+```{r plot_fev, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV"}
+fev_df |>
+  ggplot(aes(
+    x = h,
+    y = fev ,
+    color = model
+  )) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+\newpage
+
+```{r plot_hs, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "Historical Shocks"}
+hs_df |>
+  ggplot(aes(
+    x = date,
+    y = hs,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_hs_smoothed, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "Historical Shocks - 2 year MA"}
+hs_df |>
+  _[, hs_ma := frollmean(hs, n = 16, align = "right"), by = .(impulse, model)] |>
+  ggplot(aes(
+    x = date,
+    y = hs_ma,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+\newpage
+
+```{r plot_hs_cross, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "Historical Shock Cross Scatters"}
+hs_cross |>
+  ggplot(aes(
+    x = hs_x,
+    y = hs_y
+  )) +
+  geom_point(size = 0.5) +
+  geom_smooth(method = "lm", se = F, color = "gray50") +
+  facet_grid(
+    rows = vars(model_x),
+    cols = vars(model_y),
+    scales = "free"
+  ) +
+  theme_bw(base_size = 8)
+```
+
+\newpage
+
+```{r plot_corrs, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "Historical Shock Correlations"}
+corrs |>
+  ggplot(aes(
+    x = paste0(model_x, "\n", impulse_x),
+    y = paste0(model_y, "\n", impulse_y),
+    fill = abs(corr),
+    label = round(corr, 2)
+  )) +
+  geom_tile(color = "white") +
+  geom_label(fill = "white", size = 2) +
+  scale_fill_gradient(low = "gray90", high = "gray10", limits = c(0,1)) +
+  scale_x_discrete(expand = c(0,0)) +
+  scale_y_discrete(expand = c(0,0)) +
+  labs(x = NULL, y = NULL) +
+  theme_bw(base_size = 8)
+```
+
+\newpage
+
+```{r plot_hd, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Historical Contributions"}
+hd_df |>
+  ggplot(aes(
+    x = date,
+    y = hd,
+    color = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    ncol = 2,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_q, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "Col of Q Weights (Rotation)"}
+q_df |>
+  ggplot(aes(
+    x = variable,
+    y = weight,
+    fill = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_col(
+    position = position_dodge()
+  ) +
+  scale_fill_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_b, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "Row of B_0 Weights (Empirical Shocks)"}
+b_df |>
+  ggplot(aes(
+    x = variable,
+    y = weight,
+    fill = model
+  )) +
+  geom_hline(yintercept = 0) +
+  geom_col(
+    position = position_dodge()
+  ) +
+  scale_fill_manual(
+    values = colors
+  ) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
