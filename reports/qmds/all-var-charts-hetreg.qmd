@@ -25,8 +25,8 @@ x <- data[, -"vfci"] |> copy()
 v <- fit_var(x, lags = lags)
 
 mv_list <- list(
-  max_share = id_fevdfd(v, "unemployment", bc_freqs, sign = "neg"),
-  het_reg = id_linear_het_reg(v, "unemployment")
+  max_share = id_fevdfd(v, "unemployment", bc_freqs),
+  het_reg_u = id_linear_het_reg(v, "unemployment")
 )
 
 
