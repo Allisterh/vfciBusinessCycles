@@ -50,6 +50,7 @@ irffd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   irffd$model <- names(mv_list)[[i]]
   irffd[impulse == "Main" | impulse == "Chol_1"]
 }))
+irffd_df[, p := 1 / f * 2 * pi]
 
 ## FEVDFD
 fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
@@ -57,6 +58,7 @@ fevdfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   fevdfd$model <- names(mv_list)[[i]]
   fevdfd[impulse == "Main" | impulse == "Chol_1"]
 }))
+fevdfd_df[, p := 1 / f * 2 * pi]
 
 ## FEVD
 fevd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
@@ -73,13 +75,16 @@ fevfd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   # fevfd[impulse == "Main" | impulse == "Chol_1"]
 }))
 fevfd_df[, total := sum(fevfd), by = .(model, f, response)]
+fevfd_df[, p := 1 / f * 2 * pi]
+
 
 ## FEV
 fev_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   fev <- fev(mv_list[[i]], n_ahead = 100)$fev |> setDT()
   fev$model <- names(mv_list)[[i]]
-  fev[impulse == "Main" | impulse == "Chol_1"]
+  fev
 }))
+fev_df[, total := sum(fev), by = .(model, h, response)]
 
 ## HS
 hs_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
@@ -191,10 +196,9 @@ irffd_df[f <= pi] |>
   theme(legend.position = "top")
 ```
 
-```{r plot_irffd2, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain (2 pi / 32 <= f <= 2 pi / 6)"}
+```{r plot_irffd2, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Frequency Domain (zoomed to BC freqs)"}
 irffd_df |>
-  _[f >=  2 * pi / 32] |>
-  _[f <=  2 * pi / 6] |>
+  _[f %between% (bc_freqs + c(-0.1, 0.1))] |>
   ggplot(aes(
     x = f,
     y = irf,
@@ -222,8 +226,76 @@ irffd_df |>
   theme(legend.position = "top")
 ```
 
+\newpage
 
-```{r plot_fevdfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVDFD"}
+```{r plot_irfpd, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Period Domain (p <= 100q)"}
+irffd_df |>
+  _[f <= pi] |>
+  _[p <= 100] |>
+  ggplot(aes(
+    x = p,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 6,
+    xmax = 32,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_irfpd2, echo = F, warning = F, fig.height = 3.25, out.width = "100%", fig.cap = "IRF Period Domain (p <= 40q)"}
+irffd_df |>
+  _[f <= pi] |>
+  _[p <= 40] |>
+  ggplot(aes(
+    x = p,
+    y = irf,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 6,
+    xmax = 32,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_x_continuous(limits = c(0, 40), breaks = seq(0, 40, 8)) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+\newpage
+
+
+```{r plot_fevdfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD Frequency Domain"}
 fevdfd_df[f <= pi] |>
   ggplot(aes(
     x = f,
@@ -254,7 +326,7 @@ fevdfd_df[f <= pi] |>
   theme(legend.position = "top")
 ```
 
-```{r plot_fevfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV FD"}
+```{r plot_fevfd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV Frequency Domain"}
 fevfd_df[f <= pi] |>
   _[impulse == "Main" | impulse == "Chol_1"] |>
   ggplot(aes(
@@ -285,7 +357,7 @@ fevfd_df[f <= pi] |>
 
 
 
-```{r plot_fevdfd_bc, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVDFD - Zoomed to BC Freqs"}
+```{r plot_fevdfd_bc, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD Frequency Domain - Zoomed to BC Freqs"}
 fevdfd_df |>
   _[f %between% (bc_freqs + c(-0.1, 0.1))] |>
   ggplot(aes(
@@ -318,7 +390,7 @@ fevdfd_df |>
 ```
 
 
-```{r plot_fevfd_bc, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV FD - Zoomed to BC Freqs"}
+```{r plot_fevfd_bc, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV Frequency Domain - Zoomed to BC Freqs"}
 fevfd_df[f <= pi] |>
   _[f %between% (bc_freqs + c(-0.1, 0.1))] |>
   _[impulse == "Main" | impulse == "Chol_1"] |>
@@ -348,6 +420,74 @@ fevfd_df[f <= pi] |>
   theme_bw(base_size = 8) +
   theme(legend.position = "top")
 ```
+
+
+```{r plot_fevdpd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD Period Domain (p <= 100)"}
+fevdfd_df |>
+  _[f <= pi] |>
+  _[p <= 100] |>
+  ggplot(aes(
+    x = p,
+    y = fevdfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 6,
+    xmax = 32,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1)
+  ) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
+```{r plot_fevpd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV Period Domain (p <= 100)"}
+fevfd_df |>
+  _[f <= pi] |>
+  _[p <= 100] |>
+  _[impulse == "Main" | impulse == "Chol_1"] |>
+  ggplot(aes(
+    x = p,
+    y = fevfd,
+    color = model
+  )) +
+  geom_rect(
+    ymin = -Inf,
+    ymax = Inf,
+    xmin = 6,
+    xmax = 32,
+    fill = "gray90",
+    color = NA
+  ) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    nrow = 3,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = colors
+  ) +
+  scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "top")
+```
+
 
 \newpage
 
@@ -384,7 +524,7 @@ summary_table |>
 \newpage
 
 
-```{r plot_fevd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD"}
+```{r plot_fevd, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEVD Time Domain"}
 fevd_df |>
   ggplot(aes(
     x = h,
@@ -407,8 +547,9 @@ fevd_df |>
   theme(legend.position = "top")
 ```
 
-```{r plot_fev, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV"}
+```{r plot_fev, echo = F, warning = F, fig.height = 5, out.width = "100%", fig.cap = "FEV Time Domain"}
 fev_df |>
+  _[impulse == "Main" | impulse == "Chol_1"] |>
   ggplot(aes(
     x = h,
     y = fev ,
