@@ -4,7 +4,8 @@
 #' @param var a VAR, either vars::VAR or svars object
 #' @param target variable in VAR to target with het_reg
 #' @param het_reg_lags lags passed to het_reg
-#' @param constant, boolean, default to FALSE for no constant in het_reg regression
+#' @param constant, boolean, default to TRUE for constant in het_reg regression
+#' @param use_hetreg_func, boolean, default to TRUE to use hetreg function
 #' @param sign Default to "positive". Can be "negative".  Ensures the
 #' cummulative impact of the main shock on the target variable is the
 #' given sign.
@@ -22,7 +23,8 @@ id_linear_het_reg <- function(
   var,
   target,
   het_reg_lags = 0,
-  constant = FALSE,
+  constant = TRUE,
+  use_hetreg_func = TRUE,
   sign = "pos",
   sign_horizon = 1,
   method = "default"
@@ -35,7 +37,7 @@ id_linear_het_reg <- function(
   ## Fit Cholesky SVAR
   cv <- fevdid::id_ordered_chol(var)
 
-  het_reg <- fit_het_reg_from_var(var, lags = het_reg_lags, constant = constant)
+  het_reg <- fit_het_reg_from_var(var, lags = het_reg_lags, constant = constant, use_hetreg_func = use_hetreg_func)
 
   ## Find the Q rotation column
   if (method == "default") {
@@ -152,8 +154,14 @@ find_linear_het_reg_q <- function(
   P <- t(chol(stats::cov(stats::residuals(var))))
 
   ## Coefficients from het_reg regression for target variable
-  c_0k <- stats::coef(het_reg$het_regs[[target]])
-  c_0k <- c_0k[names(c_0k) != "(Intercept)"]
+  hr <- het_reg$het_regs[[target]]
+  class(hr)
+  if (inherits(hr, "lm")) {
+    c_0k <- stats::coef(hr)
+    c_0k <- c_0k[names(c_0k) != "(Intercept)"]
+  } else if (inherits(hr, "gls")) {
+    c_0k <- stats::coef(hr$modelStruct)
+  }
 
   ## Find the q rotation and normalize it to length 1
   q_h <- t(P) %*% c_0k

@@ -26,13 +26,15 @@ v <- fit_var(x, lags = lags)
 
 mv_list <- list(
   max_share = id_fevdfd(v, "unemployment", bc_freqs),
+  het_reg_u_old = id_linear_het_reg(v, "unemployment", use_hetreg_func = FALSE),
   het_reg_u = id_linear_het_reg(v, "unemployment")
 )
 
 
 colors <- c(
   max_share = "firebrick",
-  het_reg = "steelblue"
+  het_reg_u_old = "lightblue",
+  het_reg_u = "steelblue"
 )
 ```
 

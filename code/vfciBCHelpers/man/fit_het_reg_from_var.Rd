@@ -5,14 +5,16 @@
 \title{Fit a linear regression estimating the heteroskedasticity
 of the variance of the residuals in a VAR.}
 \usage{
-fit_het_reg_from_var(var, lags = 0, constant = FALSE)
+fit_het_reg_from_var(var, lags = 0, constant = TRUE, use_hetreg_func = TRUE)
 }
 \arguments{
 \item{var}{a VAR, either vars::VAR or svars object}
 
 \item{lags}{integer, number of lags to use in het reg, defaults to 0 (just same period values)}
 
-\item{constant, }{boolean, default to false to not include a constant in estimating the het reg}
+\item{constant, }{boolean, default to TRUE to include a constant in estimating the het reg}
+
+\item{use_hetreg_func, }{boolean, default to TRUE to use hetreg function}
 }
 \value{
 A list of a set of linear regressions
