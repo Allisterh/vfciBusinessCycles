@@ -159,6 +159,7 @@ find_linear_het_reg_q <- function(
   if (inherits(hr, "hetreg")) {
     c_0k <- stats::coef(hr$lm2_adj)
     c_0k <- c_0k[names(c_0k) != "(Intercept)"]
+    c_0k <- c_0k[!grepl("_L\\d", names(c_0k))]
   } else if (inherits(hr, "gls")) {
     c_0k <- stats::coef(hr$modelStruct)
   }
