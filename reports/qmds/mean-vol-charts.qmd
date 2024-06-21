@@ -31,13 +31,20 @@ var_means <-
   _[, t := .I] |>
   tidyfast::dt_pivot_longer(-t, names_to = "variable", values_to = "var_fitted")
 
-hetreg$dt |> 
-  merge(var_means, by = c("t", "variable")) |>
+data <- 
+  hetreg$dt |> 
+  merge(var_means, by = c("t", "variable"))
+
+data |>
   ggplot(aes(y = var_fitted, x = log_var_fitted)) +
   geom_point() +
   facet_wrap(vars(variable), scales = "free", nrow = 4) +
   theme_bw(base_size = 8)
  
+data[, .(
+  corr = cor(var_fitted, log_var_fitted),
+  r_sq = cor(var_fitted, log_var_fitted) ^ 2
+  ), by = .(variable)]
 ```
 
 \newpage
@@ -50,6 +57,11 @@ hetreg$dt |>
   facet_wrap(vars(variable), scales = "free", nrow = 4) +
   theme_bw(base_size = 8)
  
+
+hetreg$dt[, .(
+  corr = cor(fitted, log_var_fitted),
+  r_sq = cor(fitted, log_var_fitted) ^ 2
+  ), by = .(variable)]
 ```
 
 
@@ -64,5 +76,9 @@ hetreg_ml$dt |>
   geom_point() +
   facet_wrap(vars(variable), scales = "free", nrow = 4) +
   theme_bw(base_size = 8)
- 
+
+hetreg_ml$dt[, .(
+  corr = cor(fitted, log_var_fitted),
+  r_sq = cor(fitted, log_var_fitted) ^ 2
+  ), by = .(variable)]
 ```
