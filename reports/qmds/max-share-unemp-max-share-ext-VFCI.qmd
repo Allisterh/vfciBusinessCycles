@@ -1,0 +1,38 @@
+---
+title: "All VAR Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+library(gt)
+```
+
+```{r}
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+x <- get_var_data()
+v <- fit_var(x, lags = lags)
+
+mv_list <- list(
+  max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
+  max_share_vfci = id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+)
+
+colors <- c(
+  max_share_u = "firebrick",
+  max_share_vfci = "steelblue"
+)
+```
+
+{{< include all-var-charts.qmd >}}
