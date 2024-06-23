@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.3",
+    "Version": "4.4.1",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -2986,11 +2986,15 @@
         "bvartools",
         "data.table",
         "fevdid",
+        "ggplot2",
+        "glue",
+        "nlme",
+        "pracma",
         "purrr",
         "tidyfast",
         "vars"
       ],
-      "Hash": "d7b10db7be11e1c100911c922d0e6453"
+      "Hash": "eca1ebb73b9d2e239ddeb0c695ff1747"
     },
     "viridisLite": {
       "Package": "viridisLite",
