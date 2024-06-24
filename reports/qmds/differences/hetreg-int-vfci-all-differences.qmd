@@ -1,0 +1,55 @@
+---
+title: "All VAR Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+data <- get_var_data(make_stationary = TRUE)
+x <- data[, -"vfci"] |> copy()
+v <- fit_var(x, lags = lags)
+
+all_variables <- names(x[, -"date"]) |> set_names()
+
+mv_list <- all_variables |>
+  map(~ id_linear_het_reg(v, target = .x)) |>
+  c(list(max_share_u = id_fevdfd(v, "unemployment", bc_freqs)))
+
+colors <-
+  c(
+    "#b6848e",
+    "#92d34f",
+    "#9043da",
+    "#d0a54c",
+    "#736bb7",
+    "#8ad3a7",
+    "#c54fa0",
+    "#607141",
+    "#c44d3f",
+    "#71a1b8"
+  ) |>
+  setNames(all_variables) |>
+  c(max_share_u = "black")
+
+```
+
+{{< include all-var-charts.qmd >}}
+
+```{r}
+mv_list$unemployment$het_reg$het_regs |> purrr::map(hetreg_waldtest)
+```

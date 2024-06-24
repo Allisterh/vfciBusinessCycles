@@ -1,0 +1,67 @@
+---
+title: "Mean-Vol Heteroskedasticity Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-Vol (twostep method, VAR means)"}
+lags <- 2
+
+data <- get_var_data()
+x <- data[, -"vfci"] |> copy()
+v <- fit_var(x, lags = lags)
+
+hetreg <- fit_het_reg_from_var(v, lags = 0:2)
+
+var_means <-
+  fitted(v) |>
+  as.data.table() |> 
+  _[, t := .I] |>
+  tidyfast::dt_pivot_longer(-t, names_to = "variable", values_to = "var_fitted")
+
+data <- 
+  hetreg$dt |> 
+  merge(var_means, by = c("t", "variable"))
+
+data |>
+  ggplot(aes(y = var_fitted, x = log_var_fitted)) +
+  geom_point() +
+  facet_wrap(vars(variable), scales = "free", nrow = 4) +
+  theme_bw(base_size = 8)
+ 
+data[, .(
+  corr = cor(var_fitted, log_var_fitted),
+  r_sq = cor(var_fitted, log_var_fitted) ^ 2
+  ), by = .(variable)]
+```
+
+\newpage
+
+```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-Vol (twostep method, adjusted means)"}
+
+hetreg$dt |> 
+  ggplot(aes(y = fitted, x = log_var_fitted)) +
+  geom_point() +
+  facet_wrap(vars(variable), scales = "free", nrow = 4) +
+  theme_bw(base_size = 8)
+ 
+
+hetreg$dt[, .(
+  corr = cor(fitted, log_var_fitted),
+  r_sq = cor(fitted, log_var_fitted) ^ 2
+  ), by = .(variable)]
+```
+
+
