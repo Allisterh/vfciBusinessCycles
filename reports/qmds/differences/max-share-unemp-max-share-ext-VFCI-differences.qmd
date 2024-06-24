@@ -35,4 +35,4 @@ colors <- c(
 )
 ```
 
-{{< include all-var-charts.qmd >}}
+{{< include ../all-var-charts.qmd >}}

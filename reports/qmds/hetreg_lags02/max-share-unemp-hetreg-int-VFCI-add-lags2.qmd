@@ -37,7 +37,7 @@ colors <- c(
 )
 ```
 
-{{< include all-var-charts.qmd >}}
+{{< include ../all-var-charts.qmd >}}
 
 ```{r}
 mv_list$het_reg_u$het_reg$het_regs |> purrr::map(hetreg_waldtest)
