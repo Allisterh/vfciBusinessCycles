@@ -1,0 +1,624 @@
+---
+title: "The Price of Risk Drives the Business Cycle"
+subtitle: "Graduate Student Summer Seminar Series"
+title-note: "^1^The views expressed here are the authors’ and are not necessarily representative of the views of the International Monetary Fund, its Management, or its Executive Directors."
+author:
+  - name: "Tobias Adrian"
+    affiliation: "International Monetary Fund^1^"
+  - name: "Matthew DeHaven"
+    affiliation: Brown University
+  - name: "Fernando Duarte"
+    affiliation: Brown University
+date: "2024-06-27"
+callout-appearance: minimal
+editor:
+  render-on-save: true
+format:
+  clean-revealjs:
+    self-contained: true
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(tidyfast)
+library(vars)
+library(svars)
+library(fevdid)
+library(ggplot2)
+library(patchwork)
+library(vfciBCHelpers)
+```
+
+```{r}
+#| include: false
+
+theme_pres <-
+    theme_bw(base_size = 16) +
+    theme(
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(size = 12, margin = margin(0, 0, 0, 0)),
+        axis.title = element_text(size = 14),
+        plot.caption = element_text(size = 11),
+        panel.grid = element_blank(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_blank(),
+        legend.key=element_rect(fill = alpha("white", 0)),
+        legend.position = "top",
+        legend.background = element_blank(),
+        legend.title = element_text(size = 14),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.text = element_text(size = 10),
+        plot.margin = margin(10, 10, 0, 10, "pt")
+        )
+
+var_order <- c(
+    VFCI = "vfci",
+    Unemployment = "unemployment",
+    `Fed Funds` = "interest",
+    Inflation = "inflation",
+    Output = "output",
+    Investment = "investment",
+    Consumption = "consumption",
+    `Hours Worked` = "hours_worked",
+    `Labor Share` = "labor_share",
+    TFP = "TFP",
+    `Labor Prod.` = "productivity"
+)
+
+crossplot_order <- c("Output", "Investment", "Consumption", "Hours Worked", "Fed Funds", "Labor Prod.", "Inflation", "TFP", "VFCI")
+
+
+## Colors
+bg_line_color <- "gray50"
+recession_color <- "gray80"
+
+hetreg_color <- "steelblue"
+max_share_color <- "darkorange"
+```
+
+```{r var_setup}
+lags <- 2
+bc_freqs <- c( 2 * pi / 32, 2 * pi / 6)
+
+vfci_data <- get_var_data(cols = c(vfci = "vfci_fgr1gdpc1", vfci_10 = "vfci_fgr10gdpc1", mu = "mu_fgr1gdpc1"))
+
+data <- get_var_data(vfci = "vfci_fgr1gdpc1")
+data[, t := .I - lags]
+
+v <- fit_var(data[, -c("t", "vfci")], lags = lags)
+v_vfci <- fit_var(data[, -"t"], lags = lags)
+
+mv <- id_fevdfd(v, "unemployment", bc_freqs)
+hv <- id_linear_het_reg(v, "unemployment")
+cv <- fevdid::id_ordered_chol(reorder_var(v_vfci, "vfci"))
+```
+
+```{r load_recession_dates}
+rec_dates <- get_recession_dt()
+```
+
+```{r}
+pr_data <-
+  hv$het_reg$dt |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[variable == "unemployment"]  
+```
+
+## Co-movement over the Business Cycle
+
+Empirically, we observe co-movement across macro variables over the business cycle.
+
+. . .
+
+**Key Question in Macroeconomics:** What drives this co-movement?
+
+- A single shock
+- A common propagation mechanism
+
+. . .
+
+We show that...
+
+- the "price of risk" is a common propagation mechanism that can be used to discern between models of the business cycle.
+
+## Outline
+
+0. Result preview
+
+. . .
+
+1. What is the price of risk?
+
+. . .
+
+2. Vector Auto Regression (VAR) setup
+    - Identification problem
+    - Instrumenting with the VFCI
+
+. . .
+
+3. Estimate the price of risk internal to the VAR
+    - Looks like the business cycle
+
+. . .
+
+4. Interpretation and next steps
+
+## Result Preview: *quacks* like a business cycle
+
+```{r}
+#| echo: false
+#| 
+
+hd_data <- hd(hv)$hd |>
+  as.data.table() |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"]
+  
+preview_fig <-
+  ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_hline(yintercept = 0, color = bg_line_color) + 
+  geom_line(
+    data = hd_data,
+    aes(
+      x = date,
+      y = hd
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Contributions to Unemployment",
+    title = "Historical Contributions to Unemployment Rate from Identifed VAR Shock",
+    caption = "NBER recession dates shaded.\nVAR shock identified using the linear heteroskedasticity present in unemployment residuals."
+  ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  theme_pres
+preview_fig
+```
+
+## What is the Price of Risk?
+
+- A measure of the amount of compensation required to hold an additional unit of risk (volatility).
+
+. . .
+
+The SDF (stochastic discount factor) can be decomposed...
+
+$$
+\begin{align}
+\text{SDF}_{t+1} = \mathbb{E}_t[\text{SDF}_{t+1}] + \text{Vol}_t[{\text{SDF}_{t+1}}] \epsilon_{t+1}
+\end{align}
+$$
+
+- $\mathbb{E}_t[\text{SDF}_{t+1}]$ is the expected mean,
+- $\text{Vol}_t[{\text{SDF}_{t+1}}]$ is the expected volatility (the price of risk),
+- $\epsilon_{t+1}$ is an unforseen innovation (structural shocks).
+
+
+## Estimating the Price of Risk
+
+In most macro models, the Euler equation links the SDF to marginal utility:
+
+$$
+\text{SDF}_{t+1} = \beta \left(\frac{C_{t+1}}{C_t}\right)^{-\gamma}
+$$
+
+. . .
+
+Leveraging this, we can estimate the price of risk using changes in the volatility of consumption growth (or a similar measure).
+
+## VFCI is an Estimate of the Market Price of Risk
+
+Volatility Financial Conditions Index (VFCI) is **a** measure of the price of risk.
+
+. . .
+
+- Introduced in Adrian, Duarte, and Iyer (WP)
+
+. . .
+
+The VFCI is estimated as the predictable 
+
+- changes in the volatility of GDP growth,
+- using financial returns.
+
+## VFCI
+
+```{r}
+ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_hline(yintercept = 0, color = bg_line_color) + 
+  geom_line(data = vfci_data, aes(x = date, y = scale(vfci))) +  
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  labs(
+    x = NULL,
+    y = "Coditional Volatility (VFCI)",
+    title = "Volatility Financial Conditions Index (VFCI)"
+  ) +
+  theme_pres
+```
+
+##  Mean - Vol Relationship
+
+A key empirical result is that the price of risk (measured by the VFCI), is linearly linked to the conditional mean.
+
+
+
+```{r}
+#| fig-align: center
+vfci_data |>
+  ggplot(aes(
+    x = vfci,
+    y = mu
+  )) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point() +
+  theme_pres + 
+  theme(aspect.ratio = 1) +
+  labs(
+    y = "Conditional Mean",
+    x = "Condtional Volatility\n(VFCI)",
+    title = "Conditionally Linear Mean - Vol"
+  )
+```
+
+. . .
+
+We will leverage this relationship to identify the business cycle in our VAR.
+
+
+
+## VAR Setup
+
+A strucutral VAR with $p$ lags and $k$ variables in vector $y_t$,
+$$
+B_0 y_t = B_1 y_{t-1} + . . . + B_p y_{t-p} + w_t
+$$
+
+the shocks $w_t$ are assumed to be orthogonal and to have unit variance.
+
+. . .
+
+Empirically, only the following $A_i$ matrices and reduced form residuals, $u_t$, are observed,
+
+$$
+ y_t = \underbrace{B_0^{-1}B_1}_{A_1} y_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} y_{t-p} + \underbrace{B_0^{-1}w_t}_{u_t}
+$$
+
+
+
+
+
+## Identification Problem
+
+Need to identify a column of the impact matrix $B_0^{-1}$ to back out a structural shock:
+
+$$
+u_t = B_0^{-1} w_t
+$$
+
+. . .
+
+We will start by using the VFCI as an instrument,
+
+$$
+\begin{align}
+(1)\ \ \ \ \ \mathbf{E}[\text{VFCI}_t w_{1,t}^\prime] &= \alpha \neq 0
+\\
+(2)\ \ \ \mathbf{E}[\text{VFCI}_t w_{2:k,t}^\prime] &=  0
+\end{align}
+$$
+
+Where (1) is a relavence condition and (2) is an exogeneity condition.
+
+## Externally Instrumented Price of Risk
+```{r}
+#| echo: false
+#| 
+
+hd_data <- hd(cv)$hd |>
+  as.data.table() |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"]
+  
+ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_hline(yintercept = 0, color = bg_line_color) + 
+  geom_line(
+    data = hd_data,
+    aes(
+      x = date,
+      y = hd
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Contributions to Unemployment",
+    title = "Historical Contributions to Unemployment Rate from Identifed VAR Shock",
+    caption = "NBER recession dates shaded.\n VAR shock identified using the VFCI as an external instrument."
+  ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  theme_pres
+```
+
+
+## Mean-Vol Relationship in the VAR
+
+Taking our VAR with $p$ lags and $k$ variables in vector $y_t$,
+
+$$
+y_t = A_1 y_{t-1} + \text{ ... } + A_p y_{t-p} + u_t
+$$
+
+The log variance of the residual is then, $\sigma_t = \log\left(\widehat{u}_t^2\right)$.
+
+Then estimate,
+
+$$
+\sigma_t = \alpha y_{t} + \varepsilon_t
+$$
+
+The mean-vol relationship is between $\widehat{y}_t$ and $\widehat{\sigma}_t$.
+
+:::{.callout-note}
+There are $k$ mean-vol relationships in the VAR, one for each variable.
+:::
+
+
+## Mean-Vol Relationship in the VAR {#mean-vol-unemployment}
+
+Using unemployment, we can see a strong linear relationship between the conditional mean and the conditional volatility.
+
+```{r}
+var_means <-
+  fitted(v) |>
+  as.data.table() |> 
+  _[, t := .I] |>
+  tidyfast::dt_pivot_longer(-t, names_to = "variable", values_to = "var_fitted")
+
+mean_vol_data <- 
+  hv$het_reg$dt |> 
+  merge(var_means, by = c("t", "variable"))
+
+mean_vol_data |>
+  _[variable == "unemployment"] |>
+  ggplot(aes(y = var_fitted, x = scale(log_var_fitted) )) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point() +
+  theme_pres +
+  labs(
+    x = "Conditional Volatility",
+    y = "Conditional Mean",
+    title = "VAR Implied Mean-Vol for Unemployment"
+  ) +
+  theme(aspect.ratio = 1)
+```
+
+
+## VAR Implied Price of Risk
+
+```{r}
+ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_hline(yintercept = 0, color = bg_line_color) + 
+  geom_line(
+    data = pr_data,
+    aes(
+      x = date,
+      y = scale(log_var_fitted)
+    )
+  ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  labs(
+    title = "Price of Risk Implied by VAR Residuals of Unemployment",
+    x = NULL,
+    y = "Conditional Volatility"
+  ) +
+  theme_pres
+
+```
+
+## Result review: *quacks* like a business cycle
+
+```{r}
+#| echo: false
+#| 
+preview_fig
+```
+
+
+## Matches the "Business Cycle Anatomy" Shock
+
+Angeletos et al. (2020) identify a "Main Business Cycle (MBC) Shock" which drives most of the unforecasted variation in unemployment.
+
+. . .
+
+Our internal VAR shock has a correlation with the MBC shock of $0.75$.
+
+
+## Matches the "Business Cycle Anatomy" Shock
+
+```{r}
+#| echo: false
+#| 
+
+hd_hv_data <- hd(hv)$hd |>
+  as.data.table() |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"]
+  
+hd_mv_data <- hd(mv)$hd |>
+  as.data.table() |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[impulse == "Main"] |>
+  _[response == "unemployment"]
+
+hd_data <- rbind(
+  hd_hv_data[, method := "hetreg"],
+  hd_mv_data[, method := "max_share"]
+)
+
+ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_hline(yintercept = 0, color = bg_line_color) + 
+  geom_line(
+    data = hd_data,
+    aes(
+      x = date,
+      y = hd,
+      color = method
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Contributions to Unemployment",
+    title = "Historical Contributions to Unemployment Rate from Identifed VAR Shocks",
+    caption = "NBER recession dates shaded."
+  ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  scale_color_manual(
+    values = c(hetreg_color, max_share_color),
+    labels = c(hetreg = "Internal VAR\nPrice of Risk", max_share = "Max Share"),
+    name = "Method"
+  ) +
+  theme_pres
+```
+
+## A New Business Cycle Fact
+
+We show a new key feature of business cycles:
+
+- the price of risk comoves with the mean of macro varaibles during the cycle.
+
+. . .
+
+This is not a feature in Real Business Cycle (RBC) or New Keynesian models.
+
+. . .
+
+You need a model that links second moments (volatilities) to first moments.
+
+
+## Financial Conditions Propagate the Business Cycle
+
+There exists a general equilibrium structural model that is consistent with
+
+- the existence of the mean-vol relationship in the empirical data,
+
+- and that the price of risk comoves with the business cycle.
+
+. . .
+
+This model has financial conditions aggregate, amplify, and propagate disparate shocks to the rest of the economy.
+
+- Driven by a financial friction: the value-at-risk constraint.
+
+## Conclusion
+
+- Can use the VFCI or an internal VAR implied price of risk to identify a shock.
+    - Looks like a business cycle.
+    - Matches the "Main Business Cycle" shock.
+
+- Adds a new empirical fact for distinguishing models of the business cycle.
+
+- Consistent with a structural model where financial frictions create a common propagation mechanism through the price of risk.
+
+
+# Appendix {.appendix visibility="uncounted"}
+
+## Comparing Internal and External Price of Risk {visibility="uncounted"}
+
+```{r}
+comp_data <- 
+  pr_data |>
+  merge(data[, .(date, vfci)], by = "date")
+  
+ggplot() +
+  geom_rect(
+    data = rec_dates[start %between% as.Date(c("1965-01-01", "2017-01-01"))],
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = recession_color
+  ) +
+  geom_line(data = comp_data, aes(x = date, y = scale(log_var_fitted), color = "int_vfic")) + 
+  geom_line(data = comp_data, aes(x = date, y = scale(vfci), color = "ext_vfci")) + 
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "10 years"),
+    labels = seq(1960, 2020, 10),
+    limits = as.Date(c("1960-01-01", "2021-01-01")),
+    expand = c(0,0)
+  ) +
+  labs(
+  ) +
+  theme_pres
+
+```
+
+## Appendix: IRF of HVAR {visibility="uncounted"}
+
+```{r}
+irf(hv, n.ahead = 40)$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  ggplot(aes(
+    x = h,
+    y = irf
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line() + 
+  facet_wrap(
+    vars(response),
+    scales = "free_y"
+  ) +
+  theme_pres
+```
