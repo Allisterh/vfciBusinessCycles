@@ -21,13 +21,14 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
 data <- get_var_data()
-x <- data[, -"vfci"] |> copy()
+#x <- data[, -"vfci"] |> copy()
+x <- data |> copy()
 v <- fit_var(x, lags = lags)
 
 mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
-  het_reg_u = id_linear_het_reg(v, "unemployment", hetreg_method = "twostep"),
-  het_reg_u_lags = id_linear_het_reg(v, "unemployment", het_reg_lags = 0:2, hetreg_method = "twostep")
+  het_reg_u = id_fevdfd(v, "vfci", bc_freqs, sign = "neg"),
+  het_reg_u_lags = id_linear_het_reg(v, "consumption", het_reg_lags = 0:1, hetreg_method = "twostep", sign = "neg")
 )
 
 colors <- c(
