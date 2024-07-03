@@ -8,6 +8,7 @@ library(PerformanceAnalytics)
 library(tsibble)
 library(tidyr)
 library(tidyquant)
+library(vfciBCHelpers)
 
 ## Source helper scripts for constructing VFCI
 files <- list.files("./code/clean-raw-data/vfci-data-helpers/", full.names = TRUE)
