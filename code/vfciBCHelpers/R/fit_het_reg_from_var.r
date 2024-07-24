@@ -5,6 +5,7 @@
 #' @param lags integer, number of lags to use in het reg, defaults to 0 (just same period values)
 #' @param constant, boolean, default to TRUE to include a constant in estimating the het reg
 #' @param hetreg_method, defaults to "twostep", can change to "ML"
+#' @param hetreg_horizon defaults to 1, number of periods to calculate the forecast error
 #'
 #' @return A list of a set of linear regressions
 #' @export
@@ -15,10 +16,11 @@ fit_het_reg_from_var <- function(
   var,
   lags = 0,
   constant = TRUE,
-  hetreg_method = "twostep"
+  hetreg_method = "twostep",
+  hetreg_horizon = 1
 ) {
   ## Set visible global binding to make R CMD check happy
-  log_var <- log_var_fitted <- std <- t <- residual <- NULL
+  log_var_fitted <- std <- t <- NULL
 
   ## Get the data
   original_data_wide <-
@@ -90,21 +92,21 @@ fit_het_reg_from_var <- function(
     ## Estimate the het-reg
     het_reg_list <-
       var_colnames |>
-      purrr::map(~ hetreg_twostep(
-        data = na.omit(lagged_data),
+      purrr::map(~ hetreg_twostep_var(
+        var,
         y = .x,
-        x1 = var_lag_variables,
-        x2 = het_independent_variables
+        x2 = het_independent_variables,
+        horizon = hetreg_horizon
       ))
 
     ## Get the predicted log variance values
     predicted_log_variance <-
-      het_reg_list |>
+      var_colnames |>
       purrr::map(
         ~ data.table(
-          fitted = stats::fitted(.x$lm1_adj),
-          residuals = stats::residuals(.x$lm1_adj),
-          log_var_fitted = stats::fitted(.x$lm2_adj)
+          fitted = stats::fitted(het_reg_list[[.x]]$lm1)[, .x],
+          residuals = stats::residuals(het_reg_list[[.x]]$lm1)[, .x],
+          log_var_fitted = c(rep(NA, hetreg_horizon - 1), stats::fitted(het_reg_list[[.x]]$lm2_adj))
         ) |>
           _[, t := .I]
       ) |>

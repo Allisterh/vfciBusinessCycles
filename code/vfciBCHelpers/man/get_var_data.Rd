@@ -20,6 +20,9 @@ get_var_data(
   vfci = "vfci_fgr10gdpc1",
   start_date = as.Date("1962-01-01"),
   end_date = as.Date("2017-01-01"),
+  make_stationary = FALSE,
+  diff_cols = c("output", "investment", "consumption", "hours_worked", "productivity",
+    "TFP"),
   cols = NULL,
   add_cols = NULL
 )
@@ -52,6 +55,12 @@ get_var_data(
 \item{start_date}{date, start date of data}
 
 \item{end_date}{date, end date of data}
+
+\item{make_stationary}{logical, if TRUE,
+the function will return the first difference of the diff_columns}
+
+\item{diff_cols}{string vector of columns to difference,
+defaults to output, investment, consumption, hours_worked, productivity, TFP}
 
 \item{cols}{string vector of columns to subset, names will be used as new columns names}
 

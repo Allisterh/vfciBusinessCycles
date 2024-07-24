@@ -15,6 +15,10 @@
 #' @param vfci string, column name to be labelled vfci, defaults to vfci_fgr10gdpc1
 #' @param start_date date, start date of data
 #' @param end_date date, end date of data
+#' @param make_stationary logical, if TRUE,
+#' the function will return the first difference of the diff_columns
+#' @param diff_cols string vector of columns to difference,
+#' defaults to output, investment, consumption, hours_worked, productivity, TFP
 #' @param cols string vector of columns to subset, names will be used as new columns names
 #' @param add_cols sting vector of columns to include in the subest with the default ones
 #'

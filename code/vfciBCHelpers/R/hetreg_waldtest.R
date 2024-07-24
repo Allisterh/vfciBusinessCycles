@@ -11,7 +11,7 @@ hetreg_waldtest <- function(
   hetreg
 ) {
 
-  if (hetreg$method != "twostep") {
+  if (!hetreg$method %in% c("twostep", "twostep_var")) {
     stop("Wald Test only used for two step hetreg.
           Use the LR test for ML method.")
   }

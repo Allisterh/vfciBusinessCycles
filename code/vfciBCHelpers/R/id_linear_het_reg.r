@@ -6,6 +6,7 @@
 #' @param het_reg_lags lags passed to het_reg
 #' @param constant, boolean, default to TRUE for constant in het_reg regression
 #' @param hetreg_method, defaults to "twostep", can change to "ML"
+#' @param hetreg_horizon defaults to 1, number of periods to calculate the forecast error
 #' @param sign Default to "positive". Can be "negative".  Ensures the
 #' cummulative impact of the main shock on the target variable is the
 #' given sign.
@@ -25,6 +26,7 @@ id_linear_het_reg <- function(
   het_reg_lags = 0,
   constant = TRUE,
   hetreg_method = "twostep",
+  hetreg_horizon = 1,
   sign = "pos",
   sign_horizon = 1,
   method = "default"
@@ -37,7 +39,13 @@ id_linear_het_reg <- function(
   ## Fit Cholesky SVAR
   cv <- fevdid::id_ordered_chol(var)
 
-  het_reg <- fit_het_reg_from_var(var, lags = het_reg_lags, constant = constant, hetreg_method = hetreg_method)
+  het_reg <- fit_het_reg_from_var(
+    var,
+    lags = het_reg_lags,
+    constant = constant,
+    hetreg_method = hetreg_method,
+    hetreg_horizon = hetreg_horizon
+  )
 
   ## Find the Q rotation column
   if (method == "default") {

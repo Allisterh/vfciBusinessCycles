@@ -5,7 +5,13 @@
 \title{Fit a linear regression estimating the heteroskedasticity
 of the variance of the residuals in a VAR.}
 \usage{
-fit_het_reg_from_var(var, lags = 0, constant = TRUE, hetreg_method = "twostep")
+fit_het_reg_from_var(
+  var,
+  lags = 0,
+  constant = TRUE,
+  hetreg_method = "twostep",
+  hetreg_horizon = 1
+)
 }
 \arguments{
 \item{var}{a VAR, either vars::VAR or svars object}
@@ -15,6 +21,8 @@ fit_het_reg_from_var(var, lags = 0, constant = TRUE, hetreg_method = "twostep")
 \item{constant, }{boolean, default to TRUE to include a constant in estimating the het reg}
 
 \item{hetreg_method, }{defaults to "twostep", can change to "ML"}
+
+\item{hetreg_horizon}{defaults to 1, number of periods to calculate the forecast error}
 }
 \value{
 A list of a set of linear regressions

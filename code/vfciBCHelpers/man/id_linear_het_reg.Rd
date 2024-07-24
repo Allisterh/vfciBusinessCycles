@@ -11,6 +11,7 @@ id_linear_het_reg(
   het_reg_lags = 0,
   constant = TRUE,
   hetreg_method = "twostep",
+  hetreg_horizon = 1,
   sign = "pos",
   sign_horizon = 1,
   method = "default"
@@ -26,6 +27,8 @@ id_linear_het_reg(
 \item{constant, }{boolean, default to TRUE for constant in het_reg regression}
 
 \item{hetreg_method, }{defaults to "twostep", can change to "ML"}
+
+\item{hetreg_horizon}{defaults to 1, number of periods to calculate the forecast error}
 
 \item{sign}{Default to "positive". Can be "negative".  Ensures the
 cummulative impact of the main shock on the target variable is the
