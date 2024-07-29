@@ -19,7 +19,7 @@ library(vfciBCHelpers)
 ```{r}
 lags <- 2
 
-data <- get_var_data()
+data <- get_var_data(make_stationary = TRUE)
 data[, t := .I - lags]
 
 x <- data[, -"vfci"] |> copy()
@@ -58,12 +58,14 @@ ext_vfci <-
 
 
 ```{r}
+## .x is internal vfci
+## .y is external vfci
 comp_dt <- merge(int_vfci, ext_vfci, by = "date", allow.cartesian = TRUE)
 
 p_dt <-
 comp_dt |>
   _[target_variable.y == "gdpc1"] |>
-  _[target_variable.x == "unemployment"] |>
+  _[target_variable.x == "output"] |>
   _[target_horizon.x %in% c(1, 5, 10, 30)] |>
   _[target_horizon.y %in% c(1, 5, 10, 30)] |>
   _[, corr := cor(int_vfci, ext_vfci, use = "complete.obs"), by = .(target_variable.x, target_horizon.y, target_horizon.x, target_horizon.y)]
@@ -74,7 +76,8 @@ p_dt |>
     y = ext_vfci
   )) +
   geom_point() + 
-  geom_label(aes(label = corr), x = 0, y = 0) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  geom_text(aes(label = round(corr, 2) ), x = 0, y = 0) + 
   facet_grid(vars(target_horizon.y), vars(target_horizon.x), scales = "free")
 
 corr_dt <- 
@@ -94,15 +97,18 @@ corr_dt |>
   )) +
   geom_tile() +
   scale_fill_gradient2(limits = c(-1, 1), low = "red", mid = "white", high = "blue") +
-  geom_label()
+  geom_label() +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0))
 
 comp_dt |>
   _[target_variable.y == "gdpc1"] |>
-  _[target_variable.x == "unemployment"] |>
+  _[target_variable.x == "output"] |>
+  _[target_horizon.x == 1] |>
+  _[target_horizon.y == 1] |>
   ggplot(aes(
     x = date
   )) +
   geom_line(aes(y = int_vfci, color = "int_vfci")) + 
-  geom_line(aes(y = ext_vfci, color = "ext_vfci")) + 
-  facet_wrap(vars(target_horizon.y), scales = "free")
+  geom_line(aes(y = ext_vfci, color = "ext_vfci"))
 ```
