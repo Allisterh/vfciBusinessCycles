@@ -75,7 +75,7 @@ hd_df <- rbindlist(lapply(seq_along(mv_list), function(i) {
   hd <- hd(mv_list[[i]])$hd |> setDT()
   hd$model <- names(mv_list)[[i]]
   hd <- hd[impulse == "Main" | impulse == "Chol_1"]
-  hd$date <- rep(x[-c(1:lags), "date"][[1]], v$K)
+  hd$date <- rep(x[-c(1:lags), "date"][[1]], uniqueN(hd$response))
   hd
 }))
 

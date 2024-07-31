@@ -1,0 +1,51 @@
+---
+title: "All VAR Charts - Compare Horizons for Internal and External VFCI"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+library(gt)
+```
+
+```{r}
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+data <- get_var_data(make_stationary = TRUE)
+x <- data[, -"vfci"]
+
+v_ext <- fit_var(data, lags = lags)
+v <- fit_var(x, lags = lags)
+
+
+mv_list <- list(
+  max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
+  hr_1_c = id_linear_het_reg(v, "output", hetreg_horizon = 1, sign = "neg"),
+  hr_4_c = id_linear_het_reg(v, "output", hetreg_horizon = 4, sign = "neg"),
+  hr_10_c = id_linear_het_reg(v, "output", hetreg_horizon = 10, sign = "neg"),
+  hr_20_c = id_linear_het_reg(v, "output", hetreg_horizon = 20, sign = "neg"),
+  hr_30_c = id_linear_het_reg(v, "output", hetreg_horizon = 30, sign = "neg")
+)
+
+colors <- c(
+  max_share_u = "steelblue",
+  hr_1_c = "lightpink",
+  hr_4_c = "red",
+  hr_10_c = "forestgreen",
+  hr_20_c = "mediumorchid",
+  hr_30_c = "goldenrod"
+)
+
+```
+
+{{< include ../all-var-charts.qmd >}}

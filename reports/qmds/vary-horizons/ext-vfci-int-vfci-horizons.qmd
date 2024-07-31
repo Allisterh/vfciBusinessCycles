@@ -21,41 +21,31 @@ library(gt)
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
-data <- get_var_data(make_stationary = TRUE)
+data <- get_var_data(make_stationary = FALSE)
 x <- data[, -"vfci"]
 
-v_ext <- fit_var(data, lags = lags)
+x_ext1 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr1gdpc1")
+x_ext10 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr10gdpc1")
+
+v_ext1 <- fit_var(x_ext1, lags = lags)
+v_ext10 <- fit_var(x_ext10, lags = lags)
 v <- fit_var(x, lags = lags)
 
 
 mv_list <- list(
-  max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
-  # vfci_ext = id_fevdfd(v, "vfci", bc_freqs),
-  hr_1_c = id_linear_het_reg(v, "output", hetreg_horizon = 1, sign = "neg"),
-  hr_4_c = id_linear_het_reg(v, "output", hetreg_horizon = 4, sign = "neg"),
-  hr_10_c = id_linear_het_reg(v, "output", hetreg_horizon = 10, sign = "neg"),
-  hr_20_c = id_linear_het_reg(v, "output", hetreg_horizon = 20, sign = "neg"),
-  hr_30_c = id_linear_het_reg(v, "output", hetreg_horizon = 30, sign = "neg")
-  # hr_6_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 6, sign = "neg"), 
-  # hr_8_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 8, sign = "neg"), 
-  # hr_10_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 10, sign = "neg"), 
-  # hr_12_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 12, sign = "neg"), 
-  # hr_14_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 14, sign = "neg") 
+  max_share_u = id_fevdfd(v, "unemployment", bc_freqs, sign = "neg"),
+  vfci_1_ext = id_ordered_chol(reorder_var(v_ext1, "vfci")),
+  vfci_10_ext = id_ordered_chol(reorder_var(v_ext10, "vfci")),
+  hr_1_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 1, sign = "neg"),
+  hr_10_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 10, sign = "neg")
 )
 
 colors <- c(
-  max_share_u = "steelblue",
-  # vfci_ext = "lightblue",
+  max_share_u = "orange",
+  vfci_1_ext = "lightblue",
+  vfci_10_ext = "steelblue",
   hr_1_c = "lightpink",
-  hr_4_c = "red",
-  hr_10_c = "forestgreen",
-  hr_20_c = "mediumorchid",
-  hr_30_c = "goldenrod"
-  # hr_6_c = "#ff0000", 
-  # hr_8_c = "#ff6a00", 
-  # hr_10_c = "#ffa200", 
-  # hr_12_c = "#ffcc00", 
-  # hr_14_c = "#95ff00"
+  hr_10_c = "firebrick"
 )
 
 ```
