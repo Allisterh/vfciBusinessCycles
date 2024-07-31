@@ -36,6 +36,8 @@ fci_g_dt <- fread("./data-raw/fci_g.csv")
 ## Load the MFU data
 mfu_dt <- fread("./data-raw/mfu.csv")
 
+## Load the MFU data
+gs_dt <- fread("./data-raw/gs_fci.csv")
 
 ## Merge
 dt <- bca_dt |>
@@ -43,7 +45,8 @@ dt <- bca_dt |>
   merge(bis_dt, by = "date", all = TRUE) |>
   merge(ebp_dt, by = "date", all = TRUE) |>
   merge(fci_g_dt, by = "date", all = TRUE) |>
-  merge(mfu_dt, by = "date", all = TRUE)
+  merge(mfu_dt, by = "date", all = TRUE) |>
+  merge(gs_dt, by = "date", all = TRUE)
 
 ## Save out the data
 saveRDS(dt, "./data/all_analysis_data.rds")
@@ -63,8 +66,10 @@ dt |>
     "fin_uncert",
     "nfci",
     "anfci",
+    "gsfci",
     "vfci"
   )] |>
+  _[!is.na(value)] |>
   ggplot(aes(
     x = date,
     y = value,

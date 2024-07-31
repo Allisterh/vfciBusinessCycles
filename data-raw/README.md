@@ -36,3 +36,7 @@ Provides information on how to acquire each of the raw data files in this folder
     - Macro, Financial and Real Uncertainty indexes at different horizons.  Downloaded from [Sydney Ludbigson's website](https://www.sydneyludvigson.com/macro-and-financial-uncertainty-indexes) on July 31, 2024.  This vintage is the 202402 update (the latest at the time). Measures are introduced in "[Measuring Uncertainty](https://static1.squarespace.com/static/54397369e4b0446f66937a73/t/63629f53023c031c27dd70d4/1667407699615/jlnAER.pdf)".
 
         - Convert from monthly to quarterly by taking the last observation of the quarter.
+
+- `gs_fci_q.dta`
+
+    - Goldman Sachs Financial Conditions Index. Pulled from the [macro_dynamics](https://github.com/VFCI/macro_dynamics) repository.  This does not have any download documentation, so should be updated to a more official source.  It seems like it can be accessed on Bloomberg.
