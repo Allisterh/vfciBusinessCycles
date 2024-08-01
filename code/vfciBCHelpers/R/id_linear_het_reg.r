@@ -14,6 +14,9 @@
 #' impact of the shock.
 #' @param method, "default" for our derivations for finding the q column,
 #' and "mriv" to use Mertens and Ravn (2013) Appendix A IV derivations.
+#' @param x2 indepedent variables for predicting heteroskedasticity
+#' @param extra_data additional data columns to cbind with the data from the VAR,
+#' 
 #'
 #' @return SVAR
 #' @export
@@ -29,7 +32,9 @@ id_linear_het_reg <- function(
   hetreg_horizon = 1,
   sign = "pos",
   sign_horizon = 1,
-  method = "default"
+  method = "default",
+  x2 = NULL,
+  extra_data = NULL
 ) {
 
   data <- get_data_from_var(var) |> as.data.table()
@@ -44,7 +49,9 @@ id_linear_het_reg <- function(
     lags = het_reg_lags,
     constant = constant,
     hetreg_method = hetreg_method,
-    hetreg_horizon = hetreg_horizon
+    hetreg_horizon = hetreg_horizon,
+    x2 = x2,
+    extra_data = extra_data
   )
 
   ## Find the Q rotation column

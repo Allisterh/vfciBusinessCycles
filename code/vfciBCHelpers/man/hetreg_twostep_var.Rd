@@ -4,7 +4,7 @@
 \alias{hetreg_twostep_var}
 \title{Fits a heteroskedastic regression by twostep method}
 \usage{
-hetreg_twostep_var(var, y, x2 = NULL, horizon = 1)
+hetreg_twostep_var(var, y, x2 = NULL, horizon = 1, extra_data = NULL)
 }
 \arguments{
 \item{var}{VAR object}
@@ -15,6 +15,9 @@ hetreg_twostep_var(var, y, x2 = NULL, horizon = 1)
 defaults to all variables in VAR}
 
 \item{horizon}{forecast error horizon for residuals}
+
+\item{extra_data}{additional data columns to cbind with the data from the VAR,
+use to add exogenous variables for x2 that are not in the VAR}
 }
 \value{
 a \code{hetreg} object

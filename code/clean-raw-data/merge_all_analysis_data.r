@@ -17,9 +17,19 @@ vfci_dt <-
     dplyr::starts_with(c("vfci", "mu")),
     "nfci",
     "anfci",
-    "baa_aaa",
     "tedr",
-    "t10y3m"
+    "pc1",
+    "pc2",
+    "pc3",
+    "pc4",
+    "pc5",
+    "pc6",
+    "gspc_vol",
+    "annual_ret",
+    "t10y3m",
+    "tb3smffm",
+    "aaa10ym",
+    "baa_aaa"
   )) |>
   as.data.table() |>
   _[, date := as.IDate(date)]
@@ -59,6 +69,7 @@ dt |>
   dt_pivot_longer(-date) |>
   _[name %in% c(
     "unemployment",
+    "aaa10ym",
     "gz",
     "ebp",
     "fci_g",

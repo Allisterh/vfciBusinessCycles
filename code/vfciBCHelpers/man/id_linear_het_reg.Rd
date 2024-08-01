@@ -14,7 +14,9 @@ id_linear_het_reg(
   hetreg_horizon = 1,
   sign = "pos",
   sign_horizon = 1,
-  method = "default"
+  method = "default",
+  x2 = NULL,
+  extra_data = NULL
 )
 }
 \arguments{
@@ -39,6 +41,10 @@ impact of the shock.}
 
 \item{method, }{"default" for our derivations for finding the q column,
 and "mriv" to use Mertens and Ravn (2013) Appendix A IV derivations.}
+
+\item{x2}{indepedent variables for predicting heteroskedasticity}
+
+\item{extra_data}{additional data columns to cbind with the data from the VAR,}
 }
 \value{
 SVAR

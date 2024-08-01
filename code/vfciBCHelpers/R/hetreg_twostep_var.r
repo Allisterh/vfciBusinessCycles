@@ -5,6 +5,8 @@
 #' @param x2 indepedent varaibles for predicting heteroskedasticity,
 #' defaults to all variables in VAR
 #' @param horizon forecast error horizon for residuals
+#' @param extra_data additional data columns to cbind with the data from the VAR,
+#' use to add exogenous variables for x2 that are not in the VAR
 #'
 #' @return a `hetreg` object
 #'
@@ -13,10 +15,15 @@ hetreg_twostep_var <- function(
   var,
   y,
   x2 = NULL,
-  horizon = 1
+  horizon = 1,
+  extra_data = NULL
 ) {
 
   data <- get_data_from_var(var)
+
+  if (!is.null(extra_data)) {
+    data <- cbind(data, extra_data)
+  }
 
   if (is.null(x2)) {
     x2 <- names(data)

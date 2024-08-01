@@ -1,0 +1,50 @@
+---
+title: "Add Financial Data VAR Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+add_cols <- c(
+  "pc1", "pc2", "pc3", "pc4"
+)
+
+data <- get_var_data(vfci = "vfci_fgr1gdpc1", add_cols = add_cols)
+
+x <- data[, -"vfci"] |> copy()
+
+v <- fit_var(x[, -c(add_cols), with = FALSE], lags = lags)
+v2 <- fit_var(data[, -c(add_cols), with = FALSE][, vfci := -1 * vfci], lags = lags)
+
+mv_list <- list(
+  max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
+  het_reg_pc = id_linear_het_reg(v, "consumption", x2 = add_cols,
+    extra_data = data[, ..add_cols], method = "mriv", sign = "neg"),
+  het_reg = id_linear_het_reg(v, "consumption", sign = "pos"),
+  chol = id_ordered_chol(reorder_var(v2, "vfci"))
+)
+
+colors <- c(
+  max_share_u = "firebrick",
+  het_reg = "lightblue",
+  het_reg_pc = "steelblue",
+  chol = "goldenrod"
+)
+```
+
+{{< include all-var-charts.qmd >}}

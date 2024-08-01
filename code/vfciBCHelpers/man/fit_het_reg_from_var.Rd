@@ -10,7 +10,9 @@ fit_het_reg_from_var(
   lags = 0,
   constant = TRUE,
   hetreg_method = "twostep",
-  hetreg_horizon = 1
+  hetreg_horizon = 1,
+  x2 = NULL,
+  extra_data = NULL
 )
 }
 \arguments{
@@ -23,6 +25,11 @@ fit_het_reg_from_var(
 \item{hetreg_method, }{defaults to "twostep", can change to "ML"}
 
 \item{hetreg_horizon}{defaults to 1, number of periods to calculate the forecast error}
+
+\item{x2}{indepedent variables for predicting heteroskedasticity}
+
+\item{extra_data}{additional data columns to cbind with the data from the VAR,
+use to add exogenous variables for x2 that are not in the VAR}
 }
 \value{
 A list of a set of linear regressions

@@ -1,0 +1,119 @@
+---
+title: "Internal vs. External VFCIs, Compare Horizons"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+lags <- 2
+
+add_cols <- c(
+  "pc1", "pc2", "pc3", "pc4"
+)
+
+data <- get_var_data(add_cols = add_cols)
+data[, t := .I - lags]
+
+x <- data[, -"vfci"] |> copy()
+v <- fit_var(x[, -c("t", add_cols), with = FALSE], lags = lags)
+
+all_variables <- names(x[, -"date"]) |> set_names()
+
+hr <- fit_het_reg_from_var(v, hetreg_horizon = 10, x2 = add_cols, extra_data = data[, ..add_cols])
+
+hr_list <- purrr::map(1:30, ~ fit_het_reg_from_var(v, hetreg_horizon = .x, x2 = add_cols, extra_data = data[, ..add_cols])) 
+
+int_vfci <- 1:30 |>
+  purrr::map(~ {
+    hr_list[[.x]]$dt |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, target_variable = variable, target_horizon = .x, int_vfci = log_var_fitted)]|>
+  _[, int_vfci := scale(int_vfci), by = .(target_horizon, target_variable)]
+  }) |>
+  purrr::list_rbind()
+  
+
+```
+
+```{r}
+ext_vfci_all <- readRDS("./data/vfci_data.rds") |> setDT()
+ext_vfci <-
+  ext_vfci_all |>
+  tidyfast::dt_pivot_longer(cols = -c(date, yr, quarter)) |>
+  _[grepl("vfci_", name)] |>
+  _[!grepl("_l1", name)] |>
+  _[, target_horizon := as.numeric(stringr::str_extract(name, "(?<=fgr)\\d{1,2}")) ] |>
+  _[, target_variable := stringr::str_extract(name, "(?<=\\d)\\D.*$")] |>
+  _[, .(date, target_horizon, target_variable, ext_vfci = value)] |>
+  _[, ext_vfci := scale(ext_vfci), by = .(target_horizon, target_variable)]
+```
+
+
+```{r}
+## .x is internal vfci
+## .y is external vfci
+comp_dt <- merge(int_vfci, ext_vfci, by = "date", allow.cartesian = TRUE)
+
+p_dt <-
+comp_dt |>
+  _[target_variable.y == "gdpc1"] |>
+  _[target_variable.x == "consumption"] |>
+  _[target_horizon.x %in% c(1, 5, 10, 30)] |>
+  _[target_horizon.y %in% c(1, 5, 10, 30)] |>
+  _[, corr := cor(int_vfci, ext_vfci, use = "complete.obs"), by = .(target_variable.x, target_horizon.y, target_horizon.x, target_horizon.y)]
+
+p_dt |>
+  ggplot(aes(
+    x = int_vfci,
+    y = ext_vfci
+  )) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  geom_text(aes(label = round(corr, 2) ), x = 0, y = 0) + 
+  facet_grid(vars(target_horizon.y), vars(target_horizon.x), scales = "free")
+
+corr_dt <- 
+  comp_dt[, .(
+    corr = cor(int_vfci, ext_vfci, use = "complete.obs")
+  ),
+    by = .(target_variable.x, target_variable.y, target_horizon.x, target_horizon.y)
+  ]
+corr_dt |>
+  _[target_variable.y == "gdpc1"] |>
+  _[target_variable.x == "consumption"] |>
+  ggplot(aes(
+    x = target_horizon.x,
+    y = target_horizon.y,
+    fill = corr,
+    label = round(corr, 2)
+  )) +
+  geom_tile() +
+  scale_fill_gradient2(limits = c(-1, 1), low = "red", mid = "white", high = "blue") +
+  geom_label() +
+  scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Internal VFCI Horizon", y = "External VFCI Horizon")
+
+comp_dt |>
+  _[target_variable.y == "gdpc1"] |>
+  _[target_variable.x == "consumption"] |>
+  _[target_horizon.x == 1] |>
+  _[target_horizon.y == 1] |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = int_vfci, color = "int_vfci")) + 
+  geom_line(aes(y = -1 * ext_vfci, color = "ext_vfci"))
+```

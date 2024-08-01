@@ -483,15 +483,14 @@ summary_table <-
     wavg_fevdfd = weighted.mean(fevdfd, total)
   ), by = .(
     impulse, response, model
-  )] |>
-  _[, total_ratio := fevfd / total]
+  )]
 
 summary_table |>
-  _[impulse == "Main"] |>
+  _[impulse == "Main" | impulse == "Chol_1"] |>
   setorder(impulse, response, model) |>
   gt() |>
   fmt_number(columns = c("fevfd", "total"), decimals = 1, drop_trailing_zeros = TRUE) |>
-  fmt_percent(columns = c("avg_fevdfd", "wavg_fevdfd", "total_ratio"), decimals = 1) |>
+  fmt_percent(columns = c("avg_fevdfd", "wavg_fevdfd"), decimals = 1) |>
   tab_header("FEV Summary Statistics - Business Cycle Freqs") |>
   as_latex()
 ```
