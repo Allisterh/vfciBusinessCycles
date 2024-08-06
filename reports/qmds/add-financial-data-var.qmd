@@ -24,7 +24,7 @@ add_cols <- c(
   "pc1", "pc2", "pc3", "pc4"
 )
 
-data <- get_var_data(vfci = "vfci_fgr1gdpc1", add_cols = add_cols)
+data <- get_var_data(vfci = "vfci_fgr12gdpc1", add_cols = add_cols)
 
 x <- data[, -"vfci"] |> copy()
 
@@ -35,13 +35,15 @@ mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
   het_reg_pc = id_linear_het_reg(v, "consumption", x2 = add_cols,
     extra_data = data[, ..add_cols], method = "mriv", sign = "neg"),
-  het_reg = id_linear_het_reg(v, "consumption", sign = "pos"),
+  het_reg = id_linear_het_reg(v, "consumption", sign = "neg", x2 = c(colnames(v$y), add_cols), extra_data = data[, ..add_cols], method = "mriv"),
+  het_reg_vfci = id_linear_het_reg(v2, "consumption", sign = "neg"),
   chol = id_ordered_chol(reorder_var(v2, "vfci"))
 )
 
 colors <- c(
   max_share_u = "firebrick",
-  het_reg = "lightblue",
+  het_reg = "darkgreen",
+  het_reg_vfci = "lightblue",
   het_reg_pc = "steelblue",
   chol = "goldenrod"
 )

@@ -573,6 +573,10 @@ hs_df |>
   scale_color_manual(
     values = colors
   ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+    labels = seq(1960, 2020, 5)
+  ) +
   theme_bw(base_size = 8) +
   theme(legend.position = "top")
 ```
