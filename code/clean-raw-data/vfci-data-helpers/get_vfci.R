@@ -37,11 +37,15 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
   
   # return vfci, mu, time series, and hetreg results
   # x[seq(nrow(data))] is a way to pad NAs at the end of x to the length of data
+
+  het_coefs <- h$modelStruct$varStruct |> unlist()
+
   if (prcomp) {
     out <- list(
       ts = tibble::tibble(
         qtr = data$qtr,
-        vfci = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        vfci_resid = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        vfci = c(log(h$sigma) + as.matrix(data_pcs[, x_pcs]) %*% het_coefs),
         mu = unname(h$fitted)[seq(nrow(data))],
         h$pc_ts
       ),
@@ -53,7 +57,8 @@ get_vfci <- function(data,y,x,het=x,prcomp=TRUE,n_prcomp = 4, date_begin="1962 Q
     out <- list(
       ts = tibble::tibble(
         qtr = data$qtr,
-        vfci = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        vfci_resid = log(attr(h$residuals, "std"))[seq(nrow(data))],
+        vfci = c(log(h$sigma) +  as.matrix(data[, het]) %*% het_coefs),
         mu = unname(h$fitted)[seq(nrow(data))]
       ),
       hetreg=h,
