@@ -69,12 +69,6 @@ dt |>
   dt_pivot_longer(-date) |>
   _[name %in% c(
     "unemployment",
-    "aaa10ym",
-    "gz",
-    "ebp",
-    "fci_g",
-    "macro_uncert",
-    "fin_uncert",
     "nfci",
     "anfci",
     "gsfci",
