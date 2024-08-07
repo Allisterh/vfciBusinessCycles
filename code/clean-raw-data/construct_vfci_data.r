@@ -49,10 +49,7 @@ fred_var_list <- c("GDPC1", "PCEPILFE", "PCECC96", "CLVMNACSCAB1GQEA19")
 fred <- fred %>%
   # growth rate over next delta quarters for variables in fred_var_list
   growth_rate_df(fred_var_list, delta_fred, future_growth = TRUE) %>%
-  mutate(
-    fgr1GDPC1_l1 = 100 * (dplyr::lead(GDPC1, 1) / GDPC1 - 1),
-    fgr1PCECC96_l1 = 100 * (dplyr::lead(PCECC96, 1) / PCECC96 - 1)
-    ) %>%
+  growth_rate_df(fred_var_list, delta_fred, shift = 1, future_growth = TRUE) %>%
   dplyr::mutate(
     # logs
     log = dplyr::across(
@@ -233,7 +230,12 @@ variables <- purrr::reduce(list(fred, yahoo, annual_returns), dplyr::full_join, 
 
 # VFCI construction -------------------------------------------------------
 financial_vars <- c("gspc_vol", "annual_ret", "t10y3m", "tb3smffm", "aaa10ym", "baa_aaa") # choose returns from # annual_ret_from_daily_avg, annual_cumret_from_quart_daily_avg, annual_avgret_from_quart, annual_ret
-dep_vars <- as.list(c(paste0("fgr", delta_fred, "gdpc1"), paste0("fgr", delta_fred, "pcecc96"), "fgr1gdpc1_l1"))
+dep_vars <- as.list(c(
+  paste0("fgr", delta_fred, "gdpc1"),
+  paste0("fgr", delta_fred, "pcecc96"),
+  paste0("fgr", delta_fred, "s1gdpc1"),
+  paste0("fgr", delta_fred, "s1pcecc96")
+))
 date_begin <- "1962 Q1"
 date_end <- "2022 Q3"
 

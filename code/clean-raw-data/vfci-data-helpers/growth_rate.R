@@ -3,6 +3,7 @@ growth_rate <- function(
     ts,
     ...,
     delta = 1,
+    shift = 0,
     type = c("geometric","log","difference"),
     units = c("percent","decimal"),
     future_growth = c(FALSE,TRUE)
@@ -19,7 +20,7 @@ growth_rate <- function(
                decimal = gr,
                percent = 100 * gr
   )
-  gr <- if(future_growth) dplyr::lead(gr,delta+1) else gr
+  gr <- if(future_growth) dplyr::lead(gr, delta + shift) else gr
   return(gr)
 }
 
@@ -30,12 +31,16 @@ growth_rate_df <- function(data, var_list, delta, ...) {
     if(!("future_growth" %in% names(args))) {
       args$future_growth <- FALSE
     }
+    args$shift_boo <- FALSE
+    if("shift" %in% names(args)) {
+      args$shift_boo <- TRUE
+    }
     data %>%
       dplyr::mutate(
         dplyr::across(
           dplyr::all_of(var_list),
           ~ growth_rate(.x, delta = delta, ...),
-          .names = paste0(if(args$future_growth) "f" ,"gr{ delta }{ .col }"),
+          .names = paste0(if(args$future_growth) "f" ,"gr{ delta }", if(args$shift_boo) "s{ args$shift }", "{ .col }"),
           .unpack = TRUE
         ),
         .keep = "none"
