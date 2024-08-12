@@ -35,6 +35,8 @@ mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
   het_reg_pc = id_linear_het_reg(v, "consumption", x2 = add_cols,
     extra_data = data[, ..add_cols], method = "mriv", sign = "neg"),
+  het_reg_pc_lags = id_linear_het_reg(v, "consumption", x2 = add_cols,
+    extra_data = data[, ..add_cols], method = "mriv", sign = "neg", het_reg_lags = 0:2),
   het_reg = id_linear_het_reg(v, "consumption", sign = "neg", x2 = c(colnames(v$y), add_cols), extra_data = data[, ..add_cols], method = "mriv"),
   het_reg_vfci = id_linear_het_reg(v2, "consumption", sign = "neg"),
   chol = id_ordered_chol(reorder_var(v2, "vfci"))
@@ -45,6 +47,7 @@ colors <- c(
   het_reg = "darkgreen",
   het_reg_vfci = "lightblue",
   het_reg_pc = "steelblue",
+  het_reg_pc_lags = "black",
   chol = "goldenrod"
 )
 ```

@@ -39,27 +39,47 @@ fit_het_reg_from_var <- function(
     original_data_wide |>
     tidyfast::dt_pivot_longer(-t, names_to = "variable", values_to = "original")
 
+  original_data_wide <- cbind(original_data_wide, extra_data)
+
   ## Lagged data matrix
   lagged_data <- copy(original_data_wide)
 
-  for (i in var_colnames){
+  for (i in c(var_colnames, x2)){
     lagged_data[, paste0(i, "_L", 1:max(var$p, lags)) := shift(.SD, n = 1:max(var$p, lags)), .SDcols = i]
+  }
+
+  if (any(lags != 0)) {
+    var_lag_variables <-
+      purrr::map(
+        1:var$p,
+        ~ paste0(c(var_colnames, x2), "_L", .x)
+      ) |>
+      unlist()
+
+    if (!is.null(x2)) {
+      x2 <-
+        purrr::map(
+          1:var$p,
+          ~ paste0(x2, "_L", .x)
+        ) |>
+        unlist() |>
+        c(x2)
+    }
+
+    extra_data <- cbind(extra_data, lagged_data[, var_lag_variables, with = FALSE])
   }
 
   ## Create a formula with the needed lags and current variables names
   if (is.null(x2)) {
-    x2 <-
-      purrr::map(lags, ~ if (.x == 0) {var_colnames} else {paste0(var_colnames, "_L", .x)}) |>
+    x2 <- purrr::map(lags, ~ if (.x == 0) {
+      var_colnames
+    } else {
+      paste0(var_colnames, "_L", .x)
+    }) |>
       unlist()
   }
 
   if (hetreg_method == "ML") {
-    var_lag_variables <-
-      purrr::map(
-        1:var$p,
-        ~ paste0(var_colnames, "_L", .x)
-      ) |>
-      unlist()
 
     ## Estimate the het-reg
     het_reg_list <-
@@ -89,12 +109,6 @@ fit_het_reg_from_var <- function(
   }
 
   if (hetreg_method == "twostep") {
-    var_lag_variables <-
-      purrr::map(
-        1:var$p,
-        ~ paste0(var_colnames, "_L", .x)
-      ) |>
-      unlist()
 
     ## Estimate the het-reg
     het_reg_list <-
