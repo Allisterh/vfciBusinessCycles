@@ -17,7 +17,7 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
 add_cols <- c(
-  "pc1", "pc2", "pc3", "pc4"
+  "pc1", "pc2", "pc3", "pc4", "fci_g"
 )
 
 data <- get_var_data(vfci = "vfci_fgr1gdpc1", add_cols = add_cols)
@@ -53,7 +53,7 @@ hs_df
 data
 plot_data <-
   tidyfast::dt_pivot_wider(hs_df[, .(date, hs, model)], names_from = model, values_from = hs) |>
-  merge(data, by = "date") |>
+  merge(data, by = "date", all = T) |>
   tidyfast::dt_pivot_longer(-date) |>
   _[, value := scale(value), by = name]
 
