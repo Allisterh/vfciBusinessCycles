@@ -1,0 +1,59 @@
+---
+title: "Compare VFCI estimations"
+format: pdf
+project:
+  execute-dir: project
+---
+
+- `baseline` is the vfci estimated with only the 4 financial principal components
+- `lags` includes two lags of output/consumption growth
+- `exlags` includes two lags of output/consumption growth in the regression, but excludes them from estimating the vfci
+
+```{r}
+#| include: false
+library(data.table)
+library(dplyr)
+library(purrr)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, echo = F, warning = F}
+data <- readRDS("./data/vfci_data.rds")
+
+data <- data |> select("date", contains("vfci"))
+
+p_vfci_data <-
+  data |>
+  tidyr::pivot_longer(-date) |>
+  mutate(fgr = stringr::str_extract(name, "(?<=fgr)[0-9]*")) |>
+  mutate(variable = stringr::str_extract(name, "gdpc1|pcecc96")) |>
+  mutate(type = stringr::str_extract(name, "(?<=_)lags|(?<=_)exlags")) |>
+  mutate(shift = as.numeric(stringr::str_extract(name, "(?<=s)[0-9]*"))) |>
+  mutate(shift = ifelse(is.na(shift), 0, shift)) |>
+  mutate(type = ifelse(is.na(type), "baseline", type))
+```
+
+
+```{r}
+#| output: asis
+#| echo: false
+for (s in 0:1) {
+res <- map_chr(1:30, \(f) {
+  knitr::knit_child(text = c(
+    "## FGR Horizon: `r f`, Shift: `r s`",
+    "```{r, echo = F, warning = F, fig.height = 3, out.width = '100%'}",
+    "p_vfci_data |>
+  filter(fgr == f) |>
+  filter(shift == s) |>
+  ggplot(aes(x = date, y = value, color = type)) + 
+  geom_line() +
+  facet_wrap(vars(variable), ncol = 1, scales = 'free_y') +
+  theme_bw(base_size = 8) +
+  theme(legend.position = 'top')",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+}
+```

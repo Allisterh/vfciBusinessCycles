@@ -228,7 +228,7 @@ annual_returns <- annual_returns %>%
 # Merge all
 variables <- purrr::reduce(list(fred, yahoo, annual_returns), dplyr::full_join, by = "qtr")
 
-# VFCI construction -------------------------------------------------------
+# VFCI setup -------------------------------------------------------
 financial_vars <- c("gspc_vol", "annual_ret", "t10y3m", "tb3smffm", "aaa10ym", "baa_aaa") # choose returns from # annual_ret_from_daily_avg, annual_cumret_from_quart_daily_avg, annual_avgret_from_quart, annual_ret
 dep_vars <- as.list(c(
   paste0("fgr", delta_fred, "gdpc1"),
@@ -239,9 +239,49 @@ dep_vars <- as.list(c(
 date_begin <- "1962 Q1"
 date_end <- "2022 Q3"
 
-results <- dep_vars %>%
-  purrr::set_names() %>%
-  purrr::map(\(x) get_vfci(variables, x, financial_vars, prcomp = TRUE, n_prcomp = 4, date_begin = date_begin, date_end = date_end, na.action = na.omit))
+## Construct PCs from financial variables and merge onto variables
+match_stata <- FALSE
+pca <- get_pc(variables, financial_vars, match_stata = match_stata)
+pcs <- if (match_stata) pca$scores else pca$x
+pc_vars <- colnames(pcs) <- paste0("pc", seq_len(ncol(pcs)))
+pc_qtrs <- tsibble::as_tsibble(variables) |>
+  select(all_of(c("qtr", financial_vars))) |>
+  tsibble::filter_index(date_begin ~ date_end) |>
+  pull(qtr)
+pcs <- as_tibble(pcs) |> mutate(qtr = pc_qtrs)
+variables <- full_join(variables, pcs, by = "qtr")
+
+## Construct lags of growth rates
+num_lags <- 2
+lag_vars <- c("gdpc1", "pcecc96")
+gr_vars <- paste0("gr1", lag_vars)
+variables <- variables |> growth_rate_df(lag_vars, delta = 1)
+for (i in 1:num_lags) {
+  for (y in gr_vars) {
+    lag_y_name <- paste0("l", i, y)
+    variables <- variables |> mutate(!!lag_y_name := lag(!!dplyr::sym(y), n = i))
+  }
+}
+lag_gr_vars <-
+  stringr::str_extract(dep_vars, paste0(lag_vars, collapse = "|")) |>
+  purrr::map(~ paste0("l", 1:num_lags, "gr1", .x))
+
+## Estimate VFCI
+results <- dep_vars |>
+  purrr::set_names() |>
+  purrr::map(\(x) get_vfci(variables, x, pc_vars[1:4]), .progress = TRUE)
+
+results_lags <- seq_along(dep_vars) |>
+  purrr::set_names(dep_vars) |>
+  purrr::imap(\(i, x) get_vfci(variables, x, c(pc_vars[1:4], lag_gr_vars[[i]])), .progress = TRUE) |>
+  purrr::set_names(paste0(dep_vars, "_lags"))
+
+results_exlags <- seq_along(dep_vars) |>
+  purrr::set_names(dep_vars) |>
+  purrr::imap(\(i, x) get_vfci(variables, x, c(pc_vars[1:4], lag_gr_vars[[i]]), vfci_vars = pc_vars[1:4]), .progress = TRUE) |>
+  purrr::set_names(paste0(dep_vars, "_exlags"))
+
+results <- c(results, results_lags, results_exlags)
 
 # conditional vol (vfci)
 names_vfci_ts <- purrr::map(names(results), \(x) paste0("vfci_", x))
@@ -261,7 +301,7 @@ mu_ts <- tibble::tibble(
 
 # merge
 variables <- purrr::reduce(
-  list(variables, results$fgr1gdpc1$ts, vfci_ts, mu_ts),
+  list(variables, vfci_ts, mu_ts),
   dplyr::inner_join,
   by = "qtr"
 )
@@ -274,7 +314,7 @@ variables$quarter <- tidyquant::QUARTER(variables$date)
 
 variables <- variables %>%
   dplyr::relocate(c(
-    "date", "yr", "quarter", "vfci", "mu",
+    "date", "yr", "quarter",
     "gdpc1", "gdppot", "pcepilfe", "pcecc96", "fedfunds",
     "dgs10", "tb3ms", "med3", "tb3smffm", "aaa10ym", "wtisplc",
     "baa10ym", "lior3m", "tedrate", "vixcls"

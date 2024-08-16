@@ -6,7 +6,7 @@ growth_rate <- function(
     shift = 0,
     type = c("geometric","log","difference"),
     units = c("percent","decimal"),
-    future_growth = c(FALSE,TRUE)
+    future_growth = FALSE
   ) {
   type <- match.arg(type)
   units <- match.arg(units)
