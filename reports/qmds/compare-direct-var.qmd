@@ -1,0 +1,151 @@
+---
+title: "Compare direct forecast VARs and iterated VARs"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+## Compare Forecasted Values
+
+```{r, echo = F, warning = F}
+lags <- 2
+
+data <- get_var_data()
+x <- data[, -"vfci"] |> copy()
+
+v <- fit_var(x, lags = lags)
+
+direct_v <- purrr::map(1:30, ~ fit_var(x, lags = lags, y_lead = .x))
+
+direct_fe <- purrr::map(1:30, ~ rbind(matrix(NA, 2, 10), matrix(NA, .x, 10), fitted(direct_v[[.x]])))
+iter_fe <- purrr::map(1:30, ~ forecast(v, horizon = .x + 1)[-c(1:2, seq(nrow(x) + 1, length.out = .x - 1)),])
+
+direct_dt <- purrr::map(1:30, ~ {
+  dt <- as.data.table(direct_fe[[.x]])
+  colnames(dt) <- colnames(x[, -"date"])
+  dt[, date := data$date]
+  dt[, h := .x]
+  tidyfast::dt_pivot_longer(dt, -c(date, h))
+}) |>
+  purrr::list_rbind()
+
+iter_dt <- purrr::map(1:30, ~ {
+  dt <- as.data.table(iter_fe[[.x]])
+  colnames(dt) <- colnames(x[, -"date"])
+  dt[, date := data$date]
+  dt[, h := .x]
+  tidyfast::dt_pivot_longer(dt, -c(date, h))
+}) |>
+  purrr::list_rbind()
+
+data_dt <- tidyfast::dt_pivot_longer(x, -date, values_to = "actual") 
+
+dt <- list(
+  direct_dt[, type := "direct"],
+  iter_dt[, type := "iter"]
+  ) |>
+  purrr::list_rbind() |>
+  tidyfast::dt_pivot_wider(names_from = type, values_from = value) |>
+  merge(data_dt, by = c("date", "name"), all = TRUE)
+
+
+```
+
+
+```{r}
+#| output: asis
+#| echo: false
+
+res <- map_chr(1:30, \(horizon) {
+  knitr::knit_child(text = c(
+    "## Horizon: `r horizon`",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
+    "dt[h == horizon] |>
+    ggplot(aes(x = date)) +
+    geom_line(aes(y = actual, color = 'actual')) +
+    geom_line(aes(y = direct, color = 'direct')) +
+    geom_line(aes(y = iter, color = 'iter')) +
+    facet_wrap(vars(name), scales = 'free', nrow = 4) +
+    theme_bw(base_size = 8)",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+```
+
+
+## Compare Residuals
+
+```{r, echo = F, warning = F}
+lags <- 2
+
+data <- get_var_data()
+x <- data[, -"vfci"] |> copy()
+
+v <- fit_var(x, lags = lags)
+
+direct_v <- purrr::map(1:30, ~ fit_var(x, lags = lags, y_lead = .x))
+
+direct_fe <- purrr::map(1:30, ~ rbind(matrix(NA, 2, 10), matrix(NA, .x, 10), resid(direct_v[[.x]])))
+iter_fe <- purrr::map(1:30, ~ rbind(matrix(NA, 2, 10), fe(v, horizon = .x + 1)))
+
+direct_dt <- purrr::map(1:30, ~ {
+  dt <- as.data.table(direct_fe[[.x]])
+  colnames(dt) <- colnames(x[, -"date"])
+  dt[, date := data$date]
+  dt[, h := .x]
+  tidyfast::dt_pivot_longer(dt, -c(date, h))
+}) |>
+  purrr::list_rbind()
+
+iter_dt <- purrr::map(1:30, ~ {
+  dt <- as.data.table(iter_fe[[.x]])
+  colnames(dt) <- colnames(x[, -"date"])
+  dt[, date := data$date]
+  dt[, h := .x]
+  tidyfast::dt_pivot_longer(dt, -c(date, h))
+}) |>
+  purrr::list_rbind()
+
+dt <- list(
+  direct_dt[, type := "direct"],
+  iter_dt[, type := "iter"]
+  ) |>
+  purrr::list_rbind() |>
+  tidyfast::dt_pivot_wider(names_from = type, values_from = value)
+
+
+```
+
+
+```{r}
+#| output: asis
+#| echo: false
+
+res <- map_chr(1:30, \(horizon) {
+  knitr::knit_child(text = c(
+    "## Horizon: `r horizon`",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
+    "dt[h == horizon] |>
+    ggplot(aes(x = date)) +
+    geom_hline(yintercept = 0, color = 'gray50') +
+    geom_line(aes(y = direct, color = 'direct')) +
+    geom_line(aes(y = iter, color = 'iter')) +
+    facet_wrap(vars(name), scales = 'free', nrow = 4) +
+    theme_bw(base_size = 8)",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+```
