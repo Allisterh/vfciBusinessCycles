@@ -49,6 +49,10 @@ mfu_dt <- fread("./data-raw/mfu.csv")
 ## Load the MFU data
 gs_dt <- fread("./data-raw/gs_fci.csv")
 
+## Load the EPU data
+epu_dt <- fread("./data-raw/epu_clean.csv")
+epu_dt <- epu_dt[year(date) >= 1950] ## No reason to have data before 1950 here
+
 ## Merge
 dt <- bca_dt |>
   merge(vfci_dt, by = "date", all = TRUE) |>
@@ -56,7 +60,8 @@ dt <- bca_dt |>
   merge(ebp_dt, by = "date", all = TRUE) |>
   merge(fci_g_dt, by = "date", all = TRUE) |>
   merge(mfu_dt, by = "date", all = TRUE) |>
-  merge(gs_dt, by = "date", all = TRUE)
+  merge(gs_dt, by = "date", all = TRUE) |>
+  merge(epu_dt, by = "date", all = TRUE)
 
 ## Save out the data
 saveRDS(dt, "./data/all_analysis_data.rds")
@@ -68,11 +73,9 @@ library(tidyfast)
 dt |>
   dt_pivot_longer(-date) |>
   _[name %in% c(
-    "unemployment",
-    "nfci",
-    "anfci",
-    "gsfci",
-    "vfci"
+    "epu",
+    "epu_finregulation",
+    "vfci_fgr1gdpc1"
   )] |>
   _[!is.na(value)] |>
   ggplot(aes(

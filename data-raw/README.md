@@ -40,3 +40,15 @@ Provides information on how to acquire each of the raw data files in this folder
 - `gs_fci_q.dta`
 
     - Goldman Sachs Financial Conditions Index. Pulled from the [macro_dynamics](https://github.com/VFCI/macro_dynamics) repository.  This does not have any download documentation, so should be updated to a more official source.  It seems like it can be accessed on Bloomberg.
+
+- `epu/`
+
+    - Various Economic Policy Uncertainty indexes from Nick Bloom's [Economic Policy Uncertainty](https://www.policyuncertainty.com/index.html).
+
+        - `Categorical_EPU_Data.xlsx` contains the overall 'epu' and the index certain keyword categories (i.e. entitlements, fiscal, healthcare, financial regulation, etc.). Downloaded from this [page](https://www.policyuncertainty.com/categorical_epu.html) on August 19, 2024.
+
+        - `EMV_Data.xlsx` contains the Equity Market Volatility (EMV) index constructed from newsppapers and subindexes. Downloaded from this [page](https://www.policyuncertainty.com/EMV_monthly.html) on August 19, 2024.
+
+        - `Financial_Stress.xlsx` contains the Financial Stress index built by Lukas Puttmann from newspapers. Downloaded from this [page](https://www.policyuncertainty.com/financial_stress.html) on August 19, 2024.
+
+        - 'epu' and 'emv' data are converted from monthly to quarterly data by taking the average each quarter.
