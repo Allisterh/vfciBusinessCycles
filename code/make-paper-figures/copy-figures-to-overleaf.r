@@ -3,6 +3,7 @@
 ##  just copying figures to the Overleaf git repository.
 ##
 files <- list.files("./paper-figures/", full.names = TRUE, recursive = TRUE)
+files <- files[!grepl("paper-figurepack", files)]
 
 new_location <- stringr::str_replace_all(files, "paper-figures", "paper-Overleaf/figures/")
 
