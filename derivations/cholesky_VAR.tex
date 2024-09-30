@@ -1,0 +1,177 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\newcommand*{\E}{\mathbb{E}}
+\newcommand*{\I}{\mathbf{I}}
+
+\begin{document}
+
+\section{VAR Setup}
+
+Let a structural VAR be of the following form:
+\begin{align*}
+  B_0 y_t &= B_1 y_{t-1} + \ldots + B_p y_{t-p} + w_t
+\end{align*}
+
+where
+$y_t$ is a $K \times 1$ vector of endogenous variables,
+$B_i$ are a $K \times K$ matrix of coefficients on the endogenous variables,
+$w_t$ is a $K \times 1$ vector of exogenous structural shocks.
+
+But we can only observe a reduced form VAR:
+\begin{align*}
+  y_t &= A_1 y_{t-1} + \dots + A_p y_{t-p} + u_t
+\end{align*}
+
+where
+$A_i$ are a $K \times K$ matrix of coefficients on the endogenous variables,
+$u_t$ is a $K \times 1$ vector of reduced form shocks.
+
+We assume without any loss of generality that 
+\begin{align*}
+  \E[w_t w_t^\prime] = \I
+\end{align*}
+
+\subsection{VAR(1) form}
+It is useful to define a VAR(1) form for any VAR(p) process,
+
+\begin{align*}
+  Y_t &= \mathbf{A} Y_{t-1} + U_t
+\end{align*}
+
+where
+\begin{align*}
+  Y_t &= \begin{bmatrix} y_t \\ y_{t-1} \\ \vdots \\ y_{t-p+1} \end{bmatrix}, \
+  \mathbf{A} = \begin{bmatrix} A_1 & A_2 & \dots& A_p\\ \I & 0 & \dots & 0 \\ 0 & \I & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \I \end{bmatrix}, \
+  U_t = \begin{bmatrix} u_t \\ 0 \\ \vdots \\ 0 \end{bmatrix}
+\end{align*}
+
+And define the matrix $J$ as the following for recovering the original dimensions:
+\begin{align*}
+  \underbrace{J}_{K \times K\cdot p} \equiv \begin{bmatrix} \mathbf{I}_K & 0_{K \times K(p-1)} \end{bmatrix}
+\end{align*}
+
+Then we have that,
+\begin{align*}
+  J Y_t = y_t, \ \ \
+  J U_t = u_t, \ \ \
+  J J^\prime = \I_K
+\end{align*}
+
+\section{Identification Problem}
+
+The identification problem is to identify a structural VAR using only reduced form VAR observations.
+This amounts to identifying the inverse of the impact matrix $B_0$.
+This matrix provides a linear mapping between structural and reduced form shocks.
+
+\begin{align*}
+  u_t &= B_0^{-1} w_t
+\end{align*}
+
+\begin{align*}
+  \begin{bmatrix} u_t^1 \\ u_t^2 \\ \vdots \\ u_t^K \end{bmatrix}
+  =
+  \begin{bmatrix}
+    b_0^{11} & b_0^{12} & \dots & b_0^{1K} \\
+    b_0^{21} & b_0^{22} & \dots & b_0^{2K} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    b_0^{K1} & b_0^{K2} & \dots & b_0^{KK}  \end{bmatrix}
+  \begin{bmatrix} w_t^1 \\ w_t^2 \\ \vdots \\ w_t^K \end{bmatrix}
+\end{align*}
+
+This, along with the assumption about the unit variance of structural shocks,implies that
+
+\begin{align*}
+  \E[u_t u_t^\prime] = \Sigma_u = B_0^{-1} B_0^{-1\prime}
+\end{align*}
+
+\section{Cholesky Identification}
+
+The Cholesky identification scheme is a recursive scheme that identifies the impact matrix $B_0$ by assuming that the shocks are ordered in the way given in $y_t$.
+
+This is equivalent to the following set of 0 resetrictions on the impact matrix $B_0^{-1}$:
+
+\begin{align*}
+  \begin{bmatrix} u_t^1 \\ u_t^2 \\ \vdots \\ u_t^K \end{bmatrix}
+  =
+  \begin{bmatrix}
+    b_0^{11} & 0 & \dots & 0 \\
+    b_0^{21} & b_0^{22} & \dots & 0 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    b_0^{K1} & b_0^{K2} & \dots & b_0^{KK}
+  \end{bmatrix}
+  \begin{bmatrix} w_t^1 \\ w_t^2 \\ \vdots \\ w_t^K \end{bmatrix}
+\end{align*}
+
+These $b_0^{ij}$ are the elements of the Cholesky of the covariance matrix of the structural shocks.
+
+\begin{align*}
+  \widehat{B}_0^{-1} = \text{chol} (\widehat{\Sigma}_u)
+\end{align*}
+
+\section{Impulse Response Functions}
+
+\subsection{Reduced Form IRFs}
+
+Reduce form IRFs are defined as the following object:
+\begin{align*}
+  \Phi_i \equiv J \mathbf{A}^i J^\prime
+\end{align*}
+
+This implies that the first reduced form IRF is the identity matrix,
+\begin{align*}
+  \Phi_0 &= \I_K
+\end{align*}
+
+\subsection{Structural IRFs}
+
+The structural IRFs are defined as the following object:
+
+\begin{align*}
+  \frac{\partial y_{t+i}}{\partial w_t} = \Theta_i \hspace{1cm} i = 0, 1, 2, \dots, H
+\end{align*}
+
+and each element of the $K \times K$ matrix, $\Theta_i$, is the response of variable $j$ to shock $k$ at time $i$,
+
+\begin{align*}
+  \theta^{jk}_{i} = \frac{\partial y_{t+i}^j}{\partial w_t^k}
+\end{align*}
+
+We can convert from reduced form IRFs to structural IRFs by post multiplying by the inverse of the impact matrix,
+
+\begin{align*}
+  \Theta_0 &= \Phi_0 B_0^{-1} = B_0^{-1}
+  \\
+  \Theta_1 &= \Phi_1 B_0^{-1}
+  \\
+  \Theta_2 &= \Phi_2 B_0^{-1}
+  \\
+  \vdots
+\end{align*}
+
+Comparing just the immediate IRFs to the impact matrix, we see that
+
+\begin{align*}
+  \begin{bmatrix}
+    \theta_0^{11} & 0 & \dots & 0 \\
+    \theta_0^{21} & \theta_0^{22} & \dots & 0 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    \theta_0^{K1} & \theta_0^{K2} & \dots & \theta_0^{KK}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    b_0^{11} & 0 & \dots & 0 \\
+    b_0^{21} & b_0^{22} & \dots & 0 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    b_0^{K1} & b_0^{K2} & \dots & b_0^{KK}
+  \end{bmatrix}
+\end{align*}
+
+Which shows that for the first shock, $w_t^k$, we have $K$ responses, all in the first column of $\Theta_0$.
+
+This is the identifying assumption of a Cholesky decomposition: the first shock has a contemporaneous effect on all variables, but no other contemporary variables affect it.
+
+
+
+\end{document}
