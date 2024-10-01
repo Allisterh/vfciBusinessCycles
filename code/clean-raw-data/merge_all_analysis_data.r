@@ -29,7 +29,9 @@ vfci_dt <-
     "t10y3m",
     "tb3smffm",
     "aaa10ym",
-    "baa_aaa"
+    "baa_aaa",
+    "gdpc1",
+    "pcecc96"
   )) |>
   as.data.table() |>
   _[, date := as.IDate(date)]
@@ -73,15 +75,16 @@ library(tidyfast)
 dt |>
   dt_pivot_longer(-date) |>
   _[name %in% c(
-    "epu",
-    "epu_finregulation",
-    "vfci_fgr1gdpc1"
+    "pcecc96",
+    "consumption"
   )] |>
+  _[, value := log(value) - log(shift(value, 1, type = "lag")), by = name] |>
+  _[, value := scale(value), by = name] |>
   _[!is.na(value)] |>
   ggplot(aes(
     x = date,
     y = value,
     color = name
   )) +
-  geom_line() +
-  facet_wrap(vars(name), scales = "free_y", ncol = 1)
+  geom_line()
+  #facet_wrap(vars(name), scales = "free_y", ncol = 1)

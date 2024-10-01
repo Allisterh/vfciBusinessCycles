@@ -18,11 +18,18 @@ v <- list(
   dataEndDate = zoo::as.yearqtr(max(data$date))
 )
 
+compare_int_ext_vfci <- readRDS("./data/paper-figures/inline-values/compare-int-ext-vfci-corrs.rds")
+
+v <- v |>
+  c(compare_int_ext_vfci)
 
 ## Define the Latex commands for each value
 values <- c(
   def_latex_value("dataStartDate", v$dataStartDate, math_mode = FALSE),
-  def_latex_value("dataEndDate", v$dataEndDate, math_mode = FALSE)
+  def_latex_value("dataEndDate", v$dataEndDate, math_mode = FALSE),
+  def_latex_value("intExtFinVFCICorr", round(v$int_ext_fin_vfci_corr, 2)),
+  def_latex_value("intExtMacroVFCICorr", round(v$int_ext_macro_vfci_corr, 2)),
+  def_latex_value("intMacroFinVFCICorr", round(v$int_macro_fin_vfci_corr, 2))
 )
 
 ## Write to disk

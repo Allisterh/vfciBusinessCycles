@@ -6,23 +6,24 @@ library(fevdid)
 library(vfciBCHelpers)
 
 ## Settings
-bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
 ## Make VAR
-data <- get_var_data(vfci = "vfci_fgr1gdpc1")
+data <- get_var_data(vfci = NULL)
+fin_data <- get_var_data(add_cols = fin_cols)[, fin_cols, with = FALSE]
 var <- fit_var(data, lags = lags)
 
 all_variables <- data[, -"date"] |> colnames() |> set_names()
 data[, t := .I - lags]
 
-fevdfd_vars <- list(
-  fevdfd_vfci = id_fevdfd(var, "vfci", bc_freqs, sign = "pos"),
-  fevdfd_unem = id_fevdfd(var, "unemployment", bc_freqs, sign = "neg")
+hr_vars <- list(
+  hr_macro = id_linear_het_reg(var, "consumption", sign = "neg"),
+  hr_fin = id_linear_het_reg(var, "consumption", x2 = fin_cols, extra_data = fin_data, method = "mriv", sign = "neg")
 )
 
 ## Construct VAR IRFs, HDs, etc.
-all_irfs <- fevdfd_vars |>
+all_irfs <- hr_vars |>
   map(~ irf(.x, n.ahead = 40)$irf) |>
   list_rbind(names_to = "identification") |>
   setDT()
@@ -30,24 +31,24 @@ all_irfs <- fevdfd_vars |>
 ## Save Figure Data
 
 all_irfs |>
-  _[impulse %in% c("Main")] |>
+  _[impulse %in% c("Chol_1")] |>
   _[, .(identification, h, response, irf)] |>
-  fwrite("./data/paper-figures/charts/irf-fevdfd.csv")
+  fwrite("./data/paper-figures/charts/irf-hetreg.csv")
 
 #####
 
 ## Make Figures
 library(ggplot2)
 
-fevdfd_data <- all_irfs |>
-  _[impulse %in% c("Main")] |>
+hr_data <- all_irfs |>
+  _[impulse %in% c("Chol_1")] |>
   _[, .(identification, h, response, irf)]
 
 chol_data <- fread("./data/paper-figures/charts/irf-chol.csv")
 
 data <- list_rbind(list(
   chol_data[identification == "vfci_chol"],
-  fevdfd_data[identification == "fevdfd_vfci"]
+  hr_data[identification == "hr_fin"]
 ))
 
 p <-
@@ -84,7 +85,7 @@ p <-
 p
 
 ggsave(
-  "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-vfci.pdf",
+  "./paper-figures/charts/irf-chol-ext-vfci-hr-int-fin.pdf",
   p, width = 5.5, height = 4, units = "in"
 )
 
@@ -92,7 +93,7 @@ ggsave(
 
 data <- list_rbind(list(
   chol_data[identification == "vfci_chol"],
-  fevdfd_data[identification == "fevdfd_unem"]
+  hr_data[identification == "hr_macro"]
 ))
 
 p <-
@@ -129,6 +130,6 @@ p <-
 p
 
 ggsave(
-  "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-unem.pdf",
+  "./paper-figures/charts/irf-chol-ext-vfci-hr-int-macro.pdf",
   p, width = 5.5, height = 4, units = "in"
 )
