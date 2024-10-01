@@ -138,7 +138,20 @@ and each element of the $K \times K$ matrix, $\Theta_i$, is the response of vari
   \theta^{jk}_{i} = \frac{\partial y_{t+i}^j}{\partial w_t^k}
 \end{align*}
 
-We can convert from reduced form IRFs to structural IRFs by post multiplying by the inverse of the impact matrix,
+Start from the moving average (MA) representation of the VAR process,
+\begin{align*}
+  y_t &= \sum_{i=0}^\infty \Phi_i u_{t-i}
+\end{align*}
+
+This can be rewritten in terms of the structurual IRFs and shocks,
+
+\begin{align*}
+  y_t &= \sum_{i=0}^\infty \Phi_i B_0^{-1} B_0 u_{t-i} 
+  \\
+  &= \sum_{i=0}^\infty \Theta_i w_{t-i}
+\end{align*}
+
+This shows we can convert from reduced form IRFs to structural IRFs by post multiplying by the inverse of the impact matrix,
 
 \begin{align*}
   \Theta_0 &= \Phi_0 B_0^{-1} = B_0^{-1}
