@@ -1,0 +1,98 @@
+---
+title: "Compare Inflation Measures"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+## Compare Inflation Time Series
+
+Inflation Measures:
+
+- `gdp_def` GDP Deflator (used in BCA paper)
+- `cpiaucsl` CPI
+- `cpilfesl` CPI less food and energy
+- `pcepi` PCE
+- `pcepilfe` PCE less food and energy
+
+All measures are price indexes that we then transform by taking log differences.
+For plotting purposes only we also rescale the series to have mean 0 and standard deviation 1.
+
+```{r}
+#| include: false
+
+inf_cols <- c(gdp_def = "inflation", pce = "pcepi", pcelfe = "pcepilfe", cpi = "cpiaucsl", cpilfe =  "cpilfesl")
+data <- readRDS("./data/all_analysis_data.rds")
+data <- data[, c("date", inf_cols), with = FALSE]
+setnames(data, "inflation", "gdp_def")
+
+p <-
+  data |>
+  tidyfast::dt_pivot_longer(-date) |>
+  _[!is.na(value)] |>
+  _[, value := scale(value), by = name] |>
+  ggplot(aes(x = date, y = value, color = name)) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_line() +
+  theme_bw(base_size = 8)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Inflation Measures"
+p
+```
+ 
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 5 
+#| out.width: "100%"
+#| fig.cap: "Inflation Measures, facetted"
+p + facet_wrap(vars(name), ncol = 1)
+```
+
+
+
+```{r}
+#| include: false
+bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
+lags <- 2
+
+x <- get_var_data()
+v <- fit_var(x, lags = lags)
+
+mv_list <-
+  inf_cols |>
+  purrr::map( ~ {
+    data <- get_var_data(inflation = .x, vfci = NULL)
+    #data[, inflation := scale(inflation)]
+    v <- fit_var(data, lags = lags)
+    mv <- id_fevdfd(v, "unemployment", bc_freqs)
+    mv
+  })
+
+colors <- c(
+  gdp_def = "black",
+  pce = "steelblue",
+  pcelfe = "lightblue",
+  cpi = "firebrick",
+  cpilfe = "lightpink"
+)
+```
+
+{{< include all-var-charts.qmd >}}

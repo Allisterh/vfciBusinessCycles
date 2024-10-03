@@ -20,7 +20,10 @@ get_data <- function(
       "LIOR3M",
       "TEDRATE",
       "VIXCLS",
-      "CLVMNACSCAB1GQEA19"
+      "CLVMNACSCAB1GQEA19",
+      "CPIAUCSL",
+      "CPILFESL",
+      "PCEPI"
     ),
     yahoo_series = c(
       "^GSPC"

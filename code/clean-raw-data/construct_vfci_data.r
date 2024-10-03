@@ -302,7 +302,7 @@ mu_ts <- tibble::tibble(
 # merge
 variables <- purrr::reduce(
   list(variables, vfci_ts, mu_ts),
-  dplyr::inner_join,
+  dplyr::full_join,
   by = "qtr"
 )
 
