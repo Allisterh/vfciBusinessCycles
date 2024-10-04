@@ -18,7 +18,7 @@ data[, t := .I - lags]
 
 fevdfd_vars <- list(
   fevdfd_vfci = id_fevdfd(var, "vfci", bc_freqs, sign = "pos"),
-  fevdfd_unem = id_fevdfd(var, "unemployment", bc_freqs, sign = "neg")
+  fevdfd_unem = id_fevdfd(var, "unemployment", bc_freqs, sign = "pos")
 )
 
 ## Construct VAR IRFs, HDs, etc.
@@ -132,3 +132,46 @@ ggsave(
   "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-unem.pdf",
   p, width = 5.5, height = 4, units = "in"
 )
+
+data <- list_rbind(list(
+  fevdfd_data[identification == "fevdfd_vfci"],
+  fevdfd_data[identification == "fevdfd_unem"]
+))
+
+p <-
+  data |>
+  _[, response :=
+  factor(
+    response,
+    levels = variable_labels,
+    labels = labels(variable_labels),
+    ordered = TRUE
+  )] |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = identification
+  )) +
+  geom_hline(yintercept = 0, color = "gray") +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    scales = "free_y",
+    nrow = 3
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response Function"
+  ) +
+  theme_paper +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.88, 0.125)
+  )
+
+p
+
+# ggsave(
+#   "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-unem.pdf",
+#   p, width = 5.5, height = 4, units = "in"
+# )

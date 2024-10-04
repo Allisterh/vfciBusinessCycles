@@ -20,13 +20,13 @@ fit_cholesky_var <- function(data, lags, chol_col) {
 
 small_data <- get_var_data(cols = c(
   output = "output",
-  # consumption = "consumption",
-  # unemployment = "unemployment",
-  # investment = "investment",
-  # hours_worked = "hours_worked",
-  # labor_share = "labor_share",
-  # productivity = "productivity",
-  # TFP = "TFP",
+  consumption = "consumption",
+  unemployment = "unemployment",
+  investment = "investment",
+  hours_worked = "hours_worked",
+  labor_share = "labor_share",
+  productivity = "productivity",
+  TFP = "TFP",
   inflation = "inflation",
   interest = "interest",
   vfci = "vfci_fgr1gdpc1"
