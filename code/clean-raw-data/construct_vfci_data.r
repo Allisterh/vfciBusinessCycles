@@ -15,13 +15,21 @@ files <- list.files("./code/clean-raw-data/vfci-data-helpers/", full.names = TRU
 for (i in files) source(i)
 
 # FRED data ---------------------------------------------------------------
-fred_raw <- data.table::fread("./data-raw/vfci_data_fred.csv") %>%
+fred_raw <- data.table::fread("./data-raw/vfci_data_fred.csv") |>
   dplyr::mutate(date = as.Date(date))
 
 # Yahoo! Finance -----------------------------------------------------------
 yahoo_raw <- data.table::fread("./data-raw/vfci_data_yahoo.csv") %>%
   dplyr::mutate(symbol = purrr::map_chr(symbol, ~ stringr::str_replace(.x, pattern = "\\^", replacement = ""))) %>%
   dplyr::mutate(date = as.Date(date))
+
+# BCA data -----------------------------------------------------------------
+bca_data <- fread("./data-raw/bca_current_data.csv")
+bca_data <- bca_data[, .(date, output, consumption)] |>
+  tidyfast::dt_pivot_longer(-date, names_to = "symbol", values_to = "price") |>
+  _[, date := as.Date(date)]
+
+fred_raw <- purrr::list_rbind(list(fred_raw, bca_data))
 
 # Create variables --------------------------------------------------------
 
@@ -44,7 +52,7 @@ fred <- fred_raw %>%
 
 # create variables
 delta_fred <- 1:30
-fred_var_list <- c("GDPC1", "PCEPILFE", "PCECC96", "CLVMNACSCAB1GQEA19")
+fred_var_list <- c("GDPC1", "PCEPILFE", "PCECC96", "CLVMNACSCAB1GQEA19", "output", "consumption")
 
 fred <- fred %>%
   # growth rate over next delta quarters for variables in fred_var_list
@@ -233,6 +241,8 @@ financial_vars <- c("gspc_vol", "annual_ret", "t10y3m", "tb3smffm", "aaa10ym", "
 dep_vars <- as.list(c(
   paste0("fgr", delta_fred, "gdpc1"),
   paste0("fgr", delta_fred, "pcecc96"),
+  paste0("fgr", delta_fred, "output"),
+  paste0("fgr", delta_fred, "consumption"),
   paste0("fgr", delta_fred, "s1gdpc1"),
   paste0("fgr", delta_fred, "s1pcecc96")
 ))

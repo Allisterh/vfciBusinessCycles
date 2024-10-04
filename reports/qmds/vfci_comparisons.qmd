@@ -5,6 +5,14 @@ project:
   execute-dir: project
 ---
 
+## VFCI Variables
+- `pcecc96` is the real personal consumption expenditures
+- `gdpc1` is the real GDP
+- `output` is the real GDP per capita
+- `consumption` is the real GDP per capita, multiplied by the share of GDP: personal consumption expenditures spent on services and nondurable goods
+
+## VFCI Type
+
 - `baseline` is the vfci estimated with only the 4 financial principal components
 - `lags` includes two lags of output/consumption growth
 - `exlags` includes two lags of output/consumption growth in the regression, but excludes them from estimating the vfci
@@ -27,11 +35,13 @@ p_vfci_data <-
   data |>
   tidyr::pivot_longer(-date) |>
   mutate(fgr = stringr::str_extract(name, "(?<=fgr)[0-9]*")) |>
-  mutate(variable = stringr::str_extract(name, "gdpc1|pcecc96")) |>
+  mutate(variable = stringr::str_extract(name, "gdpc1|pcecc96|output|consumption")) |>
   mutate(type = stringr::str_extract(name, "(?<=_)lags|(?<=_)exlags")) |>
   mutate(shift = as.numeric(stringr::str_extract(name, "(?<=s)[0-9]*"))) |>
   mutate(shift = ifelse(is.na(shift), 0, shift)) |>
-  mutate(type = ifelse(is.na(type), "baseline", type))
+  mutate(type = ifelse(is.na(type), "baseline", type)) |>
+  group_by(name) |>
+  mutate(value = scale(value))
 ```
 
 
@@ -42,13 +52,16 @@ for (s in 0:1) {
 res <- map_chr(1:30, \(f) {
   knitr::knit_child(text = c(
     "## FGR Horizon: `r f`, Shift: `r s`",
-    "```{r, echo = F, warning = F, fig.height = 3, out.width = '100%'}",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
     "p_vfci_data |>
   filter(fgr == f) |>
   filter(shift == s) |>
-  ggplot(aes(x = date, y = value, color = type)) + 
+  # filter(variable %in% c('gdpc1', 'output')) |>
+  filter(!is.na(value)) |>
+  ggplot(aes(x = date, y = value, color = variable)) + 
+  geom_hline(yintercept = 0) +
   geom_line() +
-  facet_wrap(vars(variable), ncol = 1, scales = 'free_y') +
+  facet_wrap(vars(type), ncol = 1) +
   theme_bw(base_size = 8) +
   theme(legend.position = 'top')",
     "```",
