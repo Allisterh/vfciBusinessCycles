@@ -1,0 +1,766 @@
+---
+title: "Compare Internal vs External VFCI Estimates"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(dplyr)
+library(purrr)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, include = F, warning = F}
+data <- readRDS("./data/vfci_data.rds")
+
+data <- data |> select("date", contains("vfci"))
+
+p_vfci_data <-
+  data |>
+  tidyr::pivot_longer(-date) |>
+  mutate(fgr = stringr::str_extract(name, "(?<=fgr)[0-9]*")) |>
+  mutate(variable = stringr::str_extract(name, "gdpc1|pcecc96|output|consumption")) |>
+  mutate(type = stringr::str_extract(name, "(?<=_)lags$|(?<=_)exlags$|(?<=_)end2017$|(?<=_)end2017pc2017$")) |>
+  mutate(shift = as.numeric(stringr::str_extract(name, "(?<=s)[0-9]*"))) |>
+  mutate(shift = ifelse(is.na(shift), 0, shift)) |>
+  mutate(type = ifelse(is.na(type), "baseline", type)) |>
+  group_by(name) |>
+  mutate(value = scale(value)) |>
+  as.data.table()
+
+p_vfci_data[fgr == 1 & shift == 0 & variable == "pcecc96"] |>
+  _[!is.na(value)] |>
+  ggplot(aes(x = date, y = value, color = type)) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_line() +
+  facet_wrap(vars(type), ncol = 1) +
+  theme_bw(base_size = 8) + 
+  theme(legend.position = 'none')
+
+ext_vfci <- 
+  p_vfci_data |>
+  _[fgr == 1 & shift == 0 & type == "baseline"] |>
+  _[!is.na(value)] |>
+  _[variable == "pcecc96"] |>
+  _[, .(date = as.IDate(date), variable, ext_vfci = value)]
+
+ext_vfci_2017 <- 
+  p_vfci_data |>
+  _[fgr == 1 & shift == 0 & type == "end2017"] |>
+  _[!is.na(value)] |>
+  _[variable == "pcecc96"] |>
+  _[, .(date = as.IDate(date), variable, ext_vfci = value)]
+```
+
+## Baseline
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, consumption is consumption (from BCA paper), end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "consumption", vfci = NULL, end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, consumption is pcecc96, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "pcecc96", vfci = NULL, end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Percent Growth in Consumption, full sample"
+
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = as.Date("2017-01-01"))
+
+data[, pcecc96 := shift(100 * (pcecc96 / shift(pcecc96, 1, type = "lag") - 1), 1, type = "lead")]
+
+data <- na.omit(data)
+
+lags <- 1
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+\newpage
+
+## Compare External VFCI Estimated with Different Time Domains
+- `baseline` 1962 Q1 - 2023 Q1
+- `end2017` 1962 Q1 - 2017 Q1
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Compare External VFCI Estimated with Different Time Domains"
+
+
+p_vfci_data[fgr == 1 & shift == 0 & variable == "pcecc96"] |>
+  _[ type %in% c("baseline", "end2017")] |>
+  _[!is.na(value)] |>
+  ggplot(aes(x = date, y = value, color = type)) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_line() +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Percent Growth in Consumption, full sample"
+
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = Sys.Date())
+
+# data[, fgr_consumption := shift(100 * (consumption / shift(consumption, 1, type = "lag") - 1), 1, type = "lead")]
+# data[, fgr_diff_consumption := shift(consumption - shift(consumption, 1, type = "lag"), 1, type = "lead")]
+
+data[, pcecc96 := shift(100 * (pcecc96 / shift(pcecc96, 1, type = "lag") - 1), 1, type = "lead")]
+
+data <- na.omit(data)
+
+lags <- 1
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Differences in Consumption, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = Sys.Date())
+
+# data[, fgr_consumption := shift(100 * (consumption / shift(consumption, 1, type = "lag") - 1), 1, type = "lead")]
+# data[, fgr_diff_consumption := shift(consumption - shift(consumption, 1, type = "lag"), 1, type = "lead")]
+
+data[, pcecc96 := shift(pcecc96 - shift(pcecc96, 1, type = "lag"), 1, type = "lead")]
+data <- na.omit(data)
+
+lags <- 1
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels of Consumption, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, only consumption & output (no asset returns in VAR), full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", output = "output", fin_cols), end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, 5 real macro variables + interest, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(
+  pcecc96 = "pcecc96",
+  output = "output",
+  unemployment = "unemployment",
+  investment = "investment",
+  hours_worked = "hours_worked",
+  interest = "interest",
+  fin_cols
+  ), end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "pcecc96", vfci = NULL, end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, consumption is consumption (from BCA paper), full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "consumption", vfci = NULL, end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables + asset prices, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "pcecc96", vfci = NULL, end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+\newpage
+
+## VAR Fit only to 2017
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Percent Growth in Consumption, end 2017 sample"
+
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = as.Date("2017-01-01"))
+
+# data[, fgr_consumption := shift(100 * (consumption / shift(consumption, 1, type = "lag") - 1), 1, type = "lead")]
+# data[, fgr_diff_consumption := shift(consumption - shift(consumption, 1, type = "lag"), 1, type = "lead")]
+
+data[, pcecc96 := shift(100 * (pcecc96 / shift(pcecc96, 1, type = "lag") - 1), 1, type = "lead")]
+
+data <- na.omit(data)
+
+lags <- 1
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Differences in Consumption, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = as.Date("2017-01-01"))
+
+# data[, fgr_consumption := shift(100 * (consumption / shift(consumption, 1, type = "lag") - 1), 1, type = "lead")]
+# data[, fgr_diff_consumption := shift(consumption - shift(consumption, 1, type = "lag"), 1, type = "lead")]
+
+data[, pcecc96 := shift(pcecc96 - shift(pcecc96, 1, type = "lag"), 1, type = "lead")]
+data <- na.omit(data)
+
+lags <- 1
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels of Consumption, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", fin_cols), end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, only consumption & output (no asset returns in VAR), end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(pcecc96 = "pcecc96", output = "output", fin_cols), end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, 5 real macro variables + interest, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(cols = c(
+  pcecc96 = "pcecc96",
+  output = "output",
+  unemployment = "unemployment",
+  investment = "investment",
+  hours_worked = "hours_worked",
+  interest = "interest",
+  fin_cols
+  ), end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "pcecc96"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "pcecc96", vfci = NULL, end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, consumption is consumption (from BCA paper), end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "consumption", vfci = NULL, end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data[, -c(fin_cols), with = FALSE], lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci_2017, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables + asset prices, end 2017 sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(add_cols = fin_cols, consumption = "pcecc96", vfci = NULL, end = as.Date("2017-01-01"))
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE])
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI (2017)")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```

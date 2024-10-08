@@ -48,13 +48,14 @@ fit_het_reg_from_var <- function(
     lagged_data[, paste0(i, "_L", 1:max(var$p, lags)) := shift(.SD, n = 1:max(var$p, lags)), .SDcols = i]
   }
 
+  var_lag_variables <-
+    purrr::map(
+      1:var$p,
+      ~ paste0(c(var_colnames), "_L", .x)
+    ) |>
+    unlist()
+
   if (any(lags != 0)) {
-    var_lag_variables <-
-      purrr::map(
-        1:var$p,
-        ~ paste0(c(var_colnames, x2), "_L", .x)
-      ) |>
-      unlist()
 
     if (!is.null(x2)) {
       x2 <-

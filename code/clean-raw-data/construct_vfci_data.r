@@ -261,9 +261,22 @@ pc_qtrs <- tsibble::as_tsibble(variables) |>
 pcs <- as_tibble(pcs) |> mutate(qtr = pc_qtrs)
 variables <- full_join(variables, pcs, by = "qtr")
 
+## Construct PCs only to 2017
+match_stata <- FALSE
+pca_2017 <- get_pc(variables, date_begin = date_begin, date_end = "2017 Q1", financial_vars, match_stata = match_stata)
+pcs_2017 <- if (match_stata) pca_2017$scores else pca_2017$x
+pc_vars_2017 <- colnames(pcs_2017) <- paste0("pc", seq_len(ncol(pcs_2017)), "_end2017")
+pc_qtrs_2017 <- tsibble::as_tsibble(variables) |>
+  select(all_of(c("qtr", financial_vars))) |>
+  tsibble::filter_index(date_begin ~ "2017 Q1") |>
+  pull(qtr)
+pcs_2017 <- as_tibble(pcs_2017) |> mutate(qtr = pc_qtrs_2017)
+variables <- full_join(variables, pcs_2017, by = "qtr")
+
+
 ## Construct lags of growth rates
 num_lags <- 2
-lag_vars <- c("gdpc1", "pcecc96")
+lag_vars <- c("gdpc1", "pcecc96", "consumption", "output")
 gr_vars <- paste0("gr1", lag_vars)
 variables <- variables |> growth_rate_df(lag_vars, delta = 1)
 for (i in 1:num_lags) {
@@ -277,7 +290,7 @@ lag_gr_vars <-
   purrr::map(~ paste0("l", 1:num_lags, "gr1", .x))
 
 ## Estimate VFCI
-results <- dep_vars |>
+results_baseline <- dep_vars |>
   purrr::set_names() |>
   purrr::map(\(x) get_vfci(variables, x, pc_vars[1:4]), .progress = TRUE)
 
@@ -291,30 +304,28 @@ results_exlags <- seq_along(dep_vars) |>
   purrr::imap(\(i, x) get_vfci(variables, x, c(pc_vars[1:4], lag_gr_vars[[i]]), vfci_vars = pc_vars[1:4]), .progress = TRUE) |>
   purrr::set_names(paste0(dep_vars, "_exlags"))
 
-results <- c(results, results_lags, results_exlags)
 
-# conditional vol (vfci)
-names_vfci_ts <- purrr::map(names(results), \(x) paste0("vfci_", x))
-vfci_ts <- tibble::tibble(
-  !!!purrr::map(results, \(x) x$ts$vfci),
-  .name_repair = ~ unlist(names_vfci_ts)
-) %>%
-  tibble::add_column(qtr = results[[1]]$ts$qtr, .before = 1)
+results_2017 <- dep_vars |>
+  purrr::set_names() |>
+  purrr::map(\(x) get_vfci(filter(variables, qtr <= tsibble::yearquarter(as.Date("2017-01-01"))), x, pc_vars[1:4]), .progress = TRUE)|>
+  purrr::set_names(paste0(dep_vars, "_end2017"))
 
-# conditional mean
-names_mu_ts <- purrr::map(names(results), \(x) paste0("mu_", x))
-mu_ts <- tibble::tibble(
-  !!!purrr::map(results, \(x) x$ts$mu),
-  .name_repair = ~ unlist(names_mu_ts)
-) %>%
-  tibble::add_column(qtr = results[[1]]$ts$qtr, .before = 1)
+results_2017pcs2017 <- dep_vars |>
+  purrr::set_names() |>
+  purrr::map(\(x) get_vfci(filter(variables, qtr <= tsibble::yearquarter(as.Date("2017-01-01"))), x, pc_vars_2017[1:4]), .progress = TRUE)|>
+  purrr::set_names(paste0(dep_vars, "_end2017pc2017"))
+
+
+results <- c(results_baseline, results_lags, results_exlags, results_2017, results_2017pcs2017)
+
+# conditional vol (vfci) and mean (mu) time series
+vfci_ts <- results |>
+  purrr::map(~ .x$ts[, c("qtr", "vfci", "mu")]) |>
+  purrr::list_rbind(names_to = "model") |>
+  tidyr::pivot_wider(names_from = model, values_from = c("vfci", "mu"), names_sep = "_")
 
 # merge
-variables <- purrr::reduce(
-  list(variables, vfci_ts, mu_ts),
-  dplyr::full_join,
-  by = "qtr"
-)
+variables <- full_join(variables, vfci_ts, by = "qtr")
 
 # Save ---------------------------------------------------------------------
 # save and export
