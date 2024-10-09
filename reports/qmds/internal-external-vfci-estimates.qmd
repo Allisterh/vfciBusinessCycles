@@ -764,3 +764,71 @@ merge(int_vfci, ext_vfci, by = "date") |>
   theme_bw(base_size = 8)
 
 ```
+
+
+\newpage
+## Using Macro Variables for Heteroskedasticity and Full Sample
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, consumption and output, no asset returns, full sample"
+
+data <- get_var_data(cols = c(consumption = "pcecc96", output = "output"), end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig.height: 3 
+#| out.width: "100%"
+#| fig.cap: "Levels, all variables, no asset returns, full sample"
+
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(consumption = "pcecc96", vfci = NULL, end = Sys.Date())
+
+lags <- 2
+v <- fit_var(data, lags = lags)
+
+hr <- fit_het_reg_from_var(v, hetreg_method = "twostep", lags = 0)
+
+data[, t := .I - lags]
+
+int_vfci <- hr$dt |>
+  _[variable == "consumption"] |>
+  merge(data[, .(t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted)]
+
+merge(int_vfci, ext_vfci, by = "date") |>
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = scale(int_vfci), color = "Internal VFCI")) +
+  geom_line(aes(y = scale(ext_vfci), color = "External VFCI")) +
+  facet_wrap(vars(variable), ncol = 1) +
+  labs(title = "Internal vs External VFCI Estimates") +
+  theme_bw(base_size = 8)
+
+```
