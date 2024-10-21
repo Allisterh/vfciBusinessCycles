@@ -9,7 +9,6 @@ library(vfciBCHelpers)
 lags <- 2
 
 ## Make VAR
-get_var_data(add_cols = c("fci_g"))[, -"vfci"]
 
 fit_cholesky_var <- function(data, lags, chol_col) {
   var <- fit_var(data, lags = lags)
@@ -18,26 +17,10 @@ fit_cholesky_var <- function(data, lags, chol_col) {
   return(chol_var)
 }
 
-small_data <- get_var_data(cols = c(
-  output = "output",
-  consumption = "consumption",
-  unemployment = "unemployment",
-  # investment = "investment",
-  # hours_worked = "hours_worked",
-  # labor_share = "labor_share",
-  # productivity = "productivity",
-  # TFP = "TFP",
-  inflation = "inflation",
-  interest = "interest",
-  vfci = "vfci_fgr1pcecc96"
-))
-
 chol_vars <- list(
-  vfci_chol = fit_cholesky_var(get_var_data(vfci = "vfci_fgr1pcecc96"), lags, "vfci"),
-  vfci_last_chol = id_ordered_chol(fit_var(small_data, lags)),
-  # vfci_first_chol = fit_cholesky_var(small_data, lags, "vfci"),
-  fcig_chol = fit_cholesky_var(get_var_data(add_cols = c("fci_g"))[, -"vfci"], lags, "fci_g"),
-  epu_chol = fit_cholesky_var(get_var_data(add_cols = c("epu"))[, -"vfci"], lags, "epu")
+  vfci_chol = fit_cholesky_var(get_var_data(vfci = "vfci_fgr10output", end_date = as.Date("2022-07-01")), lags, "vfci"),
+  fcig_chol = fit_cholesky_var(get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("fci_g")), lags, "fci_g"),
+  epu_chol = fit_cholesky_var(get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("epu")), lags, "epu")
 )
 
 ## Construct VAR IRFs, HDs, etc.
@@ -46,17 +29,10 @@ all_irfs <- chol_vars |>
   list_rbind(names_to = "identification") |>
   setDT()
 
-
-## Check IRFS
-chol_vars$vfci_chol
-irf(chol_vars$vfci_chol, n.ahead = 1)$irf |> dplyr::filter(impulse == "Chol_11")
-irf(chol_vars$vfci_last_chol, n.ahead = 1)$irf |> dplyr::filter(impulse == "Chol_11")
-
 ## Save Figure Data
 
 all_irfs |>
-  _[(identification != "vfci_last_chol" & impulse %in% c("Chol_1")) |
-      (identification == "vfci_last_chol" & impulse == paste0("Chol_", ncol(small_data) - 1))] |>
+  _[impulse %in% c("Chol_1")] |>
   _[, .(identification, h, response, irf)] |>
   fwrite("./data/paper-figures/charts/irf-chol.csv")
 
@@ -65,8 +41,7 @@ all_irfs |>
 library(ggplot2)
 
 data <- all_irfs |>
-  _[(identification != "vfci_last_chol" & impulse %in% c("Chol_1")) |
-      (identification == "vfci_last_chol" & impulse ==  paste0("Chol_", ncol(small_data) - 1))] |>
+  _[impulse %in% c("Chol_1")] |>
   _[, .(identification, h, response, irf)]
 
 p <-
@@ -113,6 +88,11 @@ ggsave(
 p <-
   data |>
   _[identification %in% c("vfci_chol", "fcig_chol", "epu_chol")] |>
+  _[, response := factor(response, levels = c(
+    `FCI Growth` = "fci_g",
+    `EPU` = "epu",
+    variable_labels
+  ), ordered = TRUE)] |>
   ggplot(aes(
     x = h,
     y = irf,

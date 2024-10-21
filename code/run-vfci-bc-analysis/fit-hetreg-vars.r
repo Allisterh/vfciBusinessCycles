@@ -10,16 +10,16 @@ lags <- 2
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
 ## Make VAR
-data <- get_var_data(vfci = NULL)
-fin_data <- get_var_data(add_cols = fin_cols)[, fin_cols, with = FALSE]
+data <- get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"))
+fin_data <- get_var_data(add_cols = fin_cols, end_date = as.Date("2022-07-01"))[, fin_cols, with = FALSE]
 var <- fit_var(data, lags = lags)
 
 all_variables <- data[, -"date"] |> colnames() |> set_names()
 data[, t := .I - lags]
 
 hr_vars <- list(
-  hr_macro = id_linear_het_reg(var, "consumption", sign = "neg"),
-  hr_fin = id_linear_het_reg(var, "consumption", x2 = fin_cols, extra_data = fin_data, method = "mriv", sign = "neg")
+  hr_macro = id_linear_het_reg(var, "output", hetreg_horizon = 10, het_reg_lags = 0:lags, sign = "pos"),
+  hr_fin = id_linear_het_reg(var, "output", hetreg_horizon = 10, x2 = fin_cols, extra_data = fin_data, method = "mriv", sign = "pos")
 )
 
 ## Construct VAR IRFs, HDs, etc.

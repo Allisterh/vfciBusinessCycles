@@ -21,13 +21,12 @@ ext_vfci_dt <- vfci_data |>
 
 
 ## Internal Macro VFCI
-data <- get_var_data()
-data <- data[, vfci := NULL]
+data <- get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"))
 v_lags <- 2
 
 v <- fit_var(data, lags = v_lags)
 
-hr <- fit_het_reg_from_var(v)
+hr <- fit_het_reg_from_var(v, hetreg_horizon = 10, lags = 0:v_lags)
 
 int_macro_vfci <- hr$dt |>
   merge(copy(data)[, t := .I - v_lags][, .(t, date)], by = "t")
@@ -35,13 +34,12 @@ int_macro_vfci <- hr$dt |>
 
 ## Internal Financial VFCI
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
-data <- get_var_data(add_cols = fin_cols)
-data <- data[, vfci := NULL]
+data <- get_var_data(vfci = NULL, add_cols = fin_cols, end_date = as.Date("2022-07-01"))
 v_lags <- 2
 
 v <- fit_var(data[, !c(fin_cols), with = FALSE], lags = v_lags)
 
-hr <- fit_het_reg_from_var(v, x2 = fin_cols, extra_data = data[, ..fin_cols])
+hr <- fit_het_reg_from_var(v, hetreg_horizon = 10, x2 = fin_cols, extra_data = data[, ..fin_cols])
 
 int_fin_vfci <- hr$dt |>
   merge(copy(data)[, t := .I - v_lags][, .(t, date)], by = "t")
@@ -49,16 +47,16 @@ int_fin_vfci <- hr$dt |>
 
 ## Combine data to compare
 comp_data <-
-  ext_vfci_dt[forward == 1 & shift == 0 & type == "baseline" & variable == "gdpc1", .(date, ext_vfci_gdp = value)] |>
-  merge(int_macro_vfci[variable == "consumption", .(date, int_macro_vfci = log_var_fitted)]) |>
-  merge(int_fin_vfci[variable == "consumption", .(date, int_fin_vfci = log_var_fitted)])
+  ext_vfci_dt[forward == 10 & shift == 0 & type == "baseline" & variable == "gdpc1", .(date, ext_vfci_gdp = value)] |>
+  merge(int_macro_vfci[variable == "output", .(date, int_macro_vfci = log_var_fitted)]) |>
+  merge(int_fin_vfci[variable == "output", .(date, int_fin_vfci = log_var_fitted)])
 
 ## Write data to file
 comp_data |>
   fwrite("./data/paper-figures/charts/compare-int-ext-vfci.csv")
 
 ## Calculate Correlations
-corrs <- cor(comp_data[, -"date"])
+corrs <- cor(na.omit(comp_data[, -"date"]))
 
 corrs_list <- list(
   int_ext_fin_vfci_corr = corrs["int_fin_vfci", "ext_vfci_gdp"],

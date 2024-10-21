@@ -10,7 +10,7 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
 ## Make VAR
-data <- get_var_data(vfci = "vfci_fgr1gdpc1")
+data <- get_var_data(vfci = "vfci_fgr10output", end_date = as.Date("2022-07-01"))
 var <- fit_var(data, lags = lags)
 
 all_variables <- data[, -"date"] |> colnames() |> set_names()
@@ -18,7 +18,7 @@ data[, t := .I - lags]
 
 fevdfd_vars <- list(
   fevdfd_vfci = id_fevdfd(var, "vfci", bc_freqs, sign = "pos"),
-  fevdfd_unem = id_fevdfd(var, "unemployment", bc_freqs, sign = "pos")
+  fevdfd_unem = id_fevdfd(var, "unemployment", bc_freqs, sign = "neg")
 )
 
 ## Construct VAR IRFs, HDs, etc.
@@ -171,7 +171,7 @@ p <-
 
 p
 
-# ggsave(
-#   "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-unem.pdf",
-#   p, width = 5.5, height = 4, units = "in"
-# )
+ggsave(
+  "./paper-figures/charts/irf-chol-ext-vfci-fevdfd-unem.pdf",
+  p, width = 5.5, height = 4, units = "in"
+)
