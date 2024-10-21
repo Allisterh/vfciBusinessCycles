@@ -20,7 +20,7 @@ library(vfciBCHelpers)
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
-data <- get_var_data()
+data <- get_var_data(end_date = as.Date("2022-07-01"))
 x <- data[, -"vfci"] |> copy()
 v <- fit_var(x, lags = lags)
 

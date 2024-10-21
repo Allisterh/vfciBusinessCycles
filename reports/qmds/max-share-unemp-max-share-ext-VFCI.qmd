@@ -20,18 +20,24 @@ library(gt)
 ```{r}
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
+end_date <- as.Date("2022-07-01")
 
-x <- get_var_data()
+x <- get_var_data(consumption = "consumption", vfci = "vfci_fgr1output", end_date = end_date)
+
+vars::VARselect(x[, -"date"])$selection
+
 v <- fit_var(x, lags = lags)
 
 mv_list <- list(
-  max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
-  max_share_vfci = id_fevdfd(v, "vfci", bc_freqs, sign = "neg")
+  max_share_c = id_fevdfd(v, "consumption", bc_freqs, sign = "neg"),
+  max_share_vfci_fgr1 = id_fevdfd(v, "vfci", bc_freqs, sign = "neg"),
+  max_share_vfci_fgr8 = id_fevdfd(fit_var(get_var_data(vfci = "vfci_fgr8output", end_date = end_date), lags), "vfci", bc_freqs, sign = "neg")
 )
 
 colors <- c(
-  max_share_u = "firebrick",
-  max_share_vfci = "steelblue"
+  max_share_c = "firebrick",
+  max_share_vfci_fgr1 = "steelblue",
+  max_share_vfci_fgr8 = "lightblue"
 )
 ```
 

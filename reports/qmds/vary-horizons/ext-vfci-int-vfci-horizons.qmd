@@ -20,12 +20,13 @@ library(gt)
 ```{r}
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
+end_date <- as.Date("2022-07-01")
 
-data <- get_var_data(make_stationary = FALSE)
-x <- data[, -"vfci"]
+data <- get_var_data(make_stationary = FALSE, vfci = NULL, end_date = end_date)
+x <- data
 
-x_ext1 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr1gdpc1")
-x_ext10 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr10gdpc1")
+x_ext1 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr1gdpc1", end_date = end_date)
+x_ext10 <- get_var_data(make_stationary = FALSE, vfci = "vfci_fgr10gdpc1", end_date = end_date)
 
 v_ext1 <- fit_var(x_ext1, lags = lags)
 v_ext10 <- fit_var(x_ext10, lags = lags)
@@ -33,19 +34,15 @@ v <- fit_var(x, lags = lags)
 
 
 mv_list <- list(
-  max_share_u = id_fevdfd(v, "unemployment", bc_freqs, sign = "neg"),
+  max_share_u = id_fevdfd(v, "unemployment", bc_freqs, sign = "pos"),
   vfci_1_ext = id_ordered_chol(reorder_var(v_ext1, "vfci")),
-  vfci_10_ext = id_ordered_chol(reorder_var(v_ext10, "vfci")),
-  hr_1_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 1, sign = "neg"),
-  hr_10_c = id_linear_het_reg(v, "consumption", hetreg_horizon = 10, sign = "neg")
+  vfci_10_ext = id_ordered_chol(reorder_var(v_ext10, "vfci"))
 )
 
 colors <- c(
   max_share_u = "orange",
   vfci_1_ext = "lightblue",
-  vfci_10_ext = "steelblue",
-  hr_1_c = "lightpink",
-  hr_10_c = "firebrick"
+  vfci_10_ext = "steelblue"
 )
 
 ```

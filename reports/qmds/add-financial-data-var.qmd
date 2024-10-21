@@ -24,12 +24,12 @@ add_cols <- c(
   "pc1", "pc2", "pc3", "pc4"
 )
 
-data <- get_var_data(vfci = "vfci_fgr12gdpc1", add_cols = add_cols)
+data <- get_var_data(vfci = "vfci_fgr2gdpc1", add_cols = add_cols, end_date = as.Date("2022-07-01"))
 
 x <- data[, -"vfci"] |> copy()
 
 v <- fit_var(x[, -c(add_cols), with = FALSE], lags = lags)
-v2 <- fit_var(data[, -c(add_cols), with = FALSE][, vfci := -1 * vfci], lags = lags)
+v2 <- fit_var(data[, -c(add_cols), with = FALSE], lags = lags)
 
 mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
@@ -38,8 +38,7 @@ mv_list <- list(
   het_reg_pc_lags = id_linear_het_reg(v, "consumption", x2 = add_cols,
     extra_data = data[, ..add_cols], method = "mriv", sign = "neg", het_reg_lags = 0:2),
   het_reg = id_linear_het_reg(v, "consumption", sign = "neg", x2 = c(colnames(v$y), add_cols), extra_data = data[, ..add_cols], method = "mriv"),
-  het_reg_vfci = id_linear_het_reg(v2, "consumption", sign = "neg"),
-  chol = id_ordered_chol(reorder_var(v2, "vfci"))
+  het_reg_vfci = id_linear_het_reg(v2, "consumption", sign = "neg")
 )
 
 colors <- c(

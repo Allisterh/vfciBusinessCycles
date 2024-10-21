@@ -20,13 +20,13 @@ library(vfciBCHelpers)
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
-data <- get_var_data()
+data <- get_var_data(end_date = as.Date("2022-07-01"))
 x <- data[, -"vfci"] |> copy()
 v <- fit_var(x, lags = lags)
 
 mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
-  het_reg_u = id_linear_het_reg(v, "unemployment", hetreg_method = "twostep")
+  het_reg_u = id_linear_het_reg(v, "unemployment", hetreg_horizon = 10, hetreg_method = "twostep")
 )
 
 colors <- c(

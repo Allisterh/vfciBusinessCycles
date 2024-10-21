@@ -22,18 +22,18 @@ small_data <- get_var_data(cols = c(
   output = "output",
   consumption = "consumption",
   unemployment = "unemployment",
-  investment = "investment",
-  hours_worked = "hours_worked",
-  labor_share = "labor_share",
-  productivity = "productivity",
-  TFP = "TFP",
+  # investment = "investment",
+  # hours_worked = "hours_worked",
+  # labor_share = "labor_share",
+  # productivity = "productivity",
+  # TFP = "TFP",
   inflation = "inflation",
   interest = "interest",
-  vfci = "vfci_fgr1gdpc1"
+  vfci = "vfci_fgr1pcecc96"
 ))
 
 chol_vars <- list(
-  vfci_chol = fit_cholesky_var(get_var_data(vfci = "vfci_fgr1gdpc1"), lags, "vfci"),
+  vfci_chol = fit_cholesky_var(get_var_data(vfci = "vfci_fgr1pcecc96"), lags, "vfci"),
   vfci_last_chol = id_ordered_chol(fit_var(small_data, lags)),
   # vfci_first_chol = fit_cholesky_var(small_data, lags, "vfci"),
   fcig_chol = fit_cholesky_var(get_var_data(add_cols = c("fci_g"))[, -"vfci"], lags, "fci_g"),
