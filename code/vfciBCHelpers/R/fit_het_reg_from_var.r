@@ -67,7 +67,15 @@ fit_het_reg_from_var <- function(
         c(x2)
     }
 
-    extra_data <- cbind(extra_data, lagged_data[, var_lag_variables, with = FALSE])
+    hetreg_lag_variables <-
+      purrr::map(lags, ~ if (.x == 0) {
+        var_colnames
+      } else {
+        paste0(var_colnames, "_L", .x)
+      }) |>
+      unlist()
+
+    extra_data <- cbind(extra_data, lagged_data[, hetreg_lag_variables, with = FALSE])
   }
 
   ## Create a formula with the needed lags and current variables names
@@ -129,7 +137,11 @@ fit_het_reg_from_var <- function(
         ~ data.table(
           fitted = stats::fitted(het_reg_list[[.x]]$lm1)[, .x],
           residuals = stats::residuals(het_reg_list[[.x]]$lm1)[, .x],
-          log_var_fitted = c(rep(NA, hetreg_horizon - 1), stats::fitted(het_reg_list[[.x]]$lm2_adj))
+          log_var_fitted = c(
+            ## Pad with NAs if hetreg has more lags than VAR or hetreg horizon
+            rep(NA, pmax(0, hetreg_horizon - 1, max(lags) - var$p)),
+            stats::fitted(het_reg_list[[.x]]$lm2_adj)
+          )
         ) |>
           _[, t := .I]
       ) |>

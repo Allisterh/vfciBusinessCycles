@@ -18,7 +18,7 @@ library(vfciBCHelpers)
 
 ```{r}
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
-lags <- 4
+lags <- 2
 end_date <- as.Date(("2022-07-01"))
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
@@ -36,20 +36,33 @@ v <- fit_var(x[, -c(fin_cols), with = FALSE], lags = lags)
 v2 <- fit_var(x2, lags = 2)
 
 mv_list <- list(
-  max_share_u = id_fevdfd(fit_var(x[, -c(fin_cols), with = FALSE], lags = 2), "unemployment", bc_freqs),
-  het_reg_c_fin = id_linear_het_reg(v, "output", hetreg_horizon = 10, x2 = fin_cols, extra_data = x[, ..fin_cols], method = "mriv", sign = "neg"),
-  het_reg_c_macro = id_linear_het_reg(v, "output", het_reg_lags = 0:4, hetreg_horizon = 10, sign = "neg"),
-  chol_vfci = id_ordered_chol(reorder_var(v2, "vfci_neg")),
-  #chol_vfci_last = id_ordered_chol(v2),
-  max_share_vfci = id_fevdfd(v2, "vfci_neg", bc_freqs, sign = "pos")
+  max_share_u =
+    v |> 
+    id_fevdfd("unemployment", bc_freqs),
+  hetreg_fin = 
+    v |>
+    id_linear_het_reg("output", hetreg_horizon = 10, x2 = fin_cols, extra_data = x[, ..fin_cols], method = "mriv", sign = "neg"),
+  hetreg_macro = 
+    v |>
+    id_linear_het_reg("output", het_reg_lags = 0:4, hetreg_horizon = 10, sign = "neg"),
+  hetreg_macro_nolags = 
+    fit_var(x[, -c(fin_cols), with = FALSE], lags = 2) |>
+    id_linear_het_reg("output", het_reg_lags = 0, hetreg_horizon = 10, sign = "neg"),
+  chol_vfci =
+    reorder_var(v2, "vfci_neg") |>
+    id_ordered_chol(),
+  max_share_vfci = 
+    v2 |>
+    id_fevdfd("vfci_neg", bc_freqs, sign = "pos")
 )
 
 x[, t := .I - lags]
 
 colors <- c(
   max_share_u = "firebrick",
-  het_reg_c_fin = "lightblue",
-  het_reg_c_macro = "steelblue",
+  hetreg_fin = "lightblue",
+  hetreg_macro = "steelblue",
+  hetreg_macro_nolags = "darkblue",
   chol_vfci = "goldenrod",
   max_share_vfci = "mediumorchid"
 )
@@ -59,7 +72,6 @@ colors <- c(
 ```{r}
 #| include: false
 
-
 all_irfs <- map(mv_list, ~ irf(.x, n.ahead = 40)$irf) |> list_rbind(names_to = "model") |> setDT()
 
 all_irfs |>
@@ -68,7 +80,7 @@ all_irfs |>
   geom_hline(yintercept = 0, color = "gray50") + 
   geom_line() +
   facet_wrap(vars(response), scales = "free_y") +
-  theme_bw(base_size = 20) +
+  theme_bw(base_size = 8) +
   scale_color_manual(values = colors)
 
 ```
@@ -76,14 +88,16 @@ all_irfs |>
 
 
 
-```{r}
+```{r, echo = F, warning = F, fig.height = 6, out.width = "100%", fig.cap = "VFCI Comparison"}
 ext_vfci <- x2[, .(date, ext_vfci = -1 * vfci_neg, t = .I - lags)]
-int_vfci_fin <- mv_list$het_reg_c_fin$het_reg$dt[variable == "output", .(t, int_vfci_fin = log_var_fitted)]
-int_vfci_macro <- mv_list$het_reg_c_macro$het_reg$dt[variable == "output", .(t, int_vfci_macro = log_var_fitted)]
+int_vfci_fin <- mv_list$hetreg_fin$het_reg$dt[variable == "output", .(t, int_vfci_fin = log_var_fitted)]
+int_vfci_macro <- mv_list$hetreg_macro$het_reg$dt[variable == "output", .(t, int_vfci_macro = log_var_fitted)]
+int_vfci_macro_nolags <- mv_list$hetreg_macro_nolags$het_reg$dt[variable == "output", .(t, int_vfci_macro_nolags = log_var_fitted)]
 
 vfci_data <- ext_vfci |>
   merge(int_vfci_fin, by = "t", all = TRUE) |>
-  merge(int_vfci_macro, by = "t", all = TRUE)
+  merge(int_vfci_macro, by = "t", all = TRUE) |>
+  merge(int_vfci_macro_nolags, by = "t", all = TRUE)
 
 vfci_data |>
   tidyfast::dt_pivot_longer(-c(date, t)) |>
@@ -93,8 +107,15 @@ vfci_data |>
     y = value,
     color = name
   )) +
+  geom_hline(yintercept = 0, color = "gray50") + 
   geom_line() +
-  theme_bw(base_size = 20)
+  labs(
+    x = NULL,
+    y = "Normalized VFCI"
+  ) +
+  facet_wrap(vars(name), ncol = 1) +
+  theme_bw(base_size = 8) +
+  theme(legend.position = "none")
 
 ```
 
