@@ -1,0 +1,173 @@
+---
+title: "Frequency Based VFCI"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+
+
+library(vfciBCHelpers)
+library(data.table)
+library(fevdid)
+library(ggplot2)
+library(lubridate)
+```
+
+
+```{r}
+#| include: false
+
+
+x <- get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"))
+
+v <- fit_var(x, lags = 2)
+
+fe_horizon <- 30
+fe_f <- (1:fe_horizon) / fe_horizon * 2 * pi
+bc_freqs <- 2 * pi / c(32, 6)
+fe_f[fe_f %between% bc_freqs]
+
+fe_dt <-
+  1:fe_horizon |>
+  purrr::set_names() |>
+  purrr::map(~ as.data.table(fe(v, horizon = .x))[, t := .I]) |>
+  purrr::list_rbind(names_to = "horizon")
+
+colnames(fe_dt) <- c("horizon", colnames(v$y), "t")
+
+fe_dt[, horizon := as.numeric(horizon)]
+
+fe_dt <-
+  fe_dt |>
+  tidyfast::dt_pivot_longer(-c(t, horizon), values_to = "fe")
+
+fe_dt <-
+  fe_dt |>
+  merge(fe_dt[horizon == 1, .(fe_h1 = fe), by = .(t, name)], by = c("t", "name")) |>
+  _[, fe_index := fe - fe_h1]
+
+fe_dt[, fe_f := fft(fe), by = .(t, name)]
+fe_dt[, f := (horizon / 100) * 2 * pi]
+fe_dt[t >= fe_horizon]
+
+x[, t := .I - 2]
+data <-
+  x |>
+  tidyfast::dt_pivot_longer(-c(date, t), values_to = "x") |>
+  merge(fe_dt, by = c("t", "name"), all = TRUE)
+
+data_bc <-
+  x |>
+  tidyfast::dt_pivot_longer(-c(date, t), values_to = "x") |>
+  merge(
+    fe_dt[f %between% bc_freqs, .(fe_bc = sum(Re(fe_f))), by = .(t, name)],
+    by = c("t", "name"),
+    all = TRUE
+  ) |>
+  merge(
+    fe_dt[horizon == 10, .(fe_h10 = fe), by = .(t, name)],
+    by = c("t", "name"),
+    all = TRUE
+  ) |>
+  merge(
+    fe_dt[horizon == 1, .(fe_h1 = fe), by = .(t, name)],
+    by = c("t", "name"),
+    all = TRUE
+  ) |>
+  merge(
+    fe_dt[horizon == 30, .(fe_h30 = fe), by = .(t, name)],
+    by = c("t", "name"),
+    all = TRUE
+  )
+
+```
+
+
+```{r}
+#| echo: false
+#| out.width: 100%
+#| figure.height: 4
+
+
+fe_dt |>
+  _[t >= 0] |>
+  _[name == "unemployment"] |>
+  ggplot(aes(
+    x = t + horizon,
+    y = fe,
+    color = ,
+    group = t
+  )) +
+  geom_line() +
+  theme_bw(base_size = 8) + 
+  theme(legend.position = "none")
+```
+
+```{r}
+#| echo: false
+#| out.width: 100%
+#| figure.height: 4
+
+
+data |>
+  _[name == "unemployment"] |>
+  ggplot() +
+  geom_line(aes(
+    x = date %m+% months(horizon * 3),
+    y = x - fe,
+    color = horizon,
+    group = t
+  )) +
+  geom_line(aes(x = date, y = x, linewidth = 1)) +
+  theme_bw(base_size = 8) + 
+  theme(legend.position = "bottom")
+
+```
+
+```{r}
+#| include: false
+#| echo: false
+#| out.width: 100%
+#| figure.height: 4
+
+
+fe_dt |>
+  _[t >= fe_horizon] |>
+  _[name == "unemployment"] |>
+  _[f %between% bc_freqs] |>
+  ggplot(aes(
+    x = f,
+    y = Re(fe_f),
+    color = t,
+    group = t
+  )) +
+  geom_line() +
+  theme_bw(base_size = 8)
+
+```
+
+
+```{r}
+#| echo: false
+#| out.width: 100%
+#| figure.height: 4
+
+
+data_bc |>
+  tidyfast::dt_pivot_longer(-c(t, date, name, x), names_to = "measure") |>
+  _[, value := scale(value), by = .(name, measure)] |>
+  _[measure == "fe_bc", value := value * -1] |>
+  _[name == "unemployment"] |>
+  #_[measure != "fe_h1"] |>
+  ggplot(aes(
+    x = date,
+    y = value,
+    color = measure
+  )) +
+  geom_line() +
+  theme_bw(base_size = 8)
+
+```
