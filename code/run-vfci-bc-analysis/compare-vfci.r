@@ -3,22 +3,13 @@ library(tidyfast)
 library(stringr)
 library(vfciBCHelpers)
 
-data <- readRDS("./data/all_analysis_data.rds")
-
-vfci_cols <- colnames(data)[str_detect(colnames(data), "vfci")]
-
-vfci_data <- data[, c("date", vfci_cols), with = FALSE]
-
-ext_vfci_dt <- vfci_data |>
-  dt_pivot_longer(-date) |>
-  _[!is.na(value)] |>
-  _[, forward := as.numeric(str_extract(name, "(?<=fgr)\\d*"))] |>
-  _[, shift := as.numeric(str_extract(name, "(?<=s)1"))][is.na(shift), shift := 0] |>
-  _[, trimmed := str_remove(str_remove(name, "vfci_fgr\\d*"), "s1")] |>
-  _[, variable := str_extract(trimmed, "^[^_]*")] |>
-  _[, type := str_extract(trimmed, "(?<=_)[^_]*")][is.na(type), type := "baseline"] |>
-  _[, c("trimmed", "name") := NULL]
-
+ext_vfci_dt <-
+  est_vfci(
+    y = "output",
+    x = c("pc1", "pc2", "pc3", "pc4"),
+    forward = 10,
+    lags = 0:2
+  )
 
 ## Internal Macro VFCI
 data <- get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"))
@@ -47,7 +38,7 @@ int_fin_vfci <- hr$dt |>
 
 ## Combine data to compare
 comp_data <-
-  ext_vfci_dt[forward == 10 & shift == 0 & type == "baseline" & variable == "gdpc1", .(date, ext_vfci_gdp = value)] |>
+  ext_vfci_dt[, .(date, ext_vfci = vfci)] |>
   merge(int_macro_vfci[variable == "output", .(date, int_macro_vfci = log_var_fitted)]) |>
   merge(int_fin_vfci[variable == "output", .(date, int_fin_vfci = log_var_fitted)])
 
@@ -59,8 +50,8 @@ comp_data |>
 corrs <- cor(na.omit(comp_data[, -"date"]))
 
 corrs_list <- list(
-  int_ext_fin_vfci_corr = corrs["int_fin_vfci", "ext_vfci_gdp"],
-  int_ext_macro_vfci_corr = corrs["int_macro_vfci", "ext_vfci_gdp"],
+  int_ext_fin_vfci_corr = corrs["int_fin_vfci", "ext_vfci"],
+  int_ext_macro_vfci_corr = corrs["int_macro_vfci", "ext_vfci"],
   int_macro_fin_vfci_corr = corrs["int_fin_vfci", "int_macro_vfci"]
 )
 
@@ -75,7 +66,7 @@ library(ggplot2)
 p <-
   comp_data |>
   tidyfast::dt_pivot_longer(-date) |>
-  _[name %in% c("ext_vfci_gdp", "int_fin_vfci")] |>
+  _[name %in% c("ext_vfci", "int_fin_vfci")] |>
   _[, value := scale(value), by = name] |>
   ggplot(aes(
     x = date,
@@ -112,7 +103,7 @@ ggsave(
 p <-
   comp_data |>
   tidyfast::dt_pivot_longer(-date) |>
-  _[name %in% c("ext_vfci_gdp", "int_macro_vfci")] |>
+  _[name %in% c("ext_vfci", "int_macro_vfci")] |>
   _[, value := scale(value), by = name] |>
   ggplot(aes(
     x = date,

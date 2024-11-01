@@ -4,16 +4,18 @@
 \alias{fit_var}
 \title{Fit a VAR to given data with given lags. Ignores a column called "date" and includes a constant.}
 \usage{
-fit_var(data, lags, date_col = "date", include_const = TRUE)
+fit_var(data, lags, y_lead = 0, date_col = "date", type = "const")
 }
 \arguments{
 \item{data}{data.frame, with a date column}
 
 \item{lags}{integer, number of lags to use in VAR}
 
+\item{y_lead}{integer, number of periods to lead the dependent variable for a direct VAR model}
+
 \item{date_col}{string, defaults to "date", name of the date column}
 
-\item{include_const}{boolean, TRUE (default) includes a constant in the VAR estimation}
+\item{type}{character, "const" (default) includes a constant in the VAR estimation}
 }
 \value{
 A vars::VAR object

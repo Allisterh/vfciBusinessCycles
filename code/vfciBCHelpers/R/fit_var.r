@@ -2,6 +2,7 @@
 #'
 #' @param data data.frame, with a date column
 #' @param lags integer, number of lags to use in VAR
+#' @param y_lead integer, number of periods to lead the dependent variable for a direct VAR model
 #' @param date_col string, defaults to "date", name of the date column
 #' @param type character, "const" (default) includes a constant in the VAR estimation
 #'
@@ -39,7 +40,7 @@ fit_var <- function(
     lead_names <- paste0(cols, "_lead", y_lead)
     data[, (lead_names) := lapply(.SD, shift, y_lead, type = "lead"), .SDcols = cols]
 
-    data <- na.omit(data[, c(lag_names, lead_names), with = FALSE])
+    data <- stats::na.omit(data[, c(lag_names, lead_names), with = FALSE])
 
     x <- data[, lag_names, with = FALSE]
     y <- data[, lead_names, with = FALSE]

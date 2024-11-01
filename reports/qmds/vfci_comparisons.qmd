@@ -8,65 +8,433 @@ project:
 ## VFCI Variables
 - `pcecc96` is the real personal consumption expenditures
 - `gdpc1` is the real GDP
-- `output` is the real GDP per capita
-- `consumption` is the real GDP per capita, multiplied by the share of GDP: personal consumption expenditures spent on services and nondurable goods
+- `output` is the real GDP per capita (from BCA paper)
+- `consumption` is the real GDP per capita, multiplied by the share of GDP: personal consumption expenditures spent on services and nondurable goods (from BCA paper)
 
-## VFCI Type
+## VFCI options
 
-- `baseline` is the vfci estimated with only the 4 financial principal components
-- `lags` includes two lags of output/consumption growth
-- `exlags` includes two lags of output/consumption growth in the regression, but excludes them from estimating the vfci
+- `x` default is to estimate VFCI with 4 financial principal components
+- `forward` default 1, horizon at which to calculate forward differences in 'y'
+- `lags` default 0, lags of 'y' to include in the regression, ex. 0:4
+- `exlags` default `false`, exclude the lags when calculating VFCI or not
+- `cols_to_lag` default to `y` col only, can instead include lags of the `x` cols or both
+- `date_begin` default to "1962-01-01", `date_end` default to "2022-07-01"
+
+\tableofcontents
 
 ```{r}
 #| include: false
+
 library(data.table)
-library(dplyr)
 library(purrr)
 require(ggplot2)
 library(vfciBCHelpers)
 ```
 
-```{r, echo = F, warning = F}
-data <- readRDS("./data/vfci_data.rds")
+```{r}
+#| echo: false
+#| fig-cap: "Baseline VFCI, output"
+#| out-width: 100%
+#| fig-height: 3
 
-data <- data |> select("date", contains("vfci"))
+est_vfci("output", c("pc1", "pc2", "pc3", "pc4")) |>
+  ggplot(aes(
+    x = date,
+    y = vfci
+  )) +
+  geom_line() +
+  theme_bw(base_size = 8)
+```
 
-p_vfci_data <-
-  data |>
-  tidyr::pivot_longer(-date) |>
-  mutate(fgr = stringr::str_extract(name, "(?<=fgr)[0-9]*")) |>
-  mutate(variable = stringr::str_extract(name, "gdpc1|pcecc96|output|consumption")) |>
-  mutate(type = stringr::str_extract(name, "(?<=_)lags|(?<=_)exlags")) |>
-  mutate(shift = as.numeric(stringr::str_extract(name, "(?<=s)[0-9]*"))) |>
-  mutate(shift = ifelse(is.na(shift), 0, shift)) |>
-  mutate(type = ifelse(is.na(type), "baseline", type)) |>
-  group_by(name) |>
-  mutate(value = scale(value))
+\newpage
+
+## Vary Horizons
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare Forecast Horizons for Baseline VFCI"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = c(1, 10, 30),
+  lags = 0,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = as.factor(forward),
+    group = as.factor(forward)
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "VFCI, output, forward 10"
+#| out-width: 100%
+#| fig-height: 3
+
+
+est_vfci("output", c("pc1", "pc2", "pc3", "pc4"), forward = 10) |>
+  ggplot(aes(
+    x = date,
+    y = vfci
+  )) +
+  geom_line() +
+  theme_bw(base_size = 8)
+```
+
+\newpage
+
+## Vary Lags
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare Number of lags for Baseline VFCI"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = 1,
+  lags = map(0:10, ~ 0:.x),
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = lags_max,
+    group = lags_max
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare Number of lags for Baseline VFCI, forward 10"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = 10,
+  lags = map(0:10, ~ 0:.x),
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = lags_max,
+    group = lags_max
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
 
+\newpage
+
+## Vary Lags, exclude from VFCI calculation
+
 ```{r}
-#| output: asis
 #| echo: false
-for (s in 0:1) {
-res <- map_chr(1:30, \(f) {
-  knitr::knit_child(text = c(
-    "## FGR Horizon: `r f`, Shift: `r s`",
-    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
-    "p_vfci_data |>
-  filter(fgr == f) |>
-  filter(shift == s) |>
-  # filter(variable %in% c('gdpc1', 'output')) |>
-  filter(!is.na(value)) |>
-  ggplot(aes(x = date, y = value, color = variable)) + 
-  geom_hline(yintercept = 0) +
+#| fig-cap: "Compare Number of lags, excluded, for Baseline VFCI"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = 1,
+  lags = map(0:10, ~ 0:.x),
+  exlags = TRUE,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = lags_max,
+    group = lags_max
+  )) +
   geom_line() +
-  facet_wrap(vars(type), ncol = 1) +
+  geom_hline(yintercept = 0, color = "gray50") +
   theme_bw(base_size = 8) +
-  theme(legend.position = 'top')",
-    "```",
-    ""), envir = environment(), quiet = TRUE)
-})
-cat(res, sep = '\n')
-}
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare Number of lags, excluded, for Baseline VFCI, forward 10"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = 10,
+  lags = map(0:10, ~ 0:.x),
+  exlags = TRUE,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = lags_max,
+    group = lags_max
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+\newpage
+
+## Vary `y` variable
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare `y` variables"
+#| out-width: 100%
+#| fig-height: 3
+
+args <- CJ(
+  y = c("output", "gdpc1", "consumption", "pcecc96"),
+  x = list(c("pc1", "pc2", "pc3", "pc4")),
+  forward = 1,
+  lags = 0,
+  exlags = FALSE,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, lags_max := purrr::map_dbl(results$lags, max)]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = y,
+    group = y
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+
+
+\newpage
+
+## Vary `x` number of principal components
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare `x` variables"
+#| out-width: 100%
+#| fig-height: 4
+
+args <- CJ(
+  y = c("output"),
+  x = list(
+    c("pc1"),
+    c("pc1", "pc2"),
+    c("pc1", "pc2", "pc3"),
+    c("pc1", "pc2", "pc3", "pc4"),
+    c("pc1", "pc2", "pc3", "pc4", "pc5"),
+    c("pc1", "pc2", "pc3", "pc4", "pc5", "pc6")
+    ),
+  forward = 1,
+  lags = 0,
+  exlags = FALSE,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, pc_max := purrr::map_dbl(x, ~ max(as.numeric(stringr::str_extract(.x, "\\d+"))))]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = as.factor(pc_max),
+    group = as.factor(pc_max)
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_color_viridis_d(option = "F")
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "Compare `x` variables, just 1, 4, and 6"
+#| out-width: 100%
+#| fig-height: 4
+
+args <- CJ(
+  y = c("output"),
+  x = list(
+    c("pc1"),
+    c("pc1", "pc2", "pc3", "pc4"),
+    c("pc1", "pc2", "pc3", "pc4", "pc5", "pc6")
+    ),
+  forward = 1,
+  lags = 0,
+  exlags = FALSE,
+  sorted = FALSE
+)
+
+results_list <-
+  purrr::pmap(args, est_vfci)
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+results[, pc_max := purrr::map_dbl(x, ~ max(as.numeric(stringr::str_extract(.x, "\\d+"))))]
+
+results |>
+  _[, vfci := scale(vfci), by = .(forward, as.character(x), y, as.character(lags))] |>
+  _[, forward := as.numeric(forward)] |>
+  ggplot(aes(
+    x = date,
+    y = vfci,
+    color = as.factor(pc_max),
+    group = as.factor(pc_max)
+  )) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = "gray50") +
+  theme_bw(base_size = 8) +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_color_viridis_d(option = "F")
 ```

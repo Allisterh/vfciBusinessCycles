@@ -17,7 +17,8 @@ get_var_data(
   inflation = "inflation",
   productivity = "productivity",
   TFP = "TFP",
-  vfci = "vfci_fgr10gdpc1",
+  vfci = "vfci",
+  vfci_dt = NULL,
   start_date = as.Date("1962-01-01"),
   end_date = as.Date("2017-01-01"),
   make_stationary = FALSE,
@@ -50,7 +51,9 @@ get_var_data(
 
 \item{TFP}{string, columne name to be labelled TFP}
 
-\item{vfci}{string, column name to be labelled vfci, defaults to vfci_fgr10gdpc1}
+\item{vfci}{string, column name to be labelled vfci}
+
+\item{vfci_dt}{data.table, data.table with vfci data and date column from est_vfci function}
 
 \item{start_date}{date, start date of data}
 

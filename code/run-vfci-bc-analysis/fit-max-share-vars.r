@@ -10,7 +10,9 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 
 ## Make VAR
-data <- get_var_data(vfci = "vfci_fgr10output", end_date = as.Date("2022-07-01"))
+data <-
+  est_vfci("output", c("pc1", "pc2", "pc3", "pc4"), forward = 10) |>
+  get_var_data(vfci_dt = _, end_date = as.Date("2022-07-01"))
 var <- fit_var(data, lags = lags)
 
 all_variables <- data[, -"date"] |> colnames() |> set_names()

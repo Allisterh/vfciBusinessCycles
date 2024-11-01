@@ -4,17 +4,15 @@
 ##  with each row as one date.
 ##
 library(data.table)
-library(dplyr)
 
 ## Load the current BCA data
 bca_dt <- fread("./data-raw/bca_current_data.csv")
 
 ## Load the exogenous VFCI Data and related series
 vfci_dt <-
-  readRDS("./data/vfci_data.rds") |>
-  dplyr::select(c(
+  fread("./data/vfci_data.csv") |>
+  _[, c(
     "date",
-    dplyr::starts_with(c("vfci", "mu")),
     "pc1",
     "pc2",
     "pc3",
@@ -26,11 +24,9 @@ vfci_dt <-
     "t10y3m",
     "tb3smffm",
     "aaa10ym",
-    "baa_aaa"
-
-  )) |>
-  as.data.table() |>
-  _[, date := as.IDate(date)]
+    "baa_aaa",
+    "tedr"
+  ), with = FALSE]
 
 ## Load FRED data
 fred_dt <- fread("./data-raw/fred.csv")

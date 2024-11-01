@@ -18,9 +18,16 @@ fit_cholesky_var <- function(data, lags, chol_col) {
 }
 
 chol_vars <- list(
-  vfci_chol = fit_cholesky_var(get_var_data(vfci = "vfci_fgr10output", end_date = as.Date("2022-07-01")), lags, "vfci"),
-  fcig_chol = fit_cholesky_var(get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("fci_g")), lags, "fci_g"),
-  epu_chol = fit_cholesky_var(get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("epu")), lags, "epu")
+  vfci_chol =
+    est_vfci("output", c("pc1", "pc2", "pc3", "pc4"), forward = 10) |>
+    get_var_data(vfci_dt = _, end_date = as.Date("2022-07-01")) |>
+    fit_cholesky_var(lags, "vfci"),
+  fcig_chol =
+    get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("fci_g")) |>
+    fit_cholesky_var(lags, "fci_g"),
+  epu_chol =
+    get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), add_cols = c("epu")) |>
+    fit_cholesky_var(lags, "epu")
 )
 
 ## Construct VAR IRFs, HDs, etc.

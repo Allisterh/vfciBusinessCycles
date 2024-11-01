@@ -12,7 +12,8 @@
 #' @param inflation string, column name to be labelled inflation
 #' @param productivity string, column name to be labelled productivity
 #' @param TFP string, columne name to be labelled TFP
-#' @param vfci string, column name to be labelled vfci, defaults to vfci_fgr10gdpc1
+#' @param vfci string, column name to be labelled vfci
+#' @param vfci_dt data.table, data.table with vfci data and date column from est_vfci function
 #' @param start_date date, start date of data
 #' @param end_date date, end date of data
 #' @param make_stationary logical, if TRUE,
@@ -39,7 +40,8 @@ get_var_data <- function(
   inflation = "inflation",
   productivity = "productivity",
   TFP = "TFP",
-  vfci = "vfci_fgr10gdpc1",
+  vfci = "vfci",
+  vfci_dt = NULL,
   start_date = as.Date("1962-01-01"),
   end_date = as.Date("2017-01-01"),
   make_stationary = FALSE,
@@ -48,7 +50,12 @@ get_var_data <- function(
   add_cols = NULL
 ) {
 
-  all_data <- readRDS(data_path)
+  data <- readRDS(data_path)
+
+  if (is.null(vfci_dt)) {
+    vfci_dt <- est_vfci("gdpc1", c("pc1", "pc2", "pc3", "pc4"))
+  }
+  all_data <- data |> merge(vfci_dt, by = "date", all = TRUE)
 
   if (is.null(cols)) {
     cols <- c(

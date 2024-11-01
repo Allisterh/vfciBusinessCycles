@@ -113,7 +113,7 @@ find_linear_het_reg_q_mriv <- function(
     stats::residuals(var) |>
     data.table() |>
     cbind(het_reg$dt[variable == target, c("log_var_fitted"), with = FALSE]) |>
-    na.omit()
+    stats::na.omit()
 
   u <- as.matrix(resid_data[, colnames(var$y), with = FALSE]) |> t()
   m <- as.matrix(resid_data[, "log_var_fitted", with = FALSE]) |> t()

@@ -194,19 +194,6 @@
       ],
       "Hash": "1acd2b3db6e118dd161ee6cabedc4d4e"
     },
-    "V8": {
-      "Package": "V8",
-      "Version": "4.4.2",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "Rcpp",
-        "curl",
-        "jsonlite",
-        "utils"
-      ],
-      "Hash": "ca98390ad1cef2a5a609597b49d3d042"
-    },
     "alfred": {
       "Package": "alfred",
       "Version": "0.2.1",
@@ -312,16 +299,6 @@
       ],
       "Hash": "7cff8669c1898aa32f16a3c3d58461c3"
     },
-    "bigD": {
-      "Package": "bigD",
-      "Version": "0.2.0",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "93637e906f3fe962413912c956eb44db"
-    },
     "bit": {
       "Package": "bit",
       "Version": "4.0.5",
@@ -345,13 +322,6 @@
         "utils"
       ],
       "Hash": "9fe98599ca456d6552421db0d6772d8f"
-    },
-    "bitops": {
-      "Package": "bitops",
-      "Version": "1.0-7",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "b7d8d8ee39869c18d8846a184dd8a1af"
     },
     "blob": {
       "Package": "blob",
@@ -394,26 +364,6 @@
         "tidyr"
       ],
       "Hash": "a4652c36d1f8abfc3ddf4774f768c934"
-    },
-    "broom.mixed": {
-      "Package": "broom.mixed",
-      "Version": "0.2.9.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "broom",
-        "coda",
-        "dplyr",
-        "forcats",
-        "furrr",
-        "methods",
-        "nlme",
-        "purrr",
-        "stringr",
-        "tibble",
-        "tidyr"
-      ],
-      "Hash": "c4e6c14e4d92d7b2d29ab0758184774a"
     },
     "bslib": {
       "Package": "bslib",
@@ -611,13 +561,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "f0acb9dcb71a9cd9d5ae233c5035b1c5"
-    },
-    "commonmark": {
-      "Package": "commonmark",
-      "Version": "1.9.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "5d8225445acb167abf7797de48b2ee3c"
     },
     "conflicted": {
       "Package": "conflicted",
@@ -833,17 +776,6 @@
         "vctrs"
       ],
       "Hash": "54ed3ea01b11e81a86544faaecfef8e2"
-    },
-    "ellipsis": {
-      "Package": "ellipsis",
-      "Version": "0.3.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "rlang"
-      ],
-      "Hash": "bb0eec2fe32e88d9e2836c2f73ea2077"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -1199,36 +1131,6 @@
       ],
       "Hash": "8f8205cbb9f1066a94e22898fe949184"
     },
-    "gt": {
-      "Package": "gt",
-      "Version": "0.11.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "base64enc",
-        "bigD",
-        "bitops",
-        "cli",
-        "commonmark",
-        "dplyr",
-        "fs",
-        "glue",
-        "htmltools",
-        "htmlwidgets",
-        "juicyjuice",
-        "magrittr",
-        "markdown",
-        "reactable",
-        "rlang",
-        "sass",
-        "scales",
-        "tidyselect",
-        "vctrs",
-        "xml2"
-      ],
-      "Hash": "3470c2eb1123db6a2c54ec812de38284"
-    },
     "gtable": {
       "Package": "gtable",
       "Version": "0.3.5",
@@ -1419,16 +1321,6 @@
       ],
       "Hash": "e1b9c55281c5adc4dd113652d9e26768"
     },
-    "juicyjuice": {
-      "Package": "juicyjuice",
-      "Version": "0.1.0",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "V8"
-      ],
-      "Hash": "3bcd11943da509341838da9399e18bce"
-    },
     "knitr": {
       "Package": "knitr",
       "Version": "1.48",
@@ -1571,19 +1463,6 @@
         "R"
       ],
       "Hash": "7ce2733a9826b3aeb1775d56fd305472"
-    },
-    "markdown": {
-      "Package": "markdown",
-      "Version": "1.13",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "commonmark",
-        "utils",
-        "xfun"
-      ],
-      "Hash": "074efab766a9d6360865ad39512f2a7e"
     },
     "memoise": {
       "Package": "memoise",
@@ -1751,24 +1630,6 @@
         "utils"
       ],
       "Hash": "5410df8d22bd36e616f2a2343dbb328c"
-    },
-    "patchwork": {
-      "Package": "patchwork",
-      "Version": "1.2.0",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "cli",
-        "ggplot2",
-        "grDevices",
-        "graphics",
-        "grid",
-        "gtable",
-        "rlang",
-        "stats",
-        "utils"
-      ],
-      "Hash": "9c8ab14c00ac07e9e04d1664c0b74486"
     },
     "pbapply": {
       "Package": "pbapply",
@@ -2089,31 +1950,6 @@
         "R"
       ],
       "Hash": "5e3c5dc0b071b21fa128676560dbe94d"
-    },
-    "reactR": {
-      "Package": "reactR",
-      "Version": "0.6.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "htmltools"
-      ],
-      "Hash": "10f4d661c235181648a5958c02c0382a"
-    },
-    "reactable": {
-      "Package": "reactable",
-      "Version": "0.4.4",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "R",
-        "digest",
-        "htmltools",
-        "htmlwidgets",
-        "jsonlite",
-        "reactR"
-      ],
-      "Hash": "6069eb2a6597963eae0605c1875ff14c"
     },
     "readr": {
       "Package": "readr",
@@ -2883,27 +2719,6 @@
       ],
       "Hash": "0749a31fa3e48efc115acd1e6daabac6"
     },
-    "tsibble": {
-      "Package": "tsibble",
-      "Version": "1.1.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "anytime",
-        "dplyr",
-        "ellipsis",
-        "generics",
-        "lifecycle",
-        "lubridate",
-        "methods",
-        "rlang",
-        "tibble",
-        "tidyselect",
-        "vctrs"
-      ],
-      "Hash": "a75e397766b45996310908b5b32557ba"
-    },
     "tzdb": {
       "Package": "tzdb",
       "Version": "0.4.0",
@@ -2997,7 +2812,7 @@
         "tidyfast",
         "vars"
       ],
-      "Hash": "eca1ebb73b9d2e239ddeb0c695ff1747"
+      "Hash": "643c6048004ebffc2f68e87911361217"
     },
     "viridisLite": {
       "Package": "viridisLite",
