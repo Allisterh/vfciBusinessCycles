@@ -1,6 +1,6 @@
 library(data.table)
 library(stringr)
-library(tidyquant)
+library(quantmod)
 library(vfciBCHelpers)
 
 # FRED data ---------------------------------------------------------------
@@ -87,20 +87,16 @@ price <-
 returns <-
   price |>
   copy() |>
-  _[, date := as.Date(date)] |>
-  tidyquant::tq_transmute(
-    select = adjusted,
-    mutate_fun = allReturns,
-    type = "arithmetic"
-  ) |>
+  _[, .(date, adjusted)] |>
+  quantmod::allReturns(type = "arithmetic") |>
   as.data.table() |>
+  setnames("index", "date") |>
   _[, date := as.IDate(date)] |>
   # annualize
   _[, daily := 252 * daily] |>
   _[, weekly := NULL] |>
   _[, monthly := 12 * monthly] |>
   _[, quarterly := 4 * quarterly]
-
 
 ### Aggregate to quarterly frequency --------------------------------------
 #### Returns --------------------------------------------------------------

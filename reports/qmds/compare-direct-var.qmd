@@ -57,7 +57,7 @@ dt <- list(
   ) |>
   purrr::list_rbind() |>
   tidyfast::dt_pivot_wider(names_from = type, values_from = value) |>
-  merge(data_dt, by = c("date", "name"), all = TRUE)
+  merge(data_dt, by = c("date", "name"), all = TRUE, allow.cartesian = TRUE)
 
 
 ```

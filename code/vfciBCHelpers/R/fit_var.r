@@ -15,6 +15,7 @@ fit_var <- function(
   data,
   lags,
   y_lead = 0,
+  cumsum_y_lead = FALSE,
   date_col = "date",
   type = "const"
 ) {
@@ -39,6 +40,10 @@ fit_var <- function(
 
     lead_names <- paste0(cols, "_lead", y_lead)
     data[, (lead_names) := lapply(.SD, shift, y_lead, type = "lead"), .SDcols = cols]
+
+    if (cumsum_y_lead) {
+      data[, (lead_names) := lapply(.SD, frollsum, n = y_lead), .SDcols = lead_names]
+    }
 
     data <- stats::na.omit(data[, c(lag_names, lead_names), with = FALSE])
 
