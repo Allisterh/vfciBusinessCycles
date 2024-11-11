@@ -116,6 +116,7 @@ fit_het_reg_from_var <- function(
       copy() |>
       _[, log_var_fitted := 2 * log(std)]
   }
+  ## Need to lead this VFCI values by horizon as well
 
   if (hetreg_method == "twostep") {
 
@@ -141,7 +142,8 @@ fit_het_reg_from_var <- function(
             ## Pad with NAs if hetreg has more lags than VAR or hetreg horizon
             rep(NA, pmax(0, hetreg_horizon - 1, max(lags) - var$p)),
             stats::fitted(het_reg_list[[.x]]$lm2_adj)
-          )
+          ) |>
+            shift(n = hetreg_horizon, type = "lead")
         ) |>
           _[, t := .I]
       ) |>

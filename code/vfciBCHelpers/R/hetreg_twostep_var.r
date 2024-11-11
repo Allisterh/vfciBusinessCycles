@@ -37,7 +37,9 @@ hetreg_twostep_var <- function(
 
   ## Get the log, squared residuals
   y_loc <- grep(y, colnames(var$y))
-  data$fe <- c(rep(NA, var$p), fevdid::fe(var, horizon)[, y_loc])
+  data$fe <-
+    c(rep(NA, var$p), fevdid::fe(var, horizon)[, y_loc]) |>
+    data.table::shift(n = horizon, type = "lead")
   data$lnres2 <- log(data$fe ^ 2)
 
   ## Estimate Step 2
