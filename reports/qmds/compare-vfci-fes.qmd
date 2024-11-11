@@ -18,6 +18,8 @@ library(patchwork)
 
 
 ```{r}
+#| include: false
+
 ext_vfci <- 
   1:10 |>
   purrr::set_names() |>
@@ -40,43 +42,50 @@ p1 <-
     group = forward
   )) + 
   geom_line() +
-  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01")))
+  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01"))) +
+  labs(title = "External VFCI Forecast Errors") +
+  theme_bw(base_size = 8)
 
-p1
 ```
 
 
 
 ```{r}
+#| include: false
+
 var_lags <- 2
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 data <- get_var_data(vfci =  NULL, add_cols = fin_cols, end_date = "2022-07-01")
 
 v <- fit_var(data[, -c(fin_cols), with = FALSE], var_lags)
 
-
-fe(v, horizon = 1) |> dim()
-fe(v, horizon = 10)
-
-int_vfci[ t <= 10] |>
-  _[, .(forward, t, fe)] |>
-  tidyfast::dt_pivot_wider(names_from = forward, values_from = fe)
-
 int_vfci <-
+  1:10 |>
+  purrr::set_names() |>
+  purrr::map(~
+    fit_het_reg_from_var(v, hetreg_horizon = .x, x2 = fin_cols, extra_data = data[, c(fin_cols), with = FALSE]) |>
+    _$dt |>
+    merge(copy(data)[, t := .I - var_lags][, .(date, t)], by = "t") |>
+    _[variable == "output", .(date, int_vfci = log_var_fitted)]
+  ) |>
+  purrr::list_rbind(names_to = "forward") |>
+  _[, forward := as.numeric(forward)]
+
+int_fe <-
   1:10 |>
   purrr::set_names() |>
   purrr::map(~
     fe(v, horizon = .x)[, grep("output", colnames(v$y))] |>
       as.data.table() |>
       setnames("V1", "fe") |>
-      _[, t := .I - .x - 1] |>
-      merge(data[, t:= .I - var_lags][, .(date, t, output)], by = "t")
+      _[, t := .I] |>
+      merge(copy(data)[, t:= .I - var_lags][, .(date, t, output)], by = "t")
   ) |>
   purrr::list_rbind(names_to = "forward") |>
   _[, forward := as.numeric(forward)]
 
 p2 <- 
-  int_vfci |>
+  int_fe |>
   _[, value := lag(fe, n = forward), by = forward] |>
   ggplot(aes(
     x = date,
@@ -85,19 +94,55 @@ p2 <-
     group = forward
   )) +
   geom_line() +
-  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01")))
-
-p2
+  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01"))) +
+  labs(title = "Internal VFCI Forecast Errors") +
+  theme_bw(base_size = 8)
 ```
 
+## Compare FEs
 
 ```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 6
+#| fig-cap: "Compare Internal and External FEs"
 
 p1 / p2
+```
+
+
+## Compare VFCIs
+
+```{r}
+#| include: false
+
+p3 <-
+  ext_vfci[, .(date, forward, ext_vfci = vfci)] |>
+  merge(int_vfci, by = c("date", "forward")) |>
+  tidyfast::dt_pivot_longer(-c(date, forward)) |>
+  _[, value := scale(value), by = .(name, forward)] |>
+  ggplot(aes(
+    x = date,
+    y = value,
+    color = name,
+    group = name
+  )) + 
+  geom_line() +
+  facet_wrap(vars(forward), nrow = 5) +
+  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01"))) +
+  labs(title = "External VFCI Forecast Errors") +
+  theme_bw(base_size = 8)
 
 ```
 
 
 ```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 6
+#| fig-cap: "Compare Internal and External VFCIs"
 
+p3
 ```
