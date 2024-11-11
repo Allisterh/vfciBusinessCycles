@@ -43,7 +43,8 @@ get_vfci <- function(
 
   ts <- data.table(
     hetreg_data[, date_col, with = FALSE],
-    vfci_resid = log(attr(h$residuals, "std")),
+    vfci_from_resid = log(attr(h$residuals, "std")),
+    residuals = as.numeric(h$residuals),
     mu = unname(h$fitted)
   )
 

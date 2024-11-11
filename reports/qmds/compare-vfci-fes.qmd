@@ -1,0 +1,103 @@
+---
+title: "Frequency Based VFCI"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+
+library(vfciBCHelpers)
+library(data.table)
+library(fevdid)
+library(ggplot2)
+library(lubridate)
+library(patchwork)
+```
+
+
+```{r}
+ext_vfci <- 
+  1:10 |>
+  purrr::set_names() |>
+  purrr::map(~  
+    est_vfci(
+      y = "output",
+      x = c("pc1", "pc2", "pc3", "pc4"),
+      forward = .x
+    )
+  ) |>
+  purrr::list_rbind(names_to = "forward") |>
+  _[, forward := as.numeric(forward)]
+
+p1 <-
+  ext_vfci |>
+  ggplot(aes(
+    x = date,
+    y = residuals,
+    color = forward,
+    group = forward
+  )) + 
+  geom_line() +
+  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01")))
+
+p1
+```
+
+
+
+```{r}
+var_lags <- 2
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+data <- get_var_data(vfci =  NULL, add_cols = fin_cols, end_date = "2022-07-01")
+
+v <- fit_var(data[, -c(fin_cols), with = FALSE], var_lags)
+
+
+fe(v, horizon = 1) |> dim()
+fe(v, horizon = 10)
+
+int_vfci[ t <= 10] |>
+  _[, .(forward, t, fe)] |>
+  tidyfast::dt_pivot_wider(names_from = forward, values_from = fe)
+
+int_vfci <-
+  1:10 |>
+  purrr::set_names() |>
+  purrr::map(~
+    fe(v, horizon = .x)[, grep("output", colnames(v$y))] |>
+      as.data.table() |>
+      setnames("V1", "fe") |>
+      _[, t := .I - .x - 1] |>
+      merge(data[, t:= .I - var_lags][, .(date, t, output)], by = "t")
+  ) |>
+  purrr::list_rbind(names_to = "forward") |>
+  _[, forward := as.numeric(forward)]
+
+p2 <- 
+  int_vfci |>
+  _[, value := lag(fe, n = forward), by = forward] |>
+  ggplot(aes(
+    x = date,
+    y = value,
+    color = forward,
+    group = forward
+  )) +
+  geom_line() +
+  scale_x_date(limits = as.Date(c("1960-01-01", "2023-01-01")))
+
+p2
+```
+
+
+```{r}
+
+p1 / p2
+
+```
+
+
+```{r}
+
+```

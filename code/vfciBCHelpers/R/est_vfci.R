@@ -86,7 +86,7 @@ est_vfci <- function(
   if (include_all == TRUE) {
     return(vfci)
   } else {
-    return(vfci$ts[, c(date_col, "vfci", "mu"), with = FALSE])
+    return(vfci$ts[, c(date_col, "vfci", "mu", "residuals"), with = FALSE])
   }
 
 }
