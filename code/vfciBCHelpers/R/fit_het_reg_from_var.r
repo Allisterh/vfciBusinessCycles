@@ -25,7 +25,7 @@ fit_het_reg_from_var <- function(
   extra_data = NULL
 ) {
   ## Set visible global binding to make R CMD check happy
-  log_var_fitted <- std <- t <- NULL
+  log_var_fitted <- t <- variable <- var_lag_variables <- NULL
 
   ## Get the data
   original_data_wide <-
@@ -88,67 +88,38 @@ fit_het_reg_from_var <- function(
       unlist()
   }
 
-  if (hetreg_method == "ML") {
 
-    ## Estimate the het-reg
-    het_reg_list <-
-      var_colnames |>
-      purrr::map(~ hetreg(
-        data = na.omit(lagged_data),
-        .x,
-        var_lag_variables,
-        het = x2,
-        method = "REML"
-      ))
+  ## Estimate the het-reg
+  het_reg_list <-
+    var_colnames |>
+    purrr::map(~ hetreg_twostep_var(
+      var,
+      y = .x,
+      horizon = hetreg_horizon,
+      x2 = x2,
+      extra_data = extra_data
+    ))
 
-    ## Get the predicted log variance values
-    predicted_log_variance <-
-      het_reg_list |>
-      purrr::map(
-        ~ data.table(
-          fitted = stats::fitted(.x),
-          residuals = stats::residuals(.x),
-          std = attr(stats::residuals(.x), "std")
-        ) |>
-          _[, t := .I]
-      ) |>
-      purrr::list_rbind(names_to = "variable") |>
-      copy() |>
-      _[, log_var_fitted := 2 * log(std)]
-  }
-  ## Need to lead this VFCI values by horizon as well
-
-  if (hetreg_method == "twostep") {
-
-    ## Estimate the het-reg
-    het_reg_list <-
-      var_colnames |>
-      purrr::map(~ hetreg_twostep_var(
-        var,
-        y = .x,
-        horizon = hetreg_horizon,
-        x2 = x2,
-        extra_data = extra_data
-      ))
-
-    ## Get the predicted log variance values
-    predicted_log_variance <-
-      var_colnames |>
-      purrr::map(
-        ~ data.table(
-          fitted = stats::fitted(het_reg_list[[.x]]$lm1)[, .x],
-          residuals = stats::residuals(het_reg_list[[.x]]$lm1)[, .x],
-          log_var_fitted = c(
-            ## Pad with NAs if hetreg has more lags than VAR or hetreg horizon
-            rep(NA, pmax(0, hetreg_horizon - 1, max(lags) - var$p)),
+  ## Get the predicted log variance values
+  predicted_log_variance <-
+    var_colnames |>
+    purrr::map(
+      ~ data.table(
+        fitted = c(rep(NA, var$p), stats::fitted(het_reg_list[[.x]]$lm1)[, .x]),
+        residuals = c(rep(NA, var$p), stats::residuals(het_reg_list[[.x]]$lm1)[, .x]),
+        log_var_fitted_resid =
+          c(
+            rep(NA, pmax(0, var$p, hetreg_horizon + 1)),
+            rep(NA, pmax(0, max(lags) - var$p + 1)),
             stats::fitted(het_reg_list[[.x]]$lm2_adj)
           ) |>
-            shift(n = hetreg_horizon, type = "lead")
-        ) |>
-          _[, t := .I]
+          data.table::shift(n = hetreg_horizon, type = "lead"),
+        log_var_fitted = predict(het_reg_list[[.x]]$lm2_adj, newdata = cbind(extra_data, original_data_wide))
       ) |>
-      purrr::list_rbind(names_to = "variable")
-  }
+        _[, t := .I - var$p]
+    ) |>
+    purrr::list_rbind(names_to = "variable")
+
 
   all_data <-
     original_data |>

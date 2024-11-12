@@ -31,19 +31,24 @@ hetreg_twostep_var <- function(
     stop("Please pass valid variables in the VAR for x2.")
   }
 
-  lnres2 <- "lnres2"
+  lnres2 <- paste0("lnres2", "_lead", horizon)
 
-  lm2_forumla <- paste0(lnres2, " ~ ", paste0(x2, collapse = " + "))
+  lm2_formula <-
+    paste0(lnres2, " ~ ", paste0(x2, collapse = " + ")) |>
+    as.formula()
 
   ## Get the log, squared residuals
   y_loc <- grep(y, colnames(var$y))
   data$fe <-
     c(rep(NA, var$p), fevdid::fe(var, horizon)[, y_loc]) |>
     data.table::shift(n = horizon, type = "lead")
-  data$lnres2 <- log(data$fe ^ 2)
+  data[lnres2] <- log(data$fe ^ 2)
+
+  data |> as.data.table()
 
   ## Estimate Step 2
-  lm2 <- stats::lm(data = data, formula = lm2_forumla)
+  lm2 <- stats::lm(data = data, formula = lm2_formula)
+  lm2$call$formula <- lm2_formula
 
   ## Correct the Intercept of Step 2
   intercept_adjustment <- 1.2704
