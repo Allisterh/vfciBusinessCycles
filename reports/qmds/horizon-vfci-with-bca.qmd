@@ -1,0 +1,246 @@
+---
+title: "Which horizon of VFCI correlates best with the BCA shock?"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+
+library(vfciBCHelpers)
+library(data.table)
+library(fevdid)
+library(purrr)
+library(ggplot2)
+library(lubridate)
+library(patchwork)
+```
+
+
+```{r}
+#| include: false
+
+data <- get_var_data(vfci = NULL, end_date = "2022-07-01", make_stationary = TRUE)
+
+v <- fit_var(data, lags = 2)
+
+bca <- id_fevdfd(v, "unemployment", 2 * pi / c(32, 6), sign = "neg")
+
+bca_hs <-
+  hs(bca)$hs |>
+  as.data.table() |>
+  _[impulse == "Main"]
+
+```
+
+```{r}
+#| include: false
+
+ext_vfci_cv <-
+  1:30 |>
+  set_names() |>
+  map(~
+    est_vfci(
+      "output",
+      c("pc1", "pc2", "pc3", "pc4"),
+      forward = .x,
+      ) |>
+      get_var_data(vfci_dt = _, make_stationary = TRUE, end_date = "2022-07-01") |>
+      fit_var(lags = 2) |>
+      reorder_var("vfci") |>
+      id_ordered_chol()
+  )
+
+
+
+ext_vfci_hs <-
+  ext_vfci_cv |>
+  map(~ hs(.x)$hs |> as.data.table() |> _[impulse == "Chol_1"]) |>
+  list_rbind(names_to = "vfci_forward")
+
+corr_dt <-
+  ext_vfci_hs |>
+  merge(bca_hs[, .(t, bca_hs = hs)], by = "t") |>
+  _[, .(corr = cor(hs, bca_hs)), by = vfci_forward]
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 4
+#| fig-cap: "Correlation between BCA shock and VFCI Choleskey shock at different horizons"
+
+corr_dt |>
+  _[, vfci_forward := as.numeric(vfci_forward)] |>
+  ggplot(aes(
+    x = vfci_forward,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line() +
+  scale_y_continuous(limits = c(-1, 1)) +
+  theme_bw()
+
+```
+
+
+
+```{r}
+#| include: false
+
+int_vfci_hs <-
+  1:30 |>
+  set_names() |>
+  map(~
+    get_var_data(vfci_dt = NULL, end_date = "2022-07-01", make_stationary = TRUE) |>
+      fit_var(lags = 2) |>
+      id_linear_het_reg("output", hetreg_horizon = .x) |>
+      hs() |>
+      _$hs |>
+      as.data.table() |>
+      _[impulse == "Chol_1"]
+  ) |>
+  list_rbind(names_to = "vfci_forward") |>
+  _[, vfci_forward := as.numeric(vfci_forward)]
+
+corr_dt <-
+  int_vfci_hs |>
+  merge(bca_hs[, .(t, bca_hs = hs)], by = "t") |>
+  _[, .(corr = cor(hs, bca_hs)), by = vfci_forward]
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 4
+#| fig-cap: "Correlation between BCA shock and internal Macro VFCI hetreg shock at different horizons"
+
+corr_dt |>
+  ggplot(aes(
+    x = vfci_forward,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line() +
+  scale_y_continuous(limits = c(-1, 1)) +
+  theme_bw()
+
+```
+
+
+
+```{r}
+#| include: false
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+
+int_vfci_hs <-
+  1:30 |>
+  set_names() |>
+  map(~ {
+    data <- get_var_data(
+      vfci = NULL,
+      add_cols = fin_cols,
+      end_date = "2022-07-01",
+      make_stationary = TRUE
+    ) 
+    data |>
+      _[, -c(fin_cols), with = FALSE]|>
+      fit_var(lags = 2) |>
+      id_linear_het_reg("output", hetreg_horizon = .x, x2 = fin_cols, extra_data = data[, fin_cols, with = FALSE], method = "mriv") |>
+      hs() |>
+      _$hs |>
+      as.data.table() |>
+      _[impulse == "Chol_1"]
+  }) |>
+  list_rbind(names_to = "vfci_forward") |>
+  _[, vfci_forward := as.numeric(vfci_forward)]
+
+corr_dt <-
+  int_vfci_hs |>
+  merge(bca_hs[, .(t, bca_hs = hs)], by = "t") |>
+  _[, .(corr = cor(hs, bca_hs)), by = vfci_forward]
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 4
+#| fig-cap: "Correlation between BCA shock and internal Financial VFCI hetreg shock at different horizons"
+
+corr_dt |>
+  ggplot(aes(
+    x = vfci_forward,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line() +
+  scale_y_continuous(limits = c(-1, 1)) +
+  theme_bw()
+
+```
+
+
+
+
+```{r}
+#| include: false
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+
+int_vfci_hs <-
+  1:30 |>
+  set_names() |>
+  map(~ {
+    data <- get_var_data(
+      vfci = NULL,
+      add_cols = fin_cols,
+      end_date = "2022-07-01"
+    ) 
+    data |>
+      fit_var(lags = 2) |>
+      id_linear_het_reg(
+        "output",
+        hetreg_horizon = .x,
+        method = "mriv"
+      ) |>
+      hs() |>
+      _$hs |>
+      as.data.table() |>
+      _[impulse == "Chol_1"]
+  }) |>
+  list_rbind(names_to = "vfci_forward") |>
+  _[, vfci_forward := as.numeric(vfci_forward)]
+
+corr_dt <-
+  int_vfci_hs |>
+  merge(bca_hs[, .(t, bca_hs = hs)], by = "t") |>
+  _[, .(corr = cor(hs, bca_hs)), by = vfci_forward]
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 4
+#| fig-cap: "Correlation between BCA shock and internal Financial VFCI hetreg shock at different horizons"
+
+corr_dt |>
+  ggplot(aes(
+    x = vfci_forward,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line() +
+  scale_y_continuous(limits = c(-1, 1)) +
+  theme_bw()
+
+```
+
+

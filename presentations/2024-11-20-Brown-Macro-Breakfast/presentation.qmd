@@ -1,0 +1,984 @@
+---
+title: "The Price of Risk Drives the Business Cycle"
+subtitle: "Brown Macro Breakfast"
+title-note: "^1^The views expressed here are the authors’ and are not necessarily representative of the views of the International Monetary Fund, its Management, or its Executive Directors."
+author:
+  - name: "Tobias Adrian"
+    affiliation: "International Monetary Fund^1^"
+  - name: "Matthew DeHaven"
+    affiliation: Brown University
+  - name: "Fernando Duarte"
+    affiliation: Brown University
+date: "2024-11-20"
+callout-appearance: minimal
+editor:
+  render-on-save: true
+format:
+  clean-revealjs:
+    self-contained: true
+    html-math-method:
+        method: mathjax
+        url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    crossrefs-hover: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(tidyfast)
+library(vars)
+library(fevdid)
+library(vfciBCHelpers)
+library(purrr)
+library(ggplot2)
+library(patchwork)
+```
+
+```{r}
+#| include: false
+
+theme_pres <-
+    theme_bw(base_size = 16) +
+    theme(
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(size = 12, margin = margin(0, 0, 0, 0)),
+        axis.title = element_text(size = 14),
+        plot.caption = element_text(size = 11),
+        panel.grid = element_blank(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_blank(),
+        legend.key = element_blank(),
+        legend.position = "top",
+        legend.background = element_blank(),
+        legend.title = element_text(size = 14),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.text = element_text(size = 10),
+        plot.margin = margin(10, 10, 0, 10, "pt")
+        )
+
+var_order <- c(
+    VFCI = "vfci",
+    Unemployment = "unemployment",
+    `Fed Funds` = "interest",
+    Inflation = "inflation",
+    Output = "output",
+    Investment = "investment",
+    Consumption = "consumption",
+    `Hours Worked` = "hours_worked",
+    `Labor Share` = "labor_share",
+    TFP = "TFP",
+    `Labor Prod.` = "productivity"
+)
+
+crossplot_order <- c("Output", "Investment", "Consumption", "Hours Worked", "Fed Funds", "Labor Prod.", "Inflation", "TFP", "VFCI")
+
+
+## Colors
+bg_line_color <- "gray50"
+recession_color <- "gray80"
+
+cholesky_color <- "steelblue"
+hetreg_color <- "darkorange"
+max_share_color <- "firebrick"
+```
+
+```{r var_setup}
+lags <- 2
+bc_freqs <- c( 2 * pi / 32, 2 * pi / 6)
+
+```
+
+```{r load_recession_dates}
+rec_dates <- get_recession_dt()
+```
+
+```{r}
+vfci_dt <- est_vfci(
+  y = "output",
+  x = c("pc1", "pc2", "pc3", "pc4"),
+  forward = 1
+)
+```
+
+
+```{r}
+#| include: false
+
+data <- get_var_data(
+  vfci_dt = est_vfci(
+    "output",
+    c("pc1", "pc2", "pc3", "pc4"),
+    forward = 1
+  ),
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+cv <- data |>
+  fit_var(lags = 2) |>
+  reorder_var("vfci") |>
+  id_ordered_chol()
+```
+
+```{r}
+#| include: false
+
+data <- get_var_data(
+  vfci_dt = est_vfci(
+    "output",
+    c("pc1", "pc2", "pc3", "pc4"),
+    forward = 12
+  ),
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+cv_f12 <- data |>
+  fit_var(lags = 2) |>
+  reorder_var("vfci") |>
+  id_ordered_chol()
+```
+
+```{r}
+#| include: false
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  add_cols = fin_cols,
+  make_stationary = TRUE
+)
+
+hv <- data[, -c(fin_cols), with = FALSE] |>
+  fit_var(lags = 2) |>
+  id_linear_het_reg(
+    target = "output",
+    hetreg_horizon = 1,
+    x2 = fin_cols,
+    extra_data = data[, fin_cols, with = FALSE],
+    method = "mriv",
+    sign = "neg"
+  )
+```
+
+```{r}
+#| include: false
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  add_cols = fin_cols,
+  make_stationary = TRUE
+)
+
+hv_f12 <- data[, -c(fin_cols), with = FALSE] |>
+  fit_var(lags = 2) |>
+  id_linear_het_reg(
+    target = "output",
+    hetreg_horizon = 12,
+    x2 = fin_cols,
+    extra_data = data[, fin_cols, with = FALSE],
+    method = "mriv",
+    sign = "neg"
+  )
+```
+
+```{r}
+#| include: false
+#| 
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+mv <- data |>
+  fit_var(lags = 2) |>
+  id_fevdfd("unemployment", 2 * pi / c(32, 6), sign = "pos")
+```
+
+
+## Introduction / Motivation
+
+Time varying volatility / uncertainty / risk aversion is important for macroeconomic dynamics.^[
+List relevant papers here.
+]
+
+We leverage this heteroskedasticity in the second moment of output growth to identify a VAR.
+
+The IRFs of this VAR match the IRFs of the Business Cycle Shock from @mbc2020.
+
+Our preferred interpretation is that this is driven by the price of risk through frictions in financial intermediation.
+
+
+## Outline
+
+1. Quick Summary of @adrian2023
+    - Measuring the Price of Risk (VFCI)
+    - The Price of Risk Moves Linearly with Conditional Output Growth
+
+2. VAR Setup
+    - Identification with the VFCI
+    - Identification with Heteroskedasticity
+
+3. Comparison to the Business Cycle Shock
+
+4. Implications
+
+## Measuring the Price of Risk
+
+- Math
+
+## The Price of Risk (VFCI)
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+vfci_dt |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+      data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+      aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+      fill = recession_color
+    ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = scale(vfci)
+    ),
+      color = cholesky_color
+    ) +
+    labs(
+      x = NULL,
+      y = "VFCI, Normalized to N(0,1)",
+      title = "Time Series of the Price of Risk (VFCI)"
+    ) +
+    theme_pres
+  }()
+```
+
+## The Price of Risk Moves Linearly with Conditional Output Growth
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-align: 'center'
+
+vfci_dt |>
+  ggplot(aes(
+    x = scale(vfci),
+    y = mu
+  )) +
+  geom_point(
+    color = cholesky_color
+  ) +
+  labs(
+    x = "VFCI, Normalized to N(0,1)",
+    y = "Conditional Output Growth",
+    title = "Mean vs. Volatility of Output Growth"
+  ) +
+  theme_pres
+```
+
+## VAR Setup
+
+- Math
+
+## Indentification with the VFCI
+
+- Math
+
+
+
+##  Identification with the VFCI
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+cv_irf <-
+  cv |>
+  irf(n.ahead = 40) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "cholesky"]
+
+cv_irf |>
+  ggplot(aes(
+    x = h,
+    y = irf
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line(
+    color = cholesky_color
+  ) +
+  facet_wrap(
+    vars(response),
+    ncol = 4,
+    scales = "free_y"
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response"
+  ) +
+  theme_pres
+```
+
+##  Identification with the VFCI
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+
+cv_hs <-
+  cv |>
+  hs() |>
+  _$hs |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "cholesky"]
+
+p1 <-
+  cv_hs |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+        fill = recession_color
+      ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hs
+    ),
+      color = cholesky_color
+    ) +
+    labs(
+      x = NULL,
+      y = "Historical Shock",
+      title = "(a) Historical Shock"
+    ) +
+    theme_pres
+  }()
+
+cv_hd <-
+  cv |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "cholesky"]
+
+p2 <-
+  cv_hd |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+          fill = recession_color
+        ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hd
+    ),
+      color = cholesky_color
+    ) +
+    labs(
+      x = NULL,
+      y = "Unemployment",
+      title = "(b) Historical Shock Contribution to Unemployment"
+    ) +
+    theme_pres
+  }()
+
+p1 / p2
+```
+
+
+## Indentification with Heteroskedasticity
+
+- Math
+
+
+## Comparing VFCI to Internal VAR VFCI
+
+```{r}
+int_vfci <-
+  hv$het_reg$dt |>
+  _[variable == "output"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, .(date, int_vfci = log_var_fitted, int_mu = fitted)]
+
+vfci_dt[, .(date, ext_vfci = vfci, ext_mu = mu)] |>
+  merge(int_vfci, by = "date") |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line(aes(y = scale(int_vfci), color = "int_vfci")) +
+  geom_line(aes(y = scale(ext_vfci), color = "ext_vfci")) +
+  labs(
+    x = NULL,
+    y = "VFCI, Normalized to N(0,1)",
+    title = "Internal VAR VFCI and External VFCI"
+  ) +
+  scale_x_date(
+    breaks = seq(as.Date("1960-01-01"), as.Date("2025-01-01"), by = "5 years"),
+    labels = seq(1960, 2025, by = 5)
+  ) +
+  scale_color_manual(
+    values = c(
+      ext_vfci = cholesky_color,
+      int_vfci = hetreg_color
+    ),
+    labels = c(
+      int_vfci = "Internal VAR VFCI",
+      ext_vfci = "External VFCI"
+    )
+  ) +
+  theme_pres
+```
+
+
+##  Identification with Heteroskedasticity
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+hv_irf <-
+  hv |>
+  irf(n.ahead = 40) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "heteroskedasticity"]
+
+list_rbind(list(
+  hv_irf,
+  cv_irf
+)) |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    ncol = 4,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = c(
+      cholesky = cholesky_color,
+      heteroskedasticity = hetreg_color
+    ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity"
+      )
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response"
+  ) +
+  theme_pres
+```
+
+##  Identification with Heteroskedasticity
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+hv_hs <-
+  hv |>
+  hs() |>
+  _$hs |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "heteroskedasticity"]
+
+p1 <-
+  list_rbind(list(
+    hv_hs,
+    cv_hs
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+        fill = recession_color
+      ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hs,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Historical Shock",
+      title = "(a) Historical Shock"
+    ) +
+    theme_pres
+  }()
+
+hv_hd <-
+  hv |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "heteroskedasticity"]
+
+p2 <-
+  list_rbind(list(
+    hv_hd,
+    cv_hd
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+          fill = recession_color
+        ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hd,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Unemployment",
+      title = "(b) Historical Shock Contribution to Unemployment"
+    ) +
+    theme_pres
+  }()
+
+p1 / p2
+```
+
+
+## Comparison to the Business Cycle Shock
+
+- Math
+
+
+##  Comparison to the Business Cycle Shock
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+mv_irf <-
+  mv |>
+  irf(n.ahead = 40) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  _[, model := "mbc"]
+
+list_rbind(list(
+  cv_irf,
+  hv_irf,
+  mv_irf
+)) |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    ncol = 4,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = c(
+      cholesky = cholesky_color,
+      heteroskedasticity = hetreg_color,
+      mbc = max_share_color
+    ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response"
+  ) +
+  theme_pres
+```
+
+##  Comparison to the Business Cycle Shock
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+mv_hs <-
+  mv |>
+  hs() |>
+  _$hs |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "mbc"]
+
+p1 <-
+  list_rbind(list(
+    cv_hs,
+    hv_hs,
+    mv_hs
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+        fill = recession_color
+      ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hs,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color,
+        mbc = max_share_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Historical Shock",
+      title = "(a) Historical Shock"
+    ) +
+    theme_pres
+  }()
+
+
+mv_hd <-
+  mv |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  _[response == "unemployment"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "mbc"]
+
+
+p2 <-
+  list_rbind(list(
+    cv_hd,
+    hv_hd,
+    mv_hd
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+          fill = recession_color
+        ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hd,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color,
+        mbc = max_share_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Unemployment",
+      title = "(b) Historical Shock Contribution to Unemployment"
+    ) +
+    theme_pres
+  }()
+
+p1 / p2
+```
+
+
+## Using 3-year Horizon for the VFCI
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+cv_irf_f12 <-
+  cv_f12 |>
+  irf(n.ahead = 40) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "cholesky"]
+
+hv_irf_f12 <-
+  hv_f12 |>
+  irf(n.ahead = 40) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "heteroskedasticity"]
+
+list_rbind(list(
+  hv_irf_f12,
+  mv_irf
+)) |>
+  ggplot(aes(
+    x = h,
+    y = irf,
+    color = model
+  )) +
+  geom_hline(yintercept = 0, color = bg_line_color) +
+  geom_line() +
+  facet_wrap(
+    vars(response),
+    ncol = 4,
+    scales = "free_y"
+  ) +
+  scale_color_manual(
+    values = c(
+      cholesky = cholesky_color,
+      heteroskedasticity = hetreg_color,
+      mbc = max_share_color
+    ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response"
+  ) +
+  theme_pres
+```
+
+##  Using 3-year Horizon for the VFCI
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-align: 'center'
+
+cv_hs_f12 <-
+  cv_f12 |>
+  hs() |>
+  _$hs |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "cholesky"]
+
+hv_hs_f12 <-
+  hv_f12 |>
+  hs() |>
+  _$hs |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "heteroskedasticity"]
+
+p1 <-
+  list_rbind(list(
+    hv_hs_f12,
+    mv_hs
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+        fill = recession_color
+      ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hs,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color,
+        mbc = max_share_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Historical Shock",
+      title = "(a) Historical Shock"
+    ) +
+    theme_pres
+  }()
+
+
+cv_hd_f12 <-
+  cv_f12 |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "cholesky"]
+
+hv_hd_f12 <-
+  hv_f12 |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response == "unemployment"] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "heteroskedasticity"]
+
+
+p2 <-
+  list_rbind(list(
+    hv_hd_f12,
+    mv_hd
+  )) |>
+  {\(.x)
+    ggplot() +
+    geom_rect(
+          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
+          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+          fill = recession_color
+        ) +
+    geom_hline(yintercept = 0, color = bg_line_color) +
+    geom_line(
+      data = .x,
+      aes(
+      x = date,
+      y = hd,
+      color = model
+    )) +
+    scale_color_manual(
+      values = c(
+        cholesky = cholesky_color,
+        heteroskedasticity = hetreg_color,
+        mbc = max_share_color
+      ),
+      labels = c(
+        cholesky = "Cholesky",
+        heteroskedasticity = "Heteroskedasticity",
+        mbc = "Main Business Cycle Shock"
+      )
+    ) +
+    labs(
+      x = NULL,
+      y = "Unemployment",
+      title = "(b) Historical Shock Contribution to Unemployment"
+    ) +
+    theme_pres
+  }()
+
+p1 / p2
+```
+
+
+
+## Implications
+
+
+
+# Appendix {.appendix visibility="uncounted"}
+
+
+## References {visibility="uncounted"}
+
+::: {#refs}
+:::
+
