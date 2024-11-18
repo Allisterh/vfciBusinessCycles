@@ -133,6 +133,7 @@ corr_dt |>
 ```
 
 
+## Stationary VAR, Financial Internal VFCI
 
 ```{r}
 #| include: false
@@ -187,11 +188,10 @@ corr_dt |>
 ```
 
 
-
+## Stationary VAR, Macro Uncertainty Internal VFCI
 
 ```{r}
 #| include: false
-fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
 int_vfci_hs <-
   1:30 |>
@@ -199,15 +199,14 @@ int_vfci_hs <-
   map(~ {
     data <- get_var_data(
       vfci = NULL,
-      add_cols = fin_cols,
-      end_date = "2022-07-01"
+      end_date = "2022-07-01",
+      make_stationary = TRUE
     ) 
     data |>
       fit_var(lags = 2) |>
       id_linear_het_reg(
         "output",
-        hetreg_horizon = .x,
-        method = "mriv"
+        hetreg_horizon = .x
       ) |>
       hs() |>
       _$hs |>

@@ -33,6 +33,7 @@ library(vfciBCHelpers)
 library(purrr)
 library(ggplot2)
 library(patchwork)
+library(gt)
 ```
 
 ```{r}
@@ -74,13 +75,14 @@ var_order <- c(
 
 crossplot_order <- c("Output", "Investment", "Consumption", "Hours Worked", "Fed Funds", "Labor Prod.", "Inflation", "TFP", "VFCI")
 
+irf_horizon <- 32
 
 ## Colors
 bg_line_color <- "gray50"
 recession_color <- "gray80"
 
-cholesky_color <- "steelblue"
-hetreg_color <- "darkorange"
+hv_macro_color <- "steelblue"
+hv_fin_color <- "darkorange"
 max_share_color <- "firebrick"
 ```
 
@@ -105,65 +107,25 @@ vfci_dt <- est_vfci(
 
 ```{r}
 #| include: false
-
-data <- get_var_data(
-  vfci_dt = est_vfci(
-    "output",
-    c("pc1", "pc2", "pc3", "pc4"),
-    forward = 1
-  ),
-  end_date = "2022-07-01",
-  make_stationary = TRUE
-)
-
-cv <- data |>
-  fit_var(lags = 2) |>
-  reorder_var("vfci") |>
-  id_ordered_chol()
-```
-
-```{r}
-#| include: false
-
-data <- get_var_data(
-  vfci_dt = est_vfci(
-    "output",
-    c("pc1", "pc2", "pc3", "pc4"),
-    forward = 12
-  ),
-  end_date = "2022-07-01",
-  make_stationary = TRUE
-)
-
-cv_f12 <- data |>
-  fit_var(lags = 2) |>
-  reorder_var("vfci") |>
-  id_ordered_chol()
-```
-
-```{r}
-#| include: false
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
 data <- get_var_data(
   vfci = NULL,
   end_date = "2022-07-01",
-  add_cols = fin_cols,
   make_stationary = TRUE
 )
 
-hv <- data[, -c(fin_cols), with = FALSE] |>
+hv_macro <-
+  data |>
   fit_var(lags = 2) |>
   id_linear_het_reg(
     target = "output",
-    hetreg_horizon = 1,
-    x2 = fin_cols,
-    extra_data = data[, fin_cols, with = FALSE],
-    method = "mriv",
+    hetreg_horizon = 12,
     sign = "neg"
   )
 ```
 
+
 ```{r}
 #| include: false
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
@@ -175,7 +137,8 @@ data <- get_var_data(
   make_stationary = TRUE
 )
 
-hv_f12 <- data[, -c(fin_cols), with = FALSE] |>
+hv_fin <-
+  data[, -c(fin_cols), with = FALSE] |>
   fit_var(lags = 2) |>
   id_linear_het_reg(
     target = "output",
@@ -202,126 +165,138 @@ mv <- data |>
 ```
 
 
-## Introduction / Motivation
+## Motivation
 
-Time varying volatility / uncertainty / risk aversion is important for macroeconomic dynamics.^[
-List relevant papers here.
-]
+**Question:** What causes business cycles?
 
-We leverage this heteroskedasticity in the second moment of output growth to identify a VAR.
+- Empirically, a single shock explains most of the variation in unemployment, output, etc. (@mbc2020).
 
-The IRFs of this VAR match the IRFs of the Business Cycle Shock from @mbc2020.
+- Theoretically, models explain this by having a single structural shock that generates this movement (TFP, demand, confidence, etc.).
 
-Our preferred interpretation is that this is driven by the price of risk through frictions in financial intermediation.
+- Another option is that there is a common propagation mechanism instead of one shock.
 
+The answer determines if business cycles are efficient or inefficient outcomes, with very different implications for welfare and policy.
+
+
+## What do we do?
+We construct two shocks,
+
+1. A shock to macroeconomic uncertainty,
+2. And a shock to financial risk compensation.
+
+We find that,
+
+- These two shocks look essentially the same,
+- And both explain a large amount of the business cycle,
+    - In particular, they explain XX% and YY% of the BCA shock.
+
+## Why does this matter? {#why-matter}
+
+The fact these shocks are so similar implies that the mean and the volatility of macroeconomic variables move together over the business cycle.
+
+This is inconsistent with standard business cycle models that rely upon a single shock.
+
+But it is consistent with a model of financial frictions that are a common propagation mechanism for shocks.
+
+**Takeaway:** This implies that business cycles are partly inefficient outcomes, and that there is a role for policy to improve welfare.
+
+:::{.aside}
+[[Related Literature]{.button}](#literature-review)
+:::
 
 ## Outline
 
-1. Quick Summary of @adrian2023
-    - Measuring the Price of Risk (VFCI)
-    - The Price of Risk Moves Linearly with Conditional Output Growth
+- VAR Setup
+    - Construct a macroeconomic uncerainty shock
+    - Construct a financial risk compensation shock
 
-2. VAR Setup
-    - Identification with the VFCI
-    - Identification with Heteroskedasticity
+- Results
+  - Compare impulse response functions and historical shocks
+  - Compare to the Business Cycle Anatomy (BCA) shock
 
-3. Comparison to the Business Cycle Shock
+- Implications
 
-4. Implications
-
-## Measuring the Price of Risk
-
-- Math
-
-## The Price of Risk (VFCI)
-
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
-
-vfci_dt |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-      data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-      aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-      fill = recession_color
-    ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = scale(vfci)
-    ),
-      color = cholesky_color
-    ) +
-    labs(
-      x = NULL,
-      y = "VFCI, Normalized to N(0,1)",
-      title = "Time Series of the Price of Risk (VFCI)"
-    ) +
-    theme_pres
-  }()
-```
-
-## The Price of Risk Moves Linearly with Conditional Output Growth
-
-```{r}
-#| echo: false
-#| fig-width: 6
-#| fig-align: 'center'
-
-vfci_dt |>
-  ggplot(aes(
-    x = scale(vfci),
-    y = mu
-  )) +
-  geom_point(
-    color = cholesky_color
-  ) +
-  labs(
-    x = "VFCI, Normalized to N(0,1)",
-    y = "Conditional Output Growth",
-    title = "Mean vs. Volatility of Output Growth"
-  ) +
-  theme_pres
-```
 
 ## VAR Setup
 
-- Math
+Structural VAR($p$) with $k$ variables in vector $y_t$,
+$$
+B_0 y_t = B_1 y_{t-1} + . . . + B_p y_{t-p} + w_t
+$$
+where structural shocks $w_t$ are white noise.
 
-## Indentification with the VFCI
+. . .
 
-- Math
+Estimate reduced-form coefficients $A_i$ and residuals $u_t$,
+$$
+ y_t = \underbrace{B_0^{-1}B_1}_{A_1} y_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} y_{t-p} + \underbrace{B_0^{-1}w_t}_{u_t}
+$$
+
+and then the shock identification problem: $u_t = B_0^{-1} w_t$.
+
+## Construct a Macroeconomic Uncertainty Shock
+
+The log variance of the VAR forecast errors is, $\sigma_{t, t + h} = \log \left( \widehat{\text{FE}}_{t, t + h}^2 \right)$.
+
+Then estimate the OLS regression,
+
+$$
+\sigma_{t, t + h} = \alpha y_{t} + \varepsilon_t
+$$
+
+- Macroeconomic Uncertainty Shock: $\widehat{\alpha} y_t$
+
+
+## VAR Specification
+```{r}
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+md_start <- as.yearqtr(min(data$date))
+md_end <- as.yearqtr(max(data$date))
+md_vars <- paste0(var_order[names(var_order) != "VFCI"], sep = ", ", collapse="")
+md_vars2 <- substr(md_vars, 1, nchar(md_vars)-2)
+```
+
+Time period:
+
+- `r md_start` to `r md_end`, with $p=2$ lags.
+
+Macro Variables ($k = 10$):
+
+- In log differences: output, investment, consumption, hours worked, productivity, TFP
+- In levels: unemployment, interest rate, inflation, labor share
+
+Financial Variables (summarized by first 4 principal components):
+
+- S&P 500 returns, S&P 500 volatility, term spread, liquidity spread, credit spread, default spread
 
 
 
-##  Identification with the VFCI
+##  Macroeconomic Uncertainty Shock
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
 
-cv_irf <-
-  cv |>
-  irf(n.ahead = 40) |>
+hv_macro_irf <-
+  hv_macro |>
+  irf(n.ahead = irf_horizon) |>
   _$irf |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
-  _[, model := "cholesky"]
+  _[, model := "hv_macro"]
 
-cv_irf |>
+hv_macro_irf |>
   ggplot(aes(
     x = h,
-    y = irf
+    y = irf,
+    color = model
   )) +
   geom_hline(yintercept = 0, color = bg_line_color) +
-  geom_line(
-    color = cholesky_color
-  ) +
+  geom_line() +
   facet_wrap(
     vars(response),
     ncol = 4,
@@ -331,27 +306,38 @@ cv_irf |>
     x = "Horizon (quarters)",
     y = "Impulse Response"
   ) +
-  theme_pres
+  scale_color_manual(
+    values = c(
+      hv_macro = hv_macro_color,
+      hv_fin = hv_fin_color
+    ),
+      labels = c(
+        hv_macro = "Macroeconomic Uncertainty",
+        hv_fin = "Financial Risk Compensation"
+      )
+  ) +
+  theme_pres +
+  theme(legend.position = c(0.8, 0.2))
 ```
 
-##  Identification with the VFCI
+##  Macroeconomic Uncertainty Shock
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
 
 
-cv_hs <-
-  cv |>
+hv_macro_hs <-
+  hv_macro |>
   hs() |>
   _$hs |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
   merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "cholesky"]
+  _[, model := "hv_macro"]
 
 p1 <-
-  cv_hs |>
+  hv_macro_hs |>
   {\(.x)
     ggplot() +
     geom_rect(
@@ -366,7 +352,7 @@ p1 <-
       x = date,
       y = hs
     ),
-      color = cholesky_color
+      color = hv_macro_color
     ) +
     labs(
       x = NULL,
@@ -376,18 +362,18 @@ p1 <-
     theme_pres
   }()
 
-cv_hd <-
-  cv |>
+hv_macro_hd <-
+  hv_macro |>
   fevdid::hd() |>
   _$hd |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
   _[response == "unemployment"] |>
   merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "cholesky"]
+  _[, model := "hv_macro"]
 
 p2 <-
-  cv_hd |>
+  hv_macro_hd |>
   {\(.x)
     ggplot() +
     geom_rect(
@@ -402,7 +388,7 @@ p2 <-
       x = date,
       y = hd
     ),
-      color = cholesky_color
+      color = hv_macro_color
     ) +
     labs(
       x = NULL,
@@ -416,68 +402,37 @@ p1 / p2
 ```
 
 
-## Indentification with Heteroskedasticity
+## Construct a Financial Risk Compensation Shock
 
-- Math
+The log variance of the VAR forecast errors is, $\sigma_{t, t + h} = \log \left( \widehat{\text{FE}}_{t, t + h}^2 \right)$.
 
+Then estimate the OLS regression,
 
-## Comparing VFCI to Internal VAR VFCI
+$$
+\sigma_{t, t + h} = \alpha \color{orange}{R_{t}} \color{black}{ + \varepsilon_t}
+$$
 
-```{r}
-int_vfci <-
-  hv$het_reg$dt |>
-  _[variable == "output"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, .(date, int_vfci = log_var_fitted, int_mu = fitted)]
+- Financial Risk Compensation Shock: $\widehat{\alpha} \color{orange}{R_t}$
 
-vfci_dt[, .(date, ext_vfci = vfci, ext_mu = mu)] |>
-  merge(int_vfci, by = "date") |>
-  ggplot(aes(
-    x = date
-  )) +
-  geom_hline(yintercept = 0, color = bg_line_color) +
-  geom_line(aes(y = scale(int_vfci), color = "int_vfci")) +
-  geom_line(aes(y = scale(ext_vfci), color = "ext_vfci")) +
-  labs(
-    x = NULL,
-    y = "VFCI, Normalized to N(0,1)",
-    title = "Internal VAR VFCI and External VFCI"
-  ) +
-  scale_x_date(
-    breaks = seq(as.Date("1960-01-01"), as.Date("2025-01-01"), by = "5 years"),
-    labels = seq(1960, 2025, by = 5)
-  ) +
-  scale_color_manual(
-    values = c(
-      ext_vfci = cholesky_color,
-      int_vfci = hetreg_color
-    ),
-    labels = c(
-      int_vfci = "Internal VAR VFCI",
-      ext_vfci = "External VFCI"
-    )
-  ) +
-  theme_pres
-```
+Where $\color{orange}{R_t}$ are the financial asset principal components.
 
-
-##  Identification with Heteroskedasticity
+##  Financial Risk Compensation Shock
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
 
-hv_irf <-
-  hv |>
-  irf(n.ahead = 40) |>
+hv_fin_irf <-
+  hv_fin |>
+  irf(n.ahead = irf_horizon) |>
   _$irf |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
-  _[, model := "heteroskedasticity"]
+  _[, model := "hv_fin"]
 
 list_rbind(list(
-  hv_irf,
-  cv_irf
+  hv_fin_irf,
+  hv_macro_irf
 )) |>
   ggplot(aes(
     x = h,
@@ -493,40 +448,41 @@ list_rbind(list(
   ) +
   scale_color_manual(
     values = c(
-      cholesky = cholesky_color,
-      heteroskedasticity = hetreg_color
+      hv_macro = hv_macro_color,
+      hv_fin = hv_fin_color
     ),
       labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity"
+        hv_macro = "Macroeconomic Uncertainty",
+        hv_fin = "Financial Risk Compensation"
       )
   ) +
   labs(
     x = "Horizon (quarters)",
     y = "Impulse Response"
   ) +
-  theme_pres
+  theme_pres +
+  theme(legend.position = c(0.8, 0.2))
 ```
 
-##  Identification with Heteroskedasticity
+##  Financial Risk Compensation Shock
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
 
-hv_hs <-
-  hv |>
+hv_fin_hs <-
+  hv_fin |>
   hs() |>
   _$hs |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
   merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "heteroskedasticity"]
+  _[, model := "hv_fin"]
 
 p1 <-
   list_rbind(list(
-    hv_hs,
-    cv_hs
+    hv_fin_hs,
+    hv_macro_hs
   )) |>
   {\(.x)
     ggplot() +
@@ -545,13 +501,13 @@ p1 <-
     )) +
     scale_color_manual(
       values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color
+        hv_macro = hv_macro_color,
+        hv_fin = hv_fin_color
       ),
-      labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity"
-      )
+        labels = c(
+          hv_macro = "Macroeconomic Uncertainty",
+          hv_fin = "Financial Risk Compensation"
+        )
     ) +
     labs(
       x = NULL,
@@ -561,20 +517,20 @@ p1 <-
     theme_pres
   }()
 
-hv_hd <-
-  hv |>
+hv_fin_hd <-
+  hv_fin |>
   fevdid::hd() |>
   _$hd |>
   as.data.table() |>
   _[impulse == "Chol_1"] |>
   _[response == "unemployment"] |>
   merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "heteroskedasticity"]
+  _[, model := "hv_fin"]
 
 p2 <-
   list_rbind(list(
-    hv_hd,
-    cv_hd
+    hv_fin_hd,
+    hv_macro_hd
   )) |>
   {\(.x)
     ggplot() +
@@ -593,12 +549,12 @@ p2 <-
     )) +
     scale_color_manual(
       values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color
+        hv_macro = hv_macro_color,
+        hv_fin = hv_fin_color
       ),
       labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity"
+        hv_macro = "Macroeconomic Uncertainty",
+        hv_fin = "Financial Risk Compensation"
       )
     ) +
     labs(
@@ -615,7 +571,10 @@ p1 / p2
 
 ## Comparison to the Business Cycle Shock
 
-- Math
+Identify a "main business-cycle" shock $w_t^{(\text{MBC})}$ as in @mbc2020.
+
+1.    Pick a target variable (e.g. unemployment),
+2.    Find linear combination of residuals $w_t^{(\text{MBC})} = b^\prime u_t$ that maximizes its contribution of to the variance of target variable over business-cycle frequencies.
 
 
 ##  Comparison to the Business Cycle Shock
@@ -626,16 +585,16 @@ p1 / p2
 
 mv_irf <-
   mv |>
-  irf(n.ahead = 40) |>
+  irf(n.ahead = irf_horizon) |>
   _$irf |>
   as.data.table() |>
   _[impulse == "Main"] |>
   _[, model := "mbc"]
 
 list_rbind(list(
-  cv_irf,
-  hv_irf,
-  mv_irf
+  mv_irf,
+  hv_fin_irf,
+  hv_macro_irf
 )) |>
   ggplot(aes(
     x = h,
@@ -651,13 +610,13 @@ list_rbind(list(
   ) +
   scale_color_manual(
     values = c(
-      cholesky = cholesky_color,
-      heteroskedasticity = hetreg_color,
+      hv_fin = hv_fin_color,
+      hv_macro = hv_macro_color,
       mbc = max_share_color
     ),
       labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
+        hv_fin = "Financial Risk Compensation",
+        hv_macro = "Macroeconomic Uncertainty",
         mbc = "Main Business Cycle Shock"
       )
   ) +
@@ -665,7 +624,8 @@ list_rbind(list(
     x = "Horizon (quarters)",
     y = "Impulse Response"
   ) +
-  theme_pres
+  theme_pres +
+  theme(legend.position = c(0.8, 0.2))
 ```
 
 ##  Comparison to the Business Cycle Shock
@@ -685,9 +645,9 @@ mv_hs <-
 
 p1 <-
   list_rbind(list(
-    cv_hs,
-    hv_hs,
-    mv_hs
+    mv_hs,
+    hv_fin_hs,
+    hv_macro_hs
   )) |>
   {\(.x)
     ggplot() +
@@ -706,16 +666,16 @@ p1 <-
     )) +
     scale_color_manual(
       values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color,
+        hv_fin = hv_fin_color,
+        hv_macro = hv_macro_color,
         mbc = max_share_color
       ),
       labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
+        hv_fin = "Financial Risk Compensation",
+        hv_macro = "Macroeconomic Uncertainty",
         mbc = "Main Business Cycle Shock"
       )
-    ) +
+  ) +
     labs(
       x = NULL,
       y = "Historical Shock",
@@ -738,9 +698,9 @@ mv_hd <-
 
 p2 <-
   list_rbind(list(
-    cv_hd,
-    hv_hd,
-    mv_hd
+    mv_hd,
+    hv_fin_hd,
+    hv_macro_hd
   )) |>
   {\(.x)
     ggplot() +
@@ -759,15 +719,15 @@ p2 <-
     )) +
     scale_color_manual(
       values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color,
+        hv_fin = hv_fin_color,
+        hv_macro = hv_macro_color,
         mbc = max_share_color
       ),
-      labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
-        mbc = "Main Business Cycle Shock"
-      )
+        labels = c(
+          hv_fin = "Financial Risk Compensation",
+          hv_macro = "Macroeconomic Uncertainty",
+          mbc = "Main Business Cycle Shock"
+        )
     ) +
     labs(
       x = NULL,
@@ -781,193 +741,98 @@ p1 / p2
 ```
 
 
-## Using 3-year Horizon for the VFCI
+## Shock Correlations
 
+::::{.columns}
+
+:::{.column width="50%"}
 ```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
+var_names <- 
+  c(
+    var_1 = "MBC",
+    var_2 = "Fin",
+    var_3 = "Macro"
+  )
 
-cv_irf_f12 <-
-  cv_f12 |>
-  irf(n.ahead = 40) |>
-  _$irf |>
+list(
+  mv,
+  hv_fin,
+  hv_macro
+) |>
+  hs_corr() |>
+  _[impulse_x %in% c("Chol_1", "Main") & impulse_y %in% c("Chol_1", "Main")] |>
+  _[, .(var_x, var_y, corr)] |>
+  _[, var_x := factor(var_x, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
+  _[, var_y := factor(var_y, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
+  tidyfast::dt_pivot_wider(names_from = var_y, values_from = corr) |>
+  gt(rowname_col = "var_x") |>
+  tab_header(
+    title = "Correlation between Shocks"
+  ) |>
+  fmt_number(
+    columns = 2:4,
+    decimals = 2
+  ) |>
+  tab_options(
+    table.font.size = 18
+  )
+```
+:::
+
+:::{.column width="50%"}
+```{r}
+table_row_names <- c(
+  wavg_fevd = "Weighted Average FEVD",
+  pct_mbc_wavg = "Pct. of MBC FEVD"
+)
+model_names <- c(
+  mbc = "MBC",
+  hv_macro = "Macro",
+  hv_fin = "Fin"
+)
+
+list(
+  mbc = mv,
+  hv_fin = hv_fin,
+  hv_macro = hv_macro
+) |>
+  map(~ fevfd(.x)$fevfd) |>
+  list_rbind(names_to = "model") |>
   as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[, model := "cholesky"]
+  _[, total := sum(fevfd), by = .(model, f, response)] |>
+  _[impulse %in% c("Main", "Chol_1")] |>
+  _[f %between% (2 * pi / c(32, 6))] |>
+  _[, .(
+    fevfd = sum(fevfd),
+    total = sum(total)
+  ), by = .(
+    impulse, response, model
+  )] |>
+  _[, wavg_fevd := fevfd / total] |>
+  _[response == "unemployment"] |>
+  _[, mbc_wavg := max(wavg_fevd)] |>
+  _[, pct_mbc_wavg := wavg_fevd / mbc_wavg] |>
+  _[, .(model, wavg_fevd, pct_mbc_wavg)]  |>
+  dt_pivot_longer(-model) |>
+  _[, model := factor(model, levels = names(model_names), labels = model_names, ordered = TRUE)] |>
+  dt_pivot_wider(names_from = model, values_from = value) |>
+  _[, name := factor(name, levels = names(table_row_names), labels = table_row_names, ordered = TRUE)] |>
+  gt(rowname_col = "name") |>
+  tab_header(
+    title = "Forecast Error Variance Decompositions (FEVD)"
+  ) |>
+  fmt_percent(
+    columns = 2:4,
+    decimals = 1
+  ) |>
+  tab_options(
+    table.font.size = 18
+  )
 
-hv_irf_f12 <-
-  hv_f12 |>
-  irf(n.ahead = 40) |>
-  _$irf |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[, model := "heteroskedasticity"]
-
-list_rbind(list(
-  hv_irf_f12,
-  mv_irf
-)) |>
-  ggplot(aes(
-    x = h,
-    y = irf,
-    color = model
-  )) +
-  geom_hline(yintercept = 0, color = bg_line_color) +
-  geom_line() +
-  facet_wrap(
-    vars(response),
-    ncol = 4,
-    scales = "free_y"
-  ) +
-  scale_color_manual(
-    values = c(
-      cholesky = cholesky_color,
-      heteroskedasticity = hetreg_color,
-      mbc = max_share_color
-    ),
-      labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
-        mbc = "Main Business Cycle Shock"
-      )
-  ) +
-  labs(
-    x = "Horizon (quarters)",
-    y = "Impulse Response"
-  ) +
-  theme_pres
 ```
 
-##  Using 3-year Horizon for the VFCI
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
-
-cv_hs_f12 <-
-  cv_f12 |>
-  hs() |>
-  _$hs |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "cholesky"]
-
-hv_hs_f12 <-
-  hv_f12 |>
-  hs() |>
-  _$hs |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "heteroskedasticity"]
-
-p1 <-
-  list_rbind(list(
-    hv_hs_f12,
-    mv_hs
-  )) |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-        fill = recession_color
-      ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hs,
-      color = model
-    )) +
-    scale_color_manual(
-      values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color,
-        mbc = max_share_color
-      ),
-      labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
-        mbc = "Main Business Cycle Shock"
-      )
-    ) +
-    labs(
-      x = NULL,
-      y = "Historical Shock",
-      title = "(a) Historical Shock"
-    ) +
-    theme_pres
-  }()
-
-
-cv_hd_f12 <-
-  cv_f12 |>
-  fevdid::hd() |>
-  _$hd |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[response == "unemployment"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "cholesky"]
-
-hv_hd_f12 <-
-  hv_f12 |>
-  fevdid::hd() |>
-  _$hd |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[response == "unemployment"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "heteroskedasticity"]
-
-
-p2 <-
-  list_rbind(list(
-    hv_hd_f12,
-    mv_hd
-  )) |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-          fill = recession_color
-        ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hd,
-      color = model
-    )) +
-    scale_color_manual(
-      values = c(
-        cholesky = cholesky_color,
-        heteroskedasticity = hetreg_color,
-        mbc = max_share_color
-      ),
-      labels = c(
-        cholesky = "Cholesky",
-        heteroskedasticity = "Heteroskedasticity",
-        mbc = "Main Business Cycle Shock"
-      )
-    ) +
-    labs(
-      x = NULL,
-      y = "Unemployment",
-      title = "(b) Historical Shock Contribution to Unemployment"
-    ) +
-    theme_pres
-  }()
-
-p1 / p2
-```
-
+:::
+::::
 
 
 ## Implications
@@ -982,3 +847,16 @@ p1 / p2
 ::: {#refs}
 :::
 
+## Select Related Literature {#literature-review visibility="uncounted"}
+
+@mbc2020
+
+- 
+
+@adrian2023
+
+- 
+
+:::{.aside}
+[[Why does this Matter?]{.button}](#why-matter)
+:::

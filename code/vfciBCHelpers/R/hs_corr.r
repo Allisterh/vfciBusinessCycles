@@ -11,7 +11,7 @@ hs_corr <- function(
   var_list
 ) {
   ## Defining variables without visible global bindings to make Cmd check happy
-  . <- hs_x <- hs_y <- impulse <- var_x <- var_y <- NULL
+  . <- hs_x <- hs_y <- impulse_x <- impulse_y <- var_x <- var_y <- NULL
 
   if (is.null(names(var_list))) {
     names(var_list) <- paste0("var_", seq_len(length(var_list)))
@@ -25,7 +25,7 @@ hs_corr <- function(
   cross_dt <- merge(
     hs_dt,
     hs_dt,
-    by = c("t", "impulse"),
+    by = c("t"),
     allow.cartesian = TRUE,
     suffixes = c("_x", "_y")
   )
@@ -34,7 +34,7 @@ hs_corr <- function(
     cross_dt[, .(
       corr = stats::cor(hs_x, hs_y)
     ), by = .(
-      impulse, var_x, var_y
+      impulse_x, impulse_y, var_x, var_y
     )]
 
   return(corr_dt)
