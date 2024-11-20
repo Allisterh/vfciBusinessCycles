@@ -1,5 +1,5 @@
 ---
-title: "The Price of Risk Drives the Business Cycle"
+title: "Uncertainty, the Price of Risk, and the Business Cycle"
 subtitle: "Brown Macro Breakfast"
 title-note: "^1^The views expressed here are the authors’ and are not necessarily representative of the views of the International Monetary Fund, its Management, or its Executive Directors."
 author:
@@ -20,6 +20,7 @@ format:
         method: mathjax
         url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
     crossrefs-hover: true
+    auto-stretch: false
 bibliography: references.bib
 ---
 
@@ -62,9 +63,9 @@ theme_pres <-
 var_order <- c(
     VFCI = "vfci",
     Unemployment = "unemployment",
+    Output = "output",
     `Fed Funds` = "interest",
     Inflation = "inflation",
-    Output = "output",
     Investment = "investment",
     Consumption = "consumption",
     `Hours Worked` = "hours_worked",
@@ -165,56 +166,140 @@ mv <- data |>
 ```
 
 
-## Motivation
+```{r}
+#| include: false
 
-**Question:** What causes business cycles?
+var_names <- 
+  c(
+    var_1 = "MBC",
+    var_2 = "Fin",
+    var_3 = "Macro"
+  )
 
-- Empirically, a single shock explains most of the variation in unemployment, output, etc. (@mbc2020).
+corr_dt <-
+  list(
+    mv,
+    hv_fin,
+    hv_macro
+  ) |>
+  hs_corr() |>
+  _[impulse_x %in% c("Chol_1", "Main") & impulse_y %in% c("Chol_1", "Main")] |>
+  _[, .(var_x, var_y, corr)] |>
+  _[, var_x := factor(var_x, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
+  _[, var_y := factor(var_y, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
+  tidyfast::dt_pivot_wider(names_from = var_y, values_from = corr) 
+```
 
-- Theoretically, models explain this by having a single structural shock that generates this movement (TFP, demand, confidence, etc.).
+```{r}
+#| include: false
 
-- Another option is that there is a common propagation mechanism instead of one shock.
+hv_macro_irf <-
+  hv_macro |>
+  irf(n.ahead = irf_horizon) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "hv_macro"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
 
-The answer determines if business cycles are efficient or inefficient outcomes, with very different implications for welfare and policy.
+hv_macro_hd <-
+  hv_macro |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response %in% c("unemployment", "output")] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "hv_macro"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
+```
 
 
-## What do we do?
-We construct two shocks,
+```{r}
+hv_fin_irf <-
+  hv_fin |>
+  irf(n.ahead = irf_horizon) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[, model := "hv_fin"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
+
+hv_fin_hd <-
+  hv_fin |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Chol_1"] |>
+  _[response %in% c("output", "unemployment") ] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "hv_fin"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
+```
+
+```{r}
+mv_irf <-
+  mv |>
+  irf(n.ahead = irf_horizon) |>
+  _$irf |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  _[, model := "mbc"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
+
+mv_hd <-
+  mv |>
+  fevdid::hd() |>
+  _$hd |>
+  as.data.table() |>
+  _[impulse == "Main"] |>
+  _[response %in% c("output", "unemployment")] |>
+  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
+  _[, model := "mbc"] |>
+  _[, response := factor(response, levels = var_order, labels = names(var_order))]
+```
+
+## What Causes Business Cycles?
+
+-   Empirically, just one shock captures majority of the variation of aggregate macroeconomic variables.
+-   In models, usually a single big shock:
+    - TFP, demand, beliefs, confidence, etc.
+-   Common propagation can look like a single shock.
+
+. . .
+
+### Why we care
+-   Causes determine whether fluctuations are inefficient.
+-   Crucial for welfare and policy.
+
+
+## What Do We Do? {#what-do-we-do}
+We construct three shocks:
 
 1. A shock to macroeconomic uncertainty,
-2. And a shock to financial risk compensation.
-
-We find that,
-
-- These two shocks look essentially the same,
-- And both explain a large amount of the business cycle,
-    - In particular, they explain XX% and YY% of the BCA shock.
-
-## Why does this matter? {#why-matter}
-
-The fact these shocks are so similar implies that the mean and the volatility of macroeconomic variables move together over the business cycle.
-
-This is inconsistent with standard business cycle models that rely upon a single shock.
-
-But it is consistent with a model of financial frictions that are a common propagation mechanism for shocks.
-
-**Takeaway:** This implies that business cycles are partly inefficient outcomes, and that there is a role for policy to improve welfare.
+    - Which is a shock to the second moment of output growth.
+2. A shock to the price of risk,
+    - Which is a shock to the compensation financial intermediaries require to hold additional risk,
+3. And a Main Business Cycle (MBC) shock,
+    - Which is a statistical shock that explains the largest possible forecast error variance of unemployment at business cycle frequencies.
 
 :::{.aside}
 [[Related Literature]{.button}](#literature-review)
 :::
 
-## Outline
+## What Do We Find?
 
-- VAR Setup
-    - Construct a macroeconomic uncerainty shock
-    - Construct a financial risk compensation shock
+All three shocks are remarkably similar.
 
-- Results
-  - Compare impulse response functions and historical shocks
-  - Compare to the Business Cycle Anatomy (BCA) shock
+- Produce almost identical impulse response functions.
+- Explain a similar pattern of the historical movements in unemployment.
+- In particular, the business cycle shock has a correlation of...
+    -  `r round(corr_dt[var_x == "MBC", "Macro"], 2)` with the macroeconomic uncertainty shock,
+    - and `r round(corr_dt[var_x == "MBC", "Fin"], 2)` with the price of risk shock.
 
-- Implications
+. . .
+
+**Takeaway:**  We provide new evidence linking second moment shocks to the business cycle, helping distinguish between business cycle models.
 
 
 ## VAR Setup
@@ -232,28 +317,96 @@ $$
  y_t = \underbrace{B_0^{-1}B_1}_{A_1} y_{t-1} + \dots + \underbrace{B_0^{-1}B_p}_{A_p} y_{t-p} + \underbrace{B_0^{-1}w_t}_{u_t}
 $$
 
-and then the shock identification problem: $u_t = B_0^{-1} w_t$.
+The shock identification problem: $u_t = B_0^{-1} w_t$.
 
 ## Construct a Macroeconomic Uncertainty Shock
 
-The log variance of the VAR forecast errors is, $\sigma_{t, t + h} = \log \left( \widehat{\text{FE}}_{t, t + h}^2 \right)$.
+The VAR implies forecast errors, $FE_{t+h}$, for each variable $y_t$ at horizon $h$.
 
-Then estimate the OLS regression,
+Let $\sigma_{t+12} = FE_{t+12}^{\text{(output)}}$ be the forecast error three years out for output growth.
+
+Then we can estimate the OLS regression,
 
 $$
-\sigma_{t, t + h} = \alpha y_{t} + \varepsilon_t
+\log \sigma_{t+12}^2 = \alpha y_{t} + \varepsilon_t
 $$
 
-- Macroeconomic Uncertainty Shock: $\widehat{\alpha} y_t$
+$\widehat{\alpha} y_t$ is a valid instrument for a shock to output growth uncertainty, at a horizon of three years.
+
+
+## What is the Price of Risk?
+
+The *market price of risk* is the equilibrium compensation required by investors to hold all aggregate risk
+    
+- If all risk were tradable in the stock market,
+$$
+\text{market price of risk} = 
+  \frac{
+      \text{expected stock returns} - \text{risk-free rate}
+    }{
+      \text{volatility of stock returns}
+    }
+$$
+
+. . .
+
+All risk is **not** tradeable on the stock market, so we will instead back out the price of risk from the Euler equation and the SDF.
+
+
+## Estimating the Price of Risk
+
+The SDF (stochastic discount factor) can be decomposed...
+
+$$
+\begin{align}
+\text{SDF}_{t+1} = \mathbb{E}_t[\text{SDF}_{t+1}] + \underbrace{\text{Vol}_t[{\text{SDF}_{t+1}}]}_{\lambda_{t}} \epsilon_{t+1}
+\end{align}
+$$ {#eq-volatility-sdf}
+
+- $\mathbb{E}_t[\text{SDF}_{t+1}]$ is the expected mean,
+- $\lambda_{t}$ is the price of risk,
+- $\epsilon_{t+1}$ is an unforseen innovation (structural shocks).
+
+
+## Estimating the Price of Risk
+
+In most macro models, the Euler equation links the SDF to marginal utility:
+
+$$
+\text{SDF}_{t+1} = \beta \left(\frac{C_{t+1}}{C_t}\right)^{-\gamma}
+$$
+
+. . .
+
+Taking logs and combining with @eq-volatility-sdf, we get,
+
+$$
+\gamma \Delta c_{t,t+1} = \beta - \mathbb{E}_t[\text{sdf}_{t+1}] - \lambda_{t} \epsilon_{t+1}
+$$ {#eq-consumption-growth}
+
+Projecting the $\text{sdf}_{t+1}$ onto financial returns $R_t$, we can estimate $\lambda_{t}$ through a heteroskedastic regression.
+
+
+## The Price of Risk Shock in the VAR
+
+A heteroskedastic regression can be implemented by two OLS steps:
+
+1. Estimate the means (the VAR)
+2. Estimate the volatility of the residuals:
+
+Taking $\sigma_{t+12}$ as the forecast error for output growth at horizon 12, 
+
+$$
+  \log \sigma_{t+12}^2 = \delta R_t + \varepsilon_t
+$$
+
+$\widehat{\delta} R_t$ is a measure of the price of risk consistent with the VAR estimation.
+
+We will use this measure as a shock to the price of risk.
 
 
 ## VAR Specification
 ```{r}
-data <- get_var_data(
-  vfci = NULL,
-  end_date = "2022-07-01",
-  make_stationary = TRUE
-)
 md_start <- as.yearqtr(min(data$date))
 md_end <- as.yearqtr(max(data$date))
 md_vars <- paste0(var_order[names(var_order) != "VFCI"], sep = ", ", collapse="")
@@ -273,23 +426,19 @@ Financial Variables (summarized by first 4 principal components):
 
 - S&P 500 returns, S&P 500 volatility, term spread, liquidity spread, credit spread, default spread
 
+## Unemployment and Output 
 
-
-##  Macroeconomic Uncertainty Shock
 ```{r}
 #| echo: false
-#| fig-width: 10
+#| fig-width: 6
+#| fig-height: 3.5
 #| fig-align: 'center'
 
-hv_macro_irf <-
-  hv_macro |>
-  irf(n.ahead = irf_horizon) |>
-  _$irf |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[, model := "hv_macro"]
-
-hv_macro_irf |>
+list_rbind(list(
+  hv_fin_irf,
+  hv_macro_irf
+)) |>
+  _[response %in% c("Output", "Unemployment")] |>
   ggplot(aes(
     x = h,
     y = irf,
@@ -302,11 +451,8 @@ hv_macro_irf |>
     ncol = 4,
     scales = "free_y"
   ) +
-  labs(
-    x = "Horizon (quarters)",
-    y = "Impulse Response"
-  ) +
   scale_color_manual(
+    name = "Shock",
     values = c(
       hv_macro = hv_macro_color,
       hv_fin = hv_fin_color
@@ -316,119 +462,25 @@ hv_macro_irf |>
         hv_fin = "Financial Risk Compensation"
       )
   ) +
+  scale_x_continuous(
+    breaks = seq(0, irf_horizon, 8)
+  ) +
+  labs(
+    x = "Horizon (quarters)",
+    y = "Impulse Response"
+  ) +
   theme_pres +
-  theme(legend.position = c(0.8, 0.2))
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
-##  Macroeconomic Uncertainty Shock
+## All Impulse Responses
+
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
-
-
-hv_macro_hs <-
-  hv_macro |>
-  hs() |>
-  _$hs |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "hv_macro"]
-
-p1 <-
-  hv_macro_hs |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-        fill = recession_color
-      ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hs
-    ),
-      color = hv_macro_color
-    ) +
-    labs(
-      x = NULL,
-      y = "Historical Shock",
-      title = "(a) Historical Shock"
-    ) +
-    theme_pres
-  }()
-
-hv_macro_hd <-
-  hv_macro |>
-  fevdid::hd() |>
-  _$hd |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[response == "unemployment"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "hv_macro"]
-
-p2 <-
-  hv_macro_hd |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-          fill = recession_color
-        ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hd
-    ),
-      color = hv_macro_color
-    ) +
-    labs(
-      x = NULL,
-      y = "Unemployment",
-      title = "(b) Historical Shock Contribution to Unemployment"
-    ) +
-    theme_pres
-  }()
-
-p1 / p2
-```
-
-
-## Construct a Financial Risk Compensation Shock
-
-The log variance of the VAR forecast errors is, $\sigma_{t, t + h} = \log \left( \widehat{\text{FE}}_{t, t + h}^2 \right)$.
-
-Then estimate the OLS regression,
-
-$$
-\sigma_{t, t + h} = \alpha \color{orange}{R_{t}} \color{black}{ + \varepsilon_t}
-$$
-
-- Financial Risk Compensation Shock: $\widehat{\alpha} \color{orange}{R_t}$
-
-Where $\color{orange}{R_t}$ are the financial asset principal components.
-
-##  Financial Risk Compensation Shock
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
-
-hv_fin_irf <-
-  hv_fin |>
-  irf(n.ahead = irf_horizon) |>
-  _$irf |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[, model := "hv_fin"]
 
 list_rbind(list(
   hv_fin_irf,
@@ -447,6 +499,7 @@ list_rbind(list(
     scales = "free_y"
   ) +
   scale_color_manual(
+    name = "Shock",
     values = c(
       hv_macro = hv_macro_color,
       hv_fin = hv_fin_color
@@ -456,82 +509,31 @@ list_rbind(list(
         hv_fin = "Financial Risk Compensation"
       )
   ) +
+  scale_x_continuous(
+    breaks = seq(0, irf_horizon, 8)
+  ) +
   labs(
     x = "Horizon (quarters)",
     y = "Impulse Response"
   ) +
   theme_pres +
-  theme(legend.position = c(0.8, 0.2))
+  theme(
+    legend.position = c(0.85, 0.25),
+    legend.justification = c(1, 1)
+  )
 ```
 
-##  Financial Risk Compensation Shock
+## Historical Shock Contributions
+
 ```{r}
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
 
-hv_fin_hs <-
-  hv_fin |>
-  hs() |>
-  _$hs |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "hv_fin"]
-
-p1 <-
-  list_rbind(list(
-    hv_fin_hs,
-    hv_macro_hs
-  )) |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-        fill = recession_color
-      ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hs,
-      color = model
-    )) +
-    scale_color_manual(
-      values = c(
-        hv_macro = hv_macro_color,
-        hv_fin = hv_fin_color
-      ),
-        labels = c(
-          hv_macro = "Macroeconomic Uncertainty",
-          hv_fin = "Financial Risk Compensation"
-        )
-    ) +
-    labs(
-      x = NULL,
-      y = "Historical Shock",
-      title = "(a) Historical Shock"
-    ) +
-    theme_pres
-  }()
-
-hv_fin_hd <-
-  hv_fin |>
-  fevdid::hd() |>
-  _$hd |>
-  as.data.table() |>
-  _[impulse == "Chol_1"] |>
-  _[response == "unemployment"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "hv_fin"]
-
-p2 <-
-  list_rbind(list(
-    hv_fin_hd,
-    hv_macro_hd
-  )) |>
+list_rbind(list(
+  hv_fin_hd,
+  hv_macro_hd
+)) |>
   {\(.x)
     ggplot() +
     geom_rect(
@@ -547,7 +549,13 @@ p2 <-
       y = hd,
       color = model
     )) +
+    facet_wrap(
+      vars(response),
+      ncol = 1,
+      scales = "free"
+    ) +
     scale_color_manual(
+      name = "Shock",
       values = c(
         hv_macro = hv_macro_color,
         hv_fin = hv_fin_color
@@ -557,15 +565,17 @@ p2 <-
         hv_fin = "Financial Risk Compensation"
       )
     ) +
+    scale_x_date(
+      breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+      labels = seq(1960, 2020, 5)
+    ) +
     labs(
       x = NULL,
-      y = "Unemployment",
-      title = "(b) Historical Shock Contribution to Unemployment"
+      y = "Historical Contributions"
     ) +
     theme_pres
   }()
 
-p1 / p2
 ```
 
 
@@ -574,7 +584,7 @@ p1 / p2
 Identify a "main business-cycle" shock $w_t^{(\text{MBC})}$ as in @mbc2020.
 
 1.    Pick a target variable (e.g. unemployment),
-2.    Find linear combination of residuals $w_t^{(\text{MBC})} = b^\prime u_t$ that maximizes its contribution of to the variance of target variable over business-cycle frequencies.
+2.    Find linear combination of residuals $w_t^{(\text{MBC})} = b^\prime u_t$ that maximizes its contribution to the variance of target variable over business-cycle frequencies.
 
 
 ##  Comparison to the Business Cycle Shock
@@ -582,14 +592,6 @@ Identify a "main business-cycle" shock $w_t^{(\text{MBC})}$ as in @mbc2020.
 #| echo: false
 #| fig-width: 10
 #| fig-align: 'center'
-
-mv_irf <-
-  mv |>
-  irf(n.ahead = irf_horizon) |>
-  _$irf |>
-  as.data.table() |>
-  _[impulse == "Main"] |>
-  _[, model := "mbc"]
 
 list_rbind(list(
   mv_irf,
@@ -609,6 +611,7 @@ list_rbind(list(
     scales = "free_y"
   ) +
   scale_color_manual(
+    name = "Shock",
     values = c(
       hv_fin = hv_fin_color,
       hv_macro = hv_macro_color,
@@ -620,12 +623,18 @@ list_rbind(list(
         mbc = "Main Business Cycle Shock"
       )
   ) +
+  scale_x_continuous(
+    breaks = seq(0, irf_horizon, 8)
+  ) +
   labs(
     x = "Horizon (quarters)",
     y = "Impulse Response"
   ) +
   theme_pres +
-  theme(legend.position = c(0.8, 0.2))
+  theme(
+    legend.position = c(0.85, 0.25),
+    legend.justification = c(1, 1)
+  )
 ```
 
 ##  Comparison to the Business Cycle Shock
@@ -634,74 +643,11 @@ list_rbind(list(
 #| fig-width: 10
 #| fig-align: 'center'
 
-mv_hs <-
-  mv |>
-  hs() |>
-  _$hs |>
-  as.data.table() |>
-  _[impulse == "Main"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "mbc"]
-
-p1 <-
-  list_rbind(list(
-    mv_hs,
-    hv_fin_hs,
-    hv_macro_hs
-  )) |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-        data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-        aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-        fill = recession_color
-      ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hs,
-      color = model
-    )) +
-    scale_color_manual(
-      values = c(
-        hv_fin = hv_fin_color,
-        hv_macro = hv_macro_color,
-        mbc = max_share_color
-      ),
-      labels = c(
-        hv_fin = "Financial Risk Compensation",
-        hv_macro = "Macroeconomic Uncertainty",
-        mbc = "Main Business Cycle Shock"
-      )
-  ) +
-    labs(
-      x = NULL,
-      y = "Historical Shock",
-      title = "(a) Historical Shock"
-    ) +
-    theme_pres
-  }()
-
-
-mv_hd <-
-  mv |>
-  fevdid::hd() |>
-  _$hd |>
-  as.data.table() |>
-  _[impulse == "Main"] |>
-  _[response == "unemployment"] |>
-  merge(copy(data)[, t := .I - 2][,. (t, date)], by = "t") |>
-  _[, model := "mbc"]
-
-
-p2 <-
-  list_rbind(list(
-    mv_hd,
-    hv_fin_hd,
-    hv_macro_hd
-  )) |>
+list_rbind(list(
+  mv_hd,
+  hv_fin_hd,
+  hv_macro_hd
+)) |>
   {\(.x)
     ggplot() +
     geom_rect(
@@ -717,7 +663,13 @@ p2 <-
       y = hd,
       color = model
     )) +
+    facet_wrap(
+      vars(response),
+      ncol = 1,
+      scales = "free"
+    ) +
     scale_color_manual(
+      name = "Shock",
       values = c(
         hv_fin = hv_fin_color,
         hv_macro = hv_macro_color,
@@ -729,114 +681,40 @@ p2 <-
           mbc = "Main Business Cycle Shock"
         )
     ) +
+    scale_x_date(
+      breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
+      labels = seq(1960, 2020, 5)
+    ) +
     labs(
       x = NULL,
-      y = "Unemployment",
-      title = "(b) Historical Shock Contribution to Unemployment"
+      y = "Historical Contributions"
     ) +
     theme_pres
   }()
-
-p1 / p2
 ```
 
 
-## Shock Correlations
+## Distinguisihing Business Cycle Models
 
-::::{.columns}
+New Business Cycle Fact:
 
-:::{.column width="50%"}
-```{r}
-var_names <- 
-  c(
-    var_1 = "MBC",
-    var_2 = "Fin",
-    var_3 = "Macro"
-  )
+- Second moments of macroeconomic variables also comove with first moments over the business cycle.
 
-list(
-  mv,
-  hv_fin,
-  hv_macro
-) |>
-  hs_corr() |>
-  _[impulse_x %in% c("Chol_1", "Main") & impulse_y %in% c("Chol_1", "Main")] |>
-  _[, .(var_x, var_y, corr)] |>
-  _[, var_x := factor(var_x, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
-  _[, var_y := factor(var_y, levels = names(var_names), labels = var_names, ordered = TRUE)] |>
-  tidyfast::dt_pivot_wider(names_from = var_y, values_from = corr) |>
-  gt(rowname_col = "var_x") |>
-  tab_header(
-    title = "Correlation between Shocks"
-  ) |>
-  fmt_number(
-    columns = 2:4,
-    decimals = 2
-  ) |>
-  tab_options(
-    table.font.size = 18
-  )
-```
-:::
+This new fact can help distinguish between business cycle models.
 
-:::{.column width="50%"}
-```{r}
-table_row_names <- c(
-  wavg_fevd = "Weighted Average FEVD",
-  pct_mbc_wavg = "Pct. of MBC FEVD"
-)
-model_names <- c(
-  mbc = "MBC",
-  hv_macro = "Macro",
-  hv_fin = "Fin"
-)
-
-list(
-  mbc = mv,
-  hv_fin = hv_fin,
-  hv_macro = hv_macro
-) |>
-  map(~ fevfd(.x)$fevfd) |>
-  list_rbind(names_to = "model") |>
-  as.data.table() |>
-  _[, total := sum(fevfd), by = .(model, f, response)] |>
-  _[impulse %in% c("Main", "Chol_1")] |>
-  _[f %between% (2 * pi / c(32, 6))] |>
-  _[, .(
-    fevfd = sum(fevfd),
-    total = sum(total)
-  ), by = .(
-    impulse, response, model
-  )] |>
-  _[, wavg_fevd := fevfd / total] |>
-  _[response == "unemployment"] |>
-  _[, mbc_wavg := max(wavg_fevd)] |>
-  _[, pct_mbc_wavg := wavg_fevd / mbc_wavg] |>
-  _[, .(model, wavg_fevd, pct_mbc_wavg)]  |>
-  dt_pivot_longer(-model) |>
-  _[, model := factor(model, levels = names(model_names), labels = model_names, ordered = TRUE)] |>
-  dt_pivot_wider(names_from = model, values_from = value) |>
-  _[, name := factor(name, levels = names(table_row_names), labels = table_row_names, ordered = TRUE)] |>
-  gt(rowname_col = "name") |>
-  tab_header(
-    title = "Forecast Error Variance Decompositions (FEVD)"
-  ) |>
-  fmt_percent(
-    columns = 2:4,
-    decimals = 1
-  ) |>
-  tab_options(
-    table.font.size = 18
-  )
-
-```
-
-:::
-::::
+- Most standard business cycle models do not create this comovement.
+- A model with financial frictions can create this comovement.
 
 
-## Implications
+## Conclusion
 
+We construct three shocks:
+
+- macroeconomic uncertainty, price of risk, and a main business cycle shock.
+
+These shocks produce almost identical impulse response functions and explain a similar pattern of historical movements in unemployment.
+
+These new facts can help distinguish between business cycle models.
 
 
 # Appendix {.appendix visibility="uncounted"}
@@ -847,16 +725,14 @@ list(
 ::: {#refs}
 :::
 
-## Select Related Literature {#literature-review visibility="uncounted"}
+## Select Related Literature {#literature-review visibility="uncounted" .smaller}
 
-@mbc2020
+@mbc2020 --- Introduces the "Main Business Cycle Shock" by showing the same shock explains a large portion of the variance of output, unemployment, consumption, investment and hours worked over business cycle frequencies.  This same shock does not explain much of the variation in inflation or TFP.
 
-- 
+@adrian2023 --- Introduces the "Volatility Financial Conditions Index" (VFCI) as the conditional variance of output growth that is explained by financial factors.  The VFCI is the first FCI grounded in theory and does a better job explaining credit spreads than other FCIs.
 
-@adrian2023
-
-- 
+@brunnermeier2021 --- Identifies a structural VAR with heteroskedastic regimes in order to look at credit expansions and financial stress shocks.
 
 :::{.aside}
-[[Why does this Matter?]{.button}](#why-matter)
+[[What Do We Do?]{.button}](#what-do-we-do)
 :::

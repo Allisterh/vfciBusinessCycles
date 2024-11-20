@@ -46,7 +46,11 @@ ext_vfci_cv <-
       c("pc1", "pc2", "pc3", "pc4"),
       forward = .x,
       ) |>
-      get_var_data(vfci_dt = _, make_stationary = TRUE, end_date = "2022-07-01") |>
+      get_var_data(
+        vfci_dt = _,
+        make_stationary = TRUE,
+        end_date = "2022-07-01"
+      ) |>
       fit_var(lags = 2) |>
       reorder_var("vfci") |>
       id_ordered_chol()
