@@ -331,7 +331,7 @@ list_rbind(list(
       mbc = max_share_color
     ),
       labels = c(
-        hv_fin = "Financial Risk Compensation",
+        hv_fin = "Price of Risk",
         hv_macro = "Macroeconomic Uncertainty",
         mbc = "Main Business Cycle Shock"
       )
@@ -389,7 +389,7 @@ list_rbind(list(
         mbc = max_share_color
       ),
         labels = c(
-          hv_fin = "Financial Risk Compensation",
+          hv_fin = "Price of Risk",
           hv_macro = "Macroeconomic Uncertainty",
           mbc = "Main Business Cycle Shock"
         )
@@ -603,7 +603,7 @@ list_rbind(list(
     ),
       labels = c(
         hv_macro = "Macroeconomic Uncertainty",
-        hv_fin = "Financial Risk Compensation"
+        hv_fin = "Price of Risk"
       )
   ) +
   scale_x_continuous(
@@ -650,7 +650,7 @@ list_rbind(list(
     ),
       labels = c(
         hv_macro = "Macroeconomic Uncertainty",
-        hv_fin = "Financial Risk Compensation"
+        hv_fin = "Price of Risk"
       )
   ) +
   scale_x_continuous(
@@ -706,7 +706,7 @@ list_rbind(list(
       ),
       labels = c(
         hv_macro = "Macroeconomic Uncertainty",
-        hv_fin = "Financial Risk Compensation"
+        hv_fin = "Price of Risk"
       )
     ) +
     scale_x_date(
@@ -763,7 +763,7 @@ list_rbind(list(
       mbc = max_share_color
     ),
       labels = c(
-        hv_fin = "Financial Risk Compensation",
+        hv_fin = "Price of Risk",
         hv_macro = "Macroeconomic Uncertainty",
         mbc = "Main Business Cycle Shock"
       )
@@ -821,7 +821,7 @@ list_rbind(list(
         mbc = max_share_color
       ),
         labels = c(
-          hv_fin = "Financial Risk Compensation",
+          hv_fin = "Price of Risk",
           hv_macro = "Macroeconomic Uncertainty",
           mbc = "Main Business Cycle Shock"
         )
