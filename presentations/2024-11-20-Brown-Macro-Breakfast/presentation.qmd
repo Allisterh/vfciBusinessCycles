@@ -1,6 +1,6 @@
 ---
 title: "Uncertainty, the Price of Risk, and the Business Cycle"
-subtitle: "Brown Macro Breakfast"
+subtitle: "Southern Economic Association 94th Annual Meeting"
 title-note: "^1^The views expressed here are the authors’ and are not necessarily representative of the views of the International Monetary Fund, its Management, or its Executive Directors."
 author:
   - name: "Tobias Adrian"
@@ -9,7 +9,7 @@ author:
     affiliation: Brown University
   - name: "Fernando Duarte"
     affiliation: Brown University
-date: "2024-11-20"
+date: "2024-11-25"
 callout-appearance: minimal
 editor:
   render-on-save: true
@@ -41,12 +41,12 @@ library(gt)
 #| include: false
 
 theme_pres <-
-    theme_bw(base_size = 16) +
+    theme_bw(base_size = 18) +
     theme(
         plot.title = element_text(hjust = 0.5),
-        axis.text = element_text(size = 12, margin = margin(0, 0, 0, 0)),
-        axis.title = element_text(size = 14),
-        plot.caption = element_text(size = 11),
+        axis.text = element_text(size = 14, margin = margin(0, 0, 0, 0)),
+        axis.title = element_text(size = 16),
+        plot.caption = element_text(size = 13),
         panel.grid = element_blank(),
         plot.background = element_blank(),
         panel.background = element_blank(),
@@ -54,9 +54,9 @@ theme_pres <-
         legend.key = element_blank(),
         legend.position = "top",
         legend.background = element_blank(),
-        legend.title = element_text(size = 14),
+        legend.title = element_text(size = 16),
         legend.margin = margin(0, 0, 0, 0),
-        legend.text = element_text(size = 10),
+        legend.text = element_text(size = 12),
         plot.margin = margin(10, 10, 0, 10, "pt")
         )
 
@@ -293,126 +293,18 @@ Each of the three shocks produces essentially the same:
 - impulse response functions for macro variables
 - historical contributions to variation in unemployment, output
 
-- Business cycle shock has a correlation of
+- business cycle shock has a correlation of
     -  `r round(corr_dt[var_x == "MBC", "Macro"], 2)` with the macroeconomic 
     uncertainty shock
     -  `r round(corr_dt[var_x == "MBC", "Fin"], 2)` with the price of risk shock
 
-. . .
-
-## Preview: IRF
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
-
-list_rbind(list(
-  mv_irf,
-  hv_fin_irf,
-  hv_macro_irf
-)) |>
-  ggplot(aes(
-    x = h,
-    y = irf,
-    color = model
-  )) +
-  geom_hline(yintercept = 0, color = bg_line_color) +
-  geom_line() +
-  facet_wrap(
-    vars(response),
-    ncol = 4,
-    scales = "free_y"
-  ) +
-  scale_color_manual(
-    name = "Shock",
-    values = c(
-      hv_fin = hv_fin_color,
-      hv_macro = hv_macro_color,
-      mbc = max_share_color
-    ),
-      labels = c(
-        hv_fin = "Price of Risk",
-        hv_macro = "Macroeconomic Uncertainty",
-        mbc = "Main Business Cycle Shock"
-      )
-  ) +
-  scale_x_continuous(
-    breaks = seq(0, irf_horizon, 8)
-  ) +
-  labs(
-    x = "Horizon (quarters)",
-    y = "Impulse Response"
-  ) +
-  theme_pres +
-  theme(
-    legend.position = c(0.85, 0.25),
-    legend.justification = c(1, 1)
-  )
-```
-
-## Preview: Historical Contribution
-```{r}
-#| echo: false
-#| fig-width: 10
-#| fig-align: 'center'
-
-list_rbind(list(
-  mv_hd,
-  hv_fin_hd,
-  hv_macro_hd
-)) |>
-  {\(.x)
-    ggplot() +
-    geom_rect(
-          data = rec_dates[start %between% as.Date(c("1962-01-01", "2022-01-01"))],
-          aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
-          fill = recession_color
-        ) +
-    geom_hline(yintercept = 0, color = bg_line_color) +
-    geom_line(
-      data = .x,
-      aes(
-      x = date,
-      y = hd,
-      color = model
-    )) +
-    facet_wrap(
-      vars(response),
-      ncol = 1,
-      scales = "free"
-    ) +
-    scale_color_manual(
-      name = "Shock",
-      values = c(
-        hv_fin = hv_fin_color,
-        hv_macro = hv_macro_color,
-        mbc = max_share_color
-      ),
-        labels = c(
-          hv_fin = "Price of Risk",
-          hv_macro = "Macroeconomic Uncertainty",
-          mbc = "Main Business Cycle Shock"
-        )
-    ) +
-    scale_x_date(
-      breaks = seq(as.Date("1960-01-01"), as.Date("2020-01-01"), by = "5 years"),
-      labels = seq(1960, 2020, 5)
-    ) +
-    labs(
-      x = NULL,
-      y = "Historical Contributions"
-    ) +
-    theme_pres
-  }()
-```
 
 
-## Evidence for Financial Shocks or Financial Propagation
+## Evidence Points to Financial Shocks or Propagation
 
 -   Business cycles tightly linked to financial conditions and macro uncertainty
 -   Shocks move first and second moments of macro variables at the same time
--   Either one big financial shock or common propagation of other shocks through 
-financial system
+-   Either one big financial shock or common propagation of other shocks through financial system
 
 ### Takeaway
 -   Difficult to reconcile with standard models and shocks
@@ -449,33 +341,14 @@ $$
 
 -   Estimate VAR
 -   Let $\sigma_{t+12}$ be the twelve-quarter-ahead forecast error for output growth
--   Measure macroeconomic uncertainty by $\mathbb{E}_t\sigma_{t+12}$
+-   Measure macroeconomic uncertainty by $\mathbb{E}_t\sigma_{t+12}^2$
 -   Run OLS regression
 
 $$
-\log \sigma_{t+12}^2 = \alpha y_{t} + \varepsilon_t
+\log \sigma_{t+12}^2 = \alpha y_{t} + \upsilon_t
 $$
 
 -   Fitted value $\widehat{\alpha} y_t$ is a valid instrument for a shock to uncertainty
-
-
-<!-- ## What is the Price of Risk? -->
-
-<!-- The *market price of risk* is the equilibrium compensation required by investors to hold all aggregate risk -->
-
-<!-- - If all risk were tradable in the stock market, -->
-<!-- $$ -->
-<!-- \text{market price of risk} =  -->
-<!--   \frac{ -->
-<!--       \text{expected stock returns} - \text{risk-free rate} -->
-<!--     }{ -->
-<!--       \text{volatility of stock returns} -->
-<!--     } -->
-<!-- $$ -->
-
-<!-- . . . -->
-
-<!-- All risk is **not** tradeable on the stock market, so we will instead back out the price of risk from the Euler equation and the SDF. -->
 
 
 ## The Price of Risk
@@ -516,10 +389,10 @@ $$
 Taking logs and combining with @eq-volatility-sdf, we get
 
 $$
-\gamma \Delta c_{t,t+1} = \beta - \mathbb{E}_t[\text{sdf}_{t+1}] - \lambda_{t} \epsilon_{t+1}
+\gamma \Delta c_{t,t+1} = \beta - \mathbb{E}_t[\text{sdf}_{t+1}] - \lambda_{t} \varepsilon_{t+1}
 $$ {#eq-consumption-growth}
 
-Projecting the $\text{sdf}_{t+1}$ onto financial returns $R_t$, we can estimate $\lambda_{t}$ through a heteroskedastic regression.
+Projecting the $\text{sdf}_{t+1}$ and $\lambda_t$ onto financial returns $R_t$, we can estimate $\lambda_{t}$ through a heteroskedastic regression
 
 ::: {.notes}
 this works for general utility
@@ -542,7 +415,7 @@ $$
   \log \sigma_{t+12}^2 = \delta R_t + \varepsilon_t
 $$
 
-Then $\widehat{\delta} R_t$ is a shock to the price of risk consistent with the VAR estimation.
+Then $\widehat{\delta} R_t$ is a shock to the price of risk consistent with the VAR estimation
 
 ::: {.notes}
 Using the VAR automatically takes care of general utility functions; we are writing marginal utility as a function of macro variables and lags, which should capture the determinants of marginal utility for most/all utilities if enough lags are used
@@ -574,8 +447,8 @@ Financial Variables (summarized by first 4 principal components):
 
 ```{r}
 #| echo: false
-#| fig-width: 6
-#| fig-height: 3.5
+#| fig-width: 6.5
+#| fig-height: 4
 #| fig-align: 'center'
 
 list_rbind(list(
@@ -715,7 +588,7 @@ list_rbind(list(
     ) +
     labs(
       x = NULL,
-      y = "Historical Contributions"
+      y = "Historical Contribution"
     ) +
     theme_pres
   }()
@@ -730,7 +603,7 @@ Identify the business-cycle shock $w_t^{(\text{MBC})}$ as in @mbc2020.
 1.    Pick a target variable (e.g. unemployment),
 2.    Find linear combination of residuals $w_t^{(\text{MBC})} = b^\prime u_t$ that maximizes its contribution to the variance of target variable over business-cycle frequencies.
 
-Using unemployment, output, consumption, etc., produces the same shock
+Using unemployment, output, consumption, investment, or hours worked, produces the same shock
 
 ##  Comparison to the Business Cycle Shock
 ```{r}
@@ -765,7 +638,7 @@ list_rbind(list(
       labels = c(
         hv_fin = "Price of Risk",
         hv_macro = "Macroeconomic Uncertainty",
-        mbc = "Main Business Cycle Shock"
+        mbc = "Business Cycle Shock"
       )
   ) +
   scale_x_continuous(
@@ -823,7 +696,7 @@ list_rbind(list(
         labels = c(
           hv_fin = "Price of Risk",
           hv_macro = "Macroeconomic Uncertainty",
-          mbc = "Main Business Cycle Shock"
+          mbc = "Business Cycle Shock"
         )
     ) +
     scale_x_date(
@@ -832,37 +705,29 @@ list_rbind(list(
     ) +
     labs(
       x = NULL,
-      y = "Historical Contributions"
+      y = "Historical Contribution"
     ) +
     theme_pres
   }()
 ```
 
 
-<!-- ## Distinguisihing Business Cycle Models -->
-
-<!-- New Business Cycle Fact: -->
-
-<!-- - First and second moments of macroeconomic variables driven by same business cycle shock -->
-
-<!-- This new fact can help distinguish between business cycle models -->
-
-<!-- - Most standard business cycle models do not create this comovement -->
-<!-- - A model with financial frictions can create this comovement -->
-
 
 ## Conclusion
 
-We construct three shocks:
+- We construct three shocks:
 
-- macroeconomic uncertainty, price of risk, and a main business cycle shock
+    - macroeconomic uncertainty, price of risk, and a business cycle shock
 
-These shocks produce almost identical impulse response functions and explain a similar pattern of historical movements in unemployment and output
+- Almost identical impulse response functions and similar patterns of historical movements in unemployment and output
 
-First and second moments of macroeconomic variables driven by same business cycle shock
+- New business cycle fact:
 
-These new facts can help distinguish between business cycle models and point to 
-models with financial frictions or financial shocks
+    - first and second moments of macroeconomic variables move together
+
+- Distinguish between business cycle models
+
+    - points to models with financial frictions or financial shocks
 
 
 
