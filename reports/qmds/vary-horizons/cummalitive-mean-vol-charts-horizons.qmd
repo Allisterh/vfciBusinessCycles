@@ -1,0 +1,97 @@
+---
+title: "Mean-Vol Heteroskedasticity Charts"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, echo = F, warning = F}
+lags <- 2
+
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+x <- data |> copy()
+v <- fit_var(x, lags = lags)
+
+hetreg_list <- purrr::map(1:30, ~ fit_het_reg_from_var(v, hetreg_horizon = .x))
+
+var_means <-
+  purrr::map(1:30, ~{
+    forecast(v, horizon = .x) |>
+      as.data.table() |> 
+      _[, t := .I - .x - lags] |>
+      _[, horizon := .x] |>
+      tidyfast::dt_pivot_longer(-c(t, horizon), names_to = "variable", values_to = "mean_fitted")
+  }) |>
+  purrr::list_rbind() |>
+  _[, cum_mean_fitted := cumsum(mean_fitted), by = .(t, variable)] 
+
+hetreg_dt <- purrr::map(1:30, ~ {dt <- hetreg_list[[.x]]$dt; dt$horizon = .x; dt}) |>
+  purrr::list_rbind()
+
+data <- 
+  hetreg_dt |> 
+  merge(var_means, by = c("t", "horizon", "variable"))
+
+```
+
+
+```{r}
+#| output: asis
+#| echo: false
+
+res <- map_chr(1:30, \(h) {
+  knitr::knit_child(text = c(
+    "## Horizon: `r h`",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
+    "data[horizon == h] |>
+    ggplot(aes(y = cum_mean_fitted, x = log_var_fitted)) +
+    geom_point() +
+    facet_wrap(vars(variable), scales = 'free', nrow = 4) +
+    theme_bw(base_size = 8)",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-height: 8
+#| out-width: 100%
+#| fig-cap: "Corelations and R-squared by horizon"
+
+data[, .(
+  corr = cor(cum_mean_fitted, log_var_fitted, use = 'complete.obs'),
+  r_sq = cor(cum_mean_fitted, log_var_fitted, use = 'complete.obs') ^ 2
+  ), by = .(variable, horizon)
+] |>
+  ggplot(aes(
+    x = horizon,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0) + 
+  geom_line(aes(color = "corr")) +
+  geom_line(aes(y = r_sq, color = "r_sq"), linetype = 2) +
+  facet_wrap(vars(variable)) +
+  scale_y_continuous(limits = c(-1, 1)) + 
+  theme_bw(base_size = 8)
+
+```
+
