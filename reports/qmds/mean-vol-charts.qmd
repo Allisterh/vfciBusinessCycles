@@ -16,14 +16,22 @@ require(ggplot2)
 library(vfciBCHelpers)
 ```
 
-```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-Vol (twostep method, VAR means)"}
+```{r}
+#| include: false
+#| warning: false
+
+
 lags <- 2
 
-data <- get_var_data()
-x <- data[, -"vfci"] |> copy()
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+  )
+x <- data |> copy()
 v <- fit_var(x, lags = lags)
 
-hetreg <- fit_het_reg_from_var(v)
+hetreg <- fit_het_reg_from_var(v, hetreg_horizon = 1)
 
 var_means <-
   fitted(v) |>
@@ -35,50 +43,24 @@ data <-
   hetreg$dt |> 
   merge(var_means, by = c("t", "variable"))
 
+
+```
+
+\newpage
+
+```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-LogVariance"}
+
 data |>
   ggplot(aes(y = var_fitted, x = log_var_fitted)) +
   geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
   facet_wrap(vars(variable), scales = "free", nrow = 4) +
   theme_bw(base_size = 8)
  
 data[, .(
-  corr = cor(var_fitted, log_var_fitted),
-  r_sq = cor(var_fitted, log_var_fitted) ^ 2
-  ), by = .(variable)]
-```
-
-\newpage
-
-```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-Vol (twostep method, adjusted means)"}
-
-hetreg$dt |> 
-  ggplot(aes(y = fitted, x = log_var_fitted)) +
-  geom_point() +
-  facet_wrap(vars(variable), scales = "free", nrow = 4) +
-  theme_bw(base_size = 8)
- 
-
-hetreg$dt[, .(
-  corr = cor(fitted, log_var_fitted),
-  r_sq = cor(fitted, log_var_fitted) ^ 2
+  corr = cor(var_fitted, log_var_fitted, use = "complete.obs"),
+  r_sq = cor(var_fitted, log_var_fitted, use = "complete.obs") ^ 2
   ), by = .(variable)]
 ```
 
 
-\newpage
-
-```{r, echo = F, warning = F, fig.height = 8, out.width = "100%", fig.cap = "Mean-Vol (ML method)"}
-
-hetreg_ml <- fit_het_reg_from_var(v, hetreg_method = "ML")
-
-hetreg_ml$dt |> 
-  ggplot(aes(y = fitted, x = log_var_fitted)) +
-  geom_point() +
-  facet_wrap(vars(variable), scales = "free", nrow = 4) +
-  theme_bw(base_size = 8)
-
-hetreg_ml$dt[, .(
-  corr = cor(fitted, log_var_fitted),
-  r_sq = cor(fitted, log_var_fitted) ^ 2
-  ), by = .(variable)]
-```
