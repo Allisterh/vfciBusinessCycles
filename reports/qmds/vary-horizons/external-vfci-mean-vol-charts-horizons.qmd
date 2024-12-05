@@ -1,0 +1,87 @@
+---
+title: "Mean-Vol Heteroskedasticity Charts - External VFCI Estimates"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, echo = F, warning = F}
+args <- CJ(
+  y = c("output", "consumption", "pcecc96", "gdpc1"),
+  forward = 1:30,
+  sorted = FALSE
+)
+
+results_list <-
+  args |>
+  purrr::pmap(
+    est_vfci,
+    x = c("pc1", "pc2", "pc3", "pc4")
+  )
+
+results <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(results_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-height: 8
+#| out-width: 100%
+#| fig-cap: "Corelations and R-squared by horizon"
+
+results[, .(
+  corr = cor(mu, vfci, use = 'complete.obs'),
+  r_sq = cor(mu, vfci, use = 'complete.obs') ^ 2
+  ), by = .(y, forward)
+] |>
+  ggplot(aes(
+    x = forward,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0) + 
+  geom_line(aes(color = "corr")) +
+  geom_line(aes(y = r_sq, color = "r_sq"), linetype = 2) +
+  facet_wrap(vars(y)) +
+  scale_y_continuous(limits = c(-1, 1)) + 
+  theme_bw(base_size = 8)
+
+```
+
+```{r}
+#| output: asis
+#| echo: false
+
+res <- map_chr(1:30, \(h) {
+  knitr::knit_child(text = c(
+    "## Horizon: `r h`",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
+    "results[forward == h] |>
+    ggplot(aes(y = mu, x = vfci)) +
+    geom_point() +
+    facet_wrap(vars(y), scales = 'free', nrow = 2) +
+    theme_bw(base_size = 8)",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+```
+
+
+
