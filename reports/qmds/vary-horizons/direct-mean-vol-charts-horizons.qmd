@@ -1,0 +1,193 @@
+---
+title: "Mean-Vol Heteroskedasticity Charts -- Direct VARs"
+format: pdf
+project:
+  execute-dir: project
+---
+
+Run with direct VARs. Only those variables in differences are calculated as cummulative forward differences.
+
+```{r}
+#| include: false
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r, echo = F, warning = F}
+horizons <- 1:30
+lags <- 2
+
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+var_colnames <- colnames(data[, -"date"])
+
+var_list <-
+  horizons |>
+  map(~ {fit_var(
+    data,
+    lags = lags,
+    y_lead = .x,
+    cumsum_y_lead = TRUE,
+    cumsum_cols = c("output", "investment", "consumption", "hours_worked", "productivity", "TFP")
+  )})
+
+## Have to write custom code to handle hetreg of a direct VAR
+## The current hetreg_from_var function relies upon puling the data from the VAR
+## which, for the direct VAR, causes difficulties in aligning the correct data
+## with the correct horizon
+
+direct_var_hetreg_dt <-
+  horizons |>
+  set_names() |>
+  map( \(.h) {
+    horizon <- .h
+
+    het_reg_list <-
+      var_colnames |>
+      set_names() |>
+      map(~ {
+        y <- .x
+        dt <- copy(data)
+        var <- var_list[[horizon]]
+
+        x2 <- colnames(data[, -"date"])
+        lnres2 <- paste0("lnres2", "_lead", horizon)
+
+        lm2_formula <-
+          paste0(lnres2, " ~ ", paste0(x2, collapse = " + ")) |>
+          as.formula()
+
+        ## Get the log, squared residuals
+        y_loc <- grep(y, colnames(var$y))
+
+        dt$fe <-
+          c(rep(NA, var$p + horizon - 1 + max(0, horizon - var$p)), fevdid::fe(var, 1)[, y_loc]) |>
+          data.table::shift(n = horizon, type = "lead")
+
+        dt[, (lnres2) := log(dt$fe ^ 2)]
+
+        ## Estimate Step 2
+        lm2 <- stats::lm(data = dt, formula = lm2_formula)
+        lm2$call$formula <- lm2_formula
+
+        ## Correct the Intercept of Step 2
+        intercept_adjustment <- 1.2704
+        intercept <- lm2$coefficients[["(Intercept)"]]
+
+        lm2_adj <- lm2
+        lm2_adj$coefficients[["(Intercept)"]] <- intercept + intercept_adjustment
+
+        ## Correct the vcov of Step 2
+        z <- cbind(1, lm2$model[, -1]) |> as.matrix()
+        vcov_adj <- 4.9328 * solve(t(z) %*% z)
+
+        ## Correct the fitted values of Step 2 as well
+        lm2_adj$fitted.values <- lm2$fitted.values + intercept_adjustment
+        lm2_adj$residuals <- lm2$fitted.values - intercept_adjustment
+
+        hetreg <- list(
+          lm1_adj = NA,
+          lm2_adj = lm2_adj,
+          vcov_adj = vcov_adj,
+          lm1 = var,
+          lm2 = lm2,
+          method = "twostep_var"
+        )
+
+        hetreg
+      })
+
+      .x <- "output"
+
+    predicted_log_variance <-
+        var_colnames |>
+        set_names() |>
+        map(~ {
+
+          all_fitted <- stats::fitted(het_reg_list[[.x]]$lm1)
+          all_resids <- stats::residuals(het_reg_list[[.x]]$lm1)
+          x_loc <- grep(.x, colnames(all_fitted))
+
+          data.table(
+            fitted =
+              c(rep(NA, lags + horizon - 1 + max(0, horizon - lags)), all_fitted[, x_loc]) |>
+              data.table::shift(n = horizon, type = "lead"),
+            residuals = c(rep(NA, lags + horizon - 1 + max(0, horizon - lags)), all_resids[, x_loc]) |>
+              data.table::shift(n = horizon, type = "lead"),
+            log_var_fitted_resid =
+              c(
+                rep(NA, lags + horizon - 1 + max(0, horizon - lags)),
+                stats::fitted(het_reg_list[[.x]]$lm2_adj)
+              ) |>
+              data.table::shift(n = horizon, type = "lead"),
+            log_var_fitted = predict(het_reg_list[[.x]]$lm2_adj, newdata = data)
+          ) |>
+            _[, t := .I - lags]
+        }) |>
+        purrr::list_rbind(names_to = "variable")
+  }) |>
+  purrr::list_rbind(names_to = "horizon")
+
+
+results <- direct_var_hetreg_dt
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-height: 8
+#| out-width: 100%
+#| fig-cap: "Corelations and R-squared by horizon"
+
+results[, .(
+  corr = cor(fitted, log_var_fitted, use = 'complete.obs'),
+  r_sq = cor(fitted, log_var_fitted, use = 'complete.obs') ^ 2
+  ), by = .(variable, horizon)
+] |>
+  _[, horizon := as.numeric(horizon)] |>
+  ggplot(aes(
+    x = horizon,
+    y = corr
+  )) +
+  geom_hline(yintercept = 0) + 
+  geom_line(aes(color = "corr")) +
+  geom_line(aes(y = r_sq, color = "r_sq"), linetype = 2) +
+  facet_wrap(vars(variable)) +
+  scale_y_continuous(limits = c(-1, 1)) + 
+  theme_bw(base_size = 8)
+
+```
+
+
+
+```{r}
+#| output: asis
+#| echo: false
+
+res <- map_chr(1:30, \(h) {
+  knitr::knit_child(text = c(
+    "## Horizon: `r h`",
+    "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
+    "results[horizon == h] |>
+    _[!is.na(log_var_fitted)] |>
+    _[!is.na(fitted)] |>
+    ggplot(aes(y = fitted, x = log_var_fitted)) +
+    geom_point() +
+    facet_wrap(vars(variable), scales = 'free', nrow = 4) +
+    theme_bw(base_size = 8)",
+    "```",
+    ""), envir = environment(), quiet = TRUE)
+})
+cat(res, sep = '\n')
+```
+

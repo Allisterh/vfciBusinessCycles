@@ -73,6 +73,8 @@ res <- map_chr(1:30, \(h) {
     "## Horizon: `r h`",
     "```{r, echo = F, warning = F, fig.height = 6, out.width = '100%'}",
     "results[forward == h] |>
+    _[!is.na(vfci)] |>
+    _[!is.na(mu)] |>
     ggplot(aes(y = mu, x = vfci)) +
     geom_point() +
     facet_wrap(vars(y), scales = 'free', nrow = 2) +
