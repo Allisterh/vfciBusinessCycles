@@ -17,6 +17,8 @@
 #' @param exlags_vfci boolean, should lags be included in the vfci calculation or excluded
 #' @param date_begin start date for the data
 #' @param date_end end date for the data
+#' @param method "ML" or "twostep", whether to use Maximum Likelihood or two step
+#' estimation of the heteroskedastic regression.
 #' @param include_all boolean, whether to return all the get_vfci() data
 #' (ie model estimation) or just the time series data
 #' @param data A data.table object containing data for the VFCI estimation,
@@ -41,6 +43,7 @@ est_vfci <- function(
   exlags_vfci = FALSE,
   date_begin = "1962-01-01",
   date_end = "2022-07-01",
+  method = "ML",
   include_all = FALSE,
   data = fread("./data/vfci_data.csv")
 ) {
@@ -80,7 +83,8 @@ est_vfci <- function(
     x,
     het,
     vfci_vars,
-    date_col
+    date_col,
+    method
   )
 
   if (include_all == TRUE) {

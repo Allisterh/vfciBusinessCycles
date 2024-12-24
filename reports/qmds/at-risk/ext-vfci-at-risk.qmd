@@ -1,0 +1,283 @@
+---
+title: "External VFCI, Growth at Risk Figures"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+
+library(data.table)
+library(fevdid)
+library(vars)
+library(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+args <- CJ(
+  y = c("output", "consumption", "pcecc96", "gdpc1"),
+  forward = 1:30,
+  sorted = FALSE
+)
+
+ext_vfci_list <-
+  args |>
+  purrr::pmap(
+    est_vfci,
+    x = c("pc1", "pc2", "pc3", "pc4")
+  )
+
+ext_vfci <-
+  seq_len(nrow(args)) |>
+  purrr::map(~ cbind(ext_vfci_list[[.x]], args[.x, ])) |>
+  purrr::list_rbind() |>
+  copy()
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Actual Values and Residual Estimates"
+#| fig-height: 4
+#| out-width: 100%
+
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = residuals, color = "residuals")) +
+  geom_line(aes(y = mu + residuals, color = "value")) +
+  facet_wrap(vars(y), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean across time"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = date,
+    y = mu
+  )) +
+  geom_line() +
+  facet_wrap(vars(y), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Log Vol (VFCI) across time"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = date,
+    y = vfci
+  )) +
+  geom_line() +
+  facet_wrap(vars(y), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Vol across time"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = date,
+    y = exp(vfci)
+  )) +
+  geom_line() +
+  facet_wrap(vars(y), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Log Vol (VFCI) Scatter"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = vfci,
+    y = mu
+  )) +
+  geom_point() +
+  facet_wrap(vars(y), scales = "free")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Vol Scatter"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = exp(vfci),
+    y = mu
+  )) +
+  geom_point() +
+  facet_wrap(vars(y), scales = "free")
+
+```
+
+\newpage
+
+```{r}
+#| echo: false
+#| warning: false
+
+lms <-
+  ext_vfci |>
+  _[forward == 1] |>
+  split(f = ext_vfci[forward == 1, y]) |>
+  purrr::map(~ {
+    lm(formula = "mu ~ exp(vfci)", data = .x)
+  })
+
+lms |>
+  purrr::map(summary)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Vol across time"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  ggplot(aes(
+    x = date,
+    y = mu
+  )) +
+  geom_line(aes(color = "mean")) +
+  geom_line(aes(y = exp(vfci), color = "vol")) +
+  facet_wrap(vars(y), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Growth at risk and not at risk (i.e. Mu +- 2 * Vol)"
+#| fig-height: 4
+#| out-width: 100%
+
+ext_vfci |>
+  _[forward == 1] |>
+  #_[y == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = mu
+  )) +
+  geom_line(aes(y = mu - 2 * exp(vfci), color = "at_risk")) +
+  geom_line(aes(y = mu + 2 * exp(vfci), color = "not_at_risk")) +
+  facet_wrap(vars(y), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Choose Sigma = b (see below)"
+#| fig-height: 4
+#| out-width: 100%
+
+mean_vol_coefs <-
+  lms |>
+  purrr::map(summary) |>
+  purrr::map_dbl(~ coef(.x)["exp(vfci)", "Estimate"]) |>
+  as.data.table(keep.rownames = TRUE) |>
+  setnames(c("V1", "V2"), c("y", "coef"))
+
+
+ext_vfci |>
+  _[forward == 1] |>
+  merge(mean_vol_coefs, by = "y") |>
+  _[, at_risk := mu + coef * exp(vfci)] |>
+  _[, not_at_risk := mu - coef * exp(vfci)] |>
+  ggplot(aes(
+    x = date,
+    y = mu
+  )) +
+  geom_line(aes(y = at_risk, color = "at_risk")) +
+  geom_line(aes(y = not_at_risk, color = "not_at_risk")) +
+  facet_wrap(vars(y), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+
+mean_vol_coefs
+
+```
+
+\newpage
+
+#### Heteroskedastic Regressions:
+\begin{align}
+y_{t+1} &= \beta_0 + \beta R_t + \epsilon_{t+1}
+\\
+\log(\widehat{\epsilon_{t+1}^2}) &= \gamma_0 + \gamma R_t + \eta_{t+1}
+\\
+\text{VFCI}_{t+1} &= \widehat{\log(\widehat{\epsilon_{t+1}^2})}
+\end{align}
+
+#### Mean - Vol Relationship
+\begin{align}
+\widehat{y}_{t+1} &= a + b \exp(\widehat{\text{VFCI}}_{t+1}) + c_{t+1}
+\end{align}
+
+Now, construct quantiles of $y_{t+1}$,
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q05}} &= \widehat{y}_{t+1} - 1.96 \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+More generally, let us choose $\sigma$ for some quantile $q$ of the normal distribution.
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q}} &= \widehat{y}_{t+1} - \sigma \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+Replacing the mean with the mean-vol relationship,
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q}} &= a + b \exp(\widehat{\text{VFCI}}_{t+1}) + c_{t+1} - \sigma \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+Now choose a $\sigma = b$, and we get
+\begin{align}
+\widehat{y}_{t+1}^{\text{q}^*} &= a + c_{t+1}
+\end{align}
+which if the mean-vol relationship holds is homoskedastic noise around level $a$.
