@@ -1,0 +1,312 @@
+---
+title: "External VFCI, Growth at Risk Figures"
+format: pdf
+project:
+  execute-dir: project
+---
+
+```{r}
+#| include: false
+
+library(data.table)
+library(fevdid)
+library(vars)
+library(ggplot2)
+library(vfciBCHelpers)
+```
+
+```{r}
+horizons <- c(1, 4, 12, 20)
+lags <- 2
+
+data <- get_var_data(
+  vfci = NULL,
+  end_date = "2022-07-01",
+  make_stationary = TRUE
+)
+
+x <- data |> copy()
+
+# cols <- c("output", "consumption", "investment", "productivity")
+# x[, (cols) := .SD / 100, .SDcols = cols]
+
+data[, t := .I - lags]
+
+v <- fit_var(x, lags = lags)
+
+hetreg_list <- purrr::map(1:30, ~ fit_het_reg_from_var(v, hetreg_horizon = .x))
+
+var_means <-
+  purrr::map(1:30, ~{
+    forecast(v, horizon = .x) |>
+      as.data.table() |>
+      _[, t := .I - .x - lags] |>
+      _[, horizon := .x] |>
+      tidyfast::dt_pivot_longer(-c(t, horizon), names_to = "variable", values_to = "mean_fitted")
+  }) |>
+  purrr::list_rbind() |>
+  _[, cum_mean_fitted := cumsum(mean_fitted), by = .(t, variable)]
+
+hetreg_dt <- purrr::map(1:30, ~ {dt <- hetreg_list[[.x]]$dt; dt$horizon <- .x; dt}) |>
+  purrr::list_rbind()
+
+dt <-
+  hetreg_dt |>
+  merge(var_means, by = c("t", "horizon", "variable")) |>
+  merge(data[, .(t, date)], by = "t")
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Actual Values and Residual Estimates"
+#| fig-height: 4
+#| out-width: 100%
+
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date
+  )) +
+  geom_line(aes(y = residuals, color = "residuals")) +
+  geom_line(aes(y = original, color = "value")) +
+  facet_wrap(vars(horizon), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean across time"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = cum_mean_fitted
+  )) +
+  geom_line() +
+  facet_wrap(vars(horizon), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Log Var (VFCI) across time"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = log_var_fitted
+  )) +
+  geom_line() +
+  facet_wrap(vars(horizon), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Vol across time"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = exp(log_var_fitted / 2)
+  )) +
+  geom_line() +
+  facet_wrap(vars(horizon), scales = "free_y")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Log Var (VFCI) Scatter"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = log_var_fitted,
+    y = cum_mean_fitted
+  )) +
+  geom_point() +
+  facet_wrap(vars(horizon), scales = "free")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Vol Scatter"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = exp(log_var_fitted / 2),
+    y = cum_mean_fitted
+  )) +
+  geom_point() +
+  facet_wrap(vars(horizon), scales = "free")
+
+```
+
+\newpage
+
+```{r}
+#| echo: false
+#| warning: false
+
+lms <-
+  dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  split(f = dt[variable == "output" & horizon %in% horizons, horizon]) |>
+  purrr::map(~ {
+    lm(formula = "cum_mean_fitted ~ exp(log_var_fitted / 2)", data = .x)
+  })
+
+lms |>
+  purrr::map(summary)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Mean and Vol across time"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = cum_mean_fitted
+  )) +
+  geom_line(aes(color = "mean")) +
+  geom_line(aes(y = exp(log_var_fitted / 2), color = "vol")) +
+  facet_wrap(vars(horizon), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Growth at risk and not at risk (i.e. Mu +- 2 * Vol)"
+#| fig-height: 4
+#| out-width: 100%
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  ggplot(aes(
+    x = date,
+    y = mu
+  )) +
+  geom_line(aes(y = cum_mean_fitted - 2 * exp(log_var_fitted / 2), color = "at_risk")) +
+  geom_line(aes(y = cum_mean_fitted + 2 * exp(log_var_fitted / 2), color = "not_at_risk")) +
+  facet_wrap(vars(horizon), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Choose Sigma = b (see below)"
+#| fig-height: 4
+#| out-width: 100%
+
+mean_vol_coefs <-
+  lms |>
+  purrr::map(summary) |>
+  purrr::map_dbl(~ coef(.x)["exp(log_var_fitted/2)", "Estimate"]) |>
+  as.data.table(keep.rownames = TRUE) |>
+  setnames(c("V1", "V2"), c("horizon", "coef")) |>
+  _[, horizon := as.numeric(horizon)]
+
+
+dt |>
+  _[horizon %in% horizons] |>
+  _[variable == "output"] |>
+  merge(mean_vol_coefs, by = "horizon") |>
+  _[, at_risk := cum_mean_fitted + coef * exp(log_var_fitted / 2)] |>
+  _[, not_at_risk := cum_mean_fitted - coef * exp(log_var_fitted / 2)] |>
+  ggplot(aes(
+    x = date,
+    y = cum_mean_fitted
+  )) +
+  geom_line(aes(y = at_risk, color = "at_risk")) +
+  geom_line(aes(y = not_at_risk, color = "not_at_risk")) +
+  facet_wrap(vars(horizon), scales = "free_y") +
+  theme_bw(base_size = 10)
+
+```
+
+```{r}
+
+mean_vol_coefs
+
+```
+
+\newpage
+
+#### Heteroskedastic Regressions:
+\begin{align}
+y_{t+1} &= \beta_0 + \beta R_t + \epsilon_{t+1}
+\\
+\log(\widehat{\epsilon_{t+1}^2}) &= \gamma_0 + \gamma R_t + \eta_{t+1}
+\\
+\text{VFCI}_{t+1} &= \widehat{\log(\widehat{\epsilon_{t+1}^2})}
+\end{align}
+
+#### Mean - Vol Relationship
+\begin{align}
+\widehat{y}_{t+1} &= a + b \exp(\widehat{\text{VFCI}}_{t+1}) + c_{t+1}
+\end{align}
+
+Now, construct quantiles of $y_{t+1}$,
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q05}} &= \widehat{y}_{t+1} - 1.96 \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+More generally, let us choose $\sigma$ for some quantile $q$ of the normal distribution.
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q}} &= \widehat{y}_{t+1} - \sigma \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+Replacing the mean with the mean-vol relationship,
+\begin{align*}
+\widehat{y}_{t+1}^{\text{q}} &= a + b \exp(\widehat{\text{VFCI}}_{t+1}) + c_{t+1} - \sigma \cdot \exp(\widehat{\text{VFCI}}_{t+1})
+\end{align*}
+
+Now choose a $\sigma = b$, and we get
+\begin{align}
+\widehat{y}_{t+1}^{\text{q}^*} &= a + c_{t+1}
+\end{align}
+which if the mean-vol relationship holds is homoskedastic noise around level $a$.
