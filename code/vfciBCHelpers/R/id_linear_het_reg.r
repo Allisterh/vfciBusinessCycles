@@ -30,6 +30,7 @@ id_linear_het_reg <- function(
   constant = TRUE,
   hetreg_method = "twostep",
   hetreg_horizon = 1,
+  cumsum = FALSE,
   sign = "pos",
   sign_horizon = 1,
   method = "default",
@@ -50,6 +51,7 @@ id_linear_het_reg <- function(
     constant = constant,
     hetreg_method = hetreg_method,
     hetreg_horizon = hetreg_horizon,
+    cumsum = cumsum,
     x2 = x2,
     extra_data = extra_data
   )

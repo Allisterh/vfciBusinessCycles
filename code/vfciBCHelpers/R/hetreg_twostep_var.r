@@ -5,8 +5,11 @@
 #' @param x2 indepedent varaibles for predicting heteroskedasticity,
 #' defaults to all variables in VAR
 #' @param horizon forecast error horizon for residuals
+#' @param cumsum FALSE, whether to cumulatively sum the forecast errors over the horizons
 #' @param extra_data additional data columns to cbind with the data from the VAR,
 #' use to add exogenous variables for x2 that are not in the VAR
+#'
+#' @import data.table
 #'
 #' @return a `hetreg` object
 #'
@@ -16,10 +19,11 @@ hetreg_twostep_var <- function(
   y,
   x2 = NULL,
   horizon = 1,
+  cumsum = FALSE,
   extra_data = NULL
 ) {
 
-  data <- get_data_from_var(var)
+  data <- get_data_from_var(var) |> as.data.table()
 
   if (!is.null(extra_data)) {
     data <- cbind(data, extra_data)
@@ -39,12 +43,23 @@ hetreg_twostep_var <- function(
 
   ## Get the log, squared residuals
   y_loc <- grep(y, colnames(var$y))
-  data$fe <-
-    c(rep(NA, var$p), fevdid::fe(var, horizon)[, y_loc]) |>
-    data.table::shift(n = horizon, type = "lead")
-  data[lnres2] <- log(data$fe ^ 2)
 
-  data |> as.data.table()
+  for (i in 1:horizon) {
+    data[, paste0("fe_f", i)  :=
+      shift(c(
+        rep(NA, var$p),
+        fevdid::fe(var, i)[, y_loc]
+      ), n = i, type = "lead")
+    ]
+  }
+
+  if (cumsum == TRUE) {
+    data[, fe := rowSums(.SD), .SDcols = paste0("fe_f", 1:horizon)]
+  } else {
+    data[, fe := .SD, .SDcols = paste0("fe_f", horizon)]
+  }
+
+  data[, c(lnres2) := log(data$fe ^ 2)]
 
   ## Estimate Step 2
   lm2 <- stats::lm(data = data, formula = lm2_formula)

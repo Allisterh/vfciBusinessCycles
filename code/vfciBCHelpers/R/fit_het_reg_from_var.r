@@ -21,11 +21,12 @@ fit_het_reg_from_var <- function(
   constant = TRUE,
   hetreg_method = "twostep",
   hetreg_horizon = 1,
+  cumsum = FALSE,
   x2 = NULL,
   extra_data = NULL
 ) {
   ## Set visible global binding to make R CMD check happy
-  log_var_fitted <- t <- variable <- var_lag_variables <- NULL
+  . <- horizon <- log_var_fitted <- t <- variable <- var_lag_variables <- NULL
 
   ## Get the data
   original_data_wide <-
@@ -96,17 +97,77 @@ fit_het_reg_from_var <- function(
       var,
       y = .x,
       horizon = hetreg_horizon,
+      cumsum = cumsum,
       x2 = x2,
       extra_data = extra_data
     ))
 
-  ## Get the predicted log variance values
+  ## Get the predicted log variance, fitted, and residual values
+  forecasts <-
+    1:hetreg_horizon |>
+    purrr::set_names() |>
+    purrr::map(~ {
+      forecast_h <- fevdid::forecast(het_reg_list[[1]]$lm1, .x) |> as.data.table()
+      forecast_h_aligned <- shift(forecast_h, n = .x, type = "lead") |> as.data.table()
+      colnames(forecast_h_aligned) <- colnames(var$y)
+      na.trim(forecast_h_aligned, sides = "right")
+    }) |>
+    purrr::list_rbind(names_to = "horizon")
+
+  if (cumsum == TRUE) {
+    fitted <-
+      forecasts |>
+      copy() |>
+      _[, t := rep(seq_len(nrow(var$y)), hetreg_horizon)] |>
+      tidyfast::dt_pivot_longer(-c(t, horizon)) |>
+      _[, .(value = sum(value)), by = .(t, name)] |>
+      tidyfast::dt_pivot_wider(names_from = name, values_from = value) |>
+      _[, t := NULL]
+    fitted <- fitted[, colnames(var$y), with = FALSE]
+  } else {
+    fitted <- forecasts[horizon == hetreg_horizon]
+    fitted <- fitted[, colnames(var$y), with = FALSE]
+  }
+
+  ## Residuals
+  fes <-
+    1:hetreg_horizon |>
+    purrr::set_names() |>
+    purrr::map(~ {
+      fe_h <-
+        rbind(
+          matrix(NA, var$p, var$K),
+          fevdid::fe(het_reg_list[[1]]$lm1, .x)
+        ) |>
+        as.data.table()
+      fe_h_aligned <- shift(fe_h, n = .x, type = "lead") |> as.data.table()
+      colnames(fe_h_aligned) <- colnames(var$y)
+      fe_h_aligned
+    }) |>
+    purrr::list_rbind(names_to = "horizon")
+
+  if (cumsum == TRUE) {
+    residuals <-
+      fes |>
+      copy() |>
+      _[, t := rep(seq_len(nrow(var$y)), hetreg_horizon)] |>
+      tidyfast::dt_pivot_longer(-c(t, horizon)) |>
+      _[, .(value = sum(value)), by = .(t, name)] |>
+      tidyfast::dt_pivot_wider(names_from = name, values_from = value) |>
+      _[, t := NULL]
+    residuals <- residuals[, colnames(var$y), with = FALSE]
+  } else {
+    residuals <- fes[horizon == hetreg_horizon]
+    residuals <- residuals[, colnames(var$y), with = FALSE]
+  }
+
+
   predicted_log_variance <-
     var_colnames |>
     purrr::map(
       ~ data.table(
-        fitted = c(rep(NA, var$p), stats::fitted(het_reg_list[[.x]]$lm1)[, .x]),
-        residuals = c(rep(NA, var$p), stats::residuals(het_reg_list[[.x]]$lm1)[, .x]),
+        fitted = fitted[, .x, with = FALSE][[1]],
+        residuals = residuals[, .x, with = FALSE][[1]],
         log_var_fitted_resid =
           c(
             rep(NA, pmax(0, var$p, hetreg_horizon + 1)),
@@ -114,7 +175,8 @@ fit_het_reg_from_var <- function(
             stats::fitted(het_reg_list[[.x]]$lm2_adj)
           ) |>
           data.table::shift(n = hetreg_horizon, type = "lead"),
-        log_var_fitted = predict(het_reg_list[[.x]]$lm2_adj, newdata = cbind(extra_data, original_data_wide))
+        log_var_fitted =
+          predict(het_reg_list[[.x]]$lm2_adj, newdata = cbind(extra_data, original_data_wide))
       ) |>
         _[, t := .I - var$p]
     ) |>
