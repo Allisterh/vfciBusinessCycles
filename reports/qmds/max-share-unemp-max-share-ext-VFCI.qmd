@@ -22,22 +22,39 @@ bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 end_date <- as.Date("2022-07-01")
 
-x <- get_var_data(consumption = "consumption", vfci = "vfci_fgr1output", end_date = end_date)
-
-vars::VARselect(x[, -"date"])$selection
-
-v <- fit_var(x, lags = lags)
+x <- get_var_data(end_date = end_date, make_stationary = TRUE)
 
 mv_list <- list(
-  max_share_c = id_fevdfd(v, "consumption", bc_freqs, sign = "neg"),
-  max_share_vfci_fgr1 = id_fevdfd(v, "vfci", bc_freqs, sign = "neg"),
-  max_share_vfci_fgr8 = id_fevdfd(fit_var(get_var_data(vfci = "vfci_fgr8output", end_date = end_date), lags), "vfci", bc_freqs, sign = "neg")
+  max_share = 
+    get_var_data(
+      end_date = end_date,
+      make_stationary = TRUE,
+      vfci = NULL
+    ) |>
+    fit_var(lags = lags) |>
+    id_fevdfd("unemployment", bc_freqs),
+  max_share_vfci_fgr1 =
+    get_var_data(
+      end_date = end_date,
+      make_stationary = TRUE,
+      vfci_dt = est_vfci("output", c("pc1", "pc2", "pc3", "pc4"), forward = 1)
+    ) |>
+    fit_var(lags = lags) |>
+    id_fevdfd("vfci", bc_freqs, sign = "pos"),
+  max_share_vfci_fgr12 =
+    get_var_data(
+      end_date = end_date,
+      make_stationary = TRUE,
+      vfci_dt = est_vfci("output", c("pc1", "pc2", "pc3", "pc4"), forward = 12)
+    ) |>
+    fit_var(lags = lags) |>
+    id_fevdfd("vfci", bc_freqs, sign = "neg")
 )
 
 colors <- c(
-  max_share_c = "firebrick",
+  max_share = "firebrick",
   max_share_vfci_fgr1 = "steelblue",
-  max_share_vfci_fgr8 = "lightblue"
+  max_share_vfci_fgr12 = "lightblue"
 )
 ```
 

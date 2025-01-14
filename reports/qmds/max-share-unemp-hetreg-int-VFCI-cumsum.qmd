@@ -26,7 +26,7 @@ v <- fit_var(x, lags = lags)
 
 mv_list <- list(
   max_share_u = id_fevdfd(v, "unemployment", bc_freqs),
-  het_reg_u = id_linear_het_reg(v, "output", hetreg_horizon = 12, hetreg_method = "twostep", sign = "neg")
+  het_reg_u = id_linear_het_reg(v, "output", hetreg_horizon = 12, hetreg_method = "twostep", sign = "neg", cumsum = TRUE)
 )
 
 colors <- c(

@@ -6,6 +6,8 @@
 #' @param constant, boolean, default to TRUE to include a constant in estimating the het reg
 #' @param hetreg_method, defaults to "twostep", can change to "ML"
 #' @param hetreg_horizon defaults to 1, number of periods to calculate the forecast error
+#' @param cumsum boolean, defaults to FALSE, if TRUE, cumsum the forecast error
+#' @param annualize_factor numeric, defaults to 1, factor to annualize the growth rates
 #' @param x2 indepedent variables for predicting heteroskedasticity
 #' @param extra_data additional data columns to cbind with the data from the VAR,
 #' use to add exogenous variables for x2 that are not in the VAR
@@ -22,6 +24,7 @@ fit_het_reg_from_var <- function(
   hetreg_method = "twostep",
   hetreg_horizon = 1,
   cumsum = FALSE,
+  annualize_factor = 1,
   x2 = NULL,
   extra_data = NULL
 ) {
@@ -181,6 +184,22 @@ fit_het_reg_from_var <- function(
         _[, t := .I - var$p]
     ) |>
     purrr::list_rbind(names_to = "variable")
+
+  #### Annualize the Growth Rates
+  if (annualize_factor != 1) {
+    if (cumsum == TRUE) {
+      predicted_log_variance[, fitted := fitted * (annualize_factor / hetreg_horizon)]
+      predicted_log_variance[, residuals := residuals * (annualize_factor / hetreg_horizon)]
+      predicted_log_variance[, log_var_fitted_resid := log_var_fitted_resid * sqrt(annualize_factor / hetreg_horizon)]
+      predicted_log_variance[, log_var_fitted := log_var_fitted * sqrt(annualize_factor / hetreg_horizon)]
+    } else {
+      predicted_log_variance[, fitted := fitted * annualize_factor]
+      predicted_log_variance[, residuals := residuals * annualize_factor]
+      predicted_log_variance[, log_var_fitted_resid := log_var_fitted_resid * annualize_factor]
+      predicted_log_variance[, log_var_fitted := log_var_fitted * annualize_factor]
+    }
+  }
+
 
 
   all_data <-

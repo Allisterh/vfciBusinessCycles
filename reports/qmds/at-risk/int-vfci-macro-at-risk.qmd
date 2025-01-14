@@ -27,32 +27,19 @@ data <- get_var_data(
 
 x <- data |> copy()
 
-# cols <- c("output", "consumption", "investment", "productivity")
-# x[, (cols) := .SD / 100, .SDcols = cols]
-
 data[, t := .I - lags]
 
 v <- fit_var(x, lags = lags)
 
-hetreg_list <- purrr::map(1:30, ~ fit_het_reg_from_var(v, hetreg_horizon = .x))
-
-var_means <-
-  purrr::map(1:30, ~{
-    forecast(v, horizon = .x) |>
-      as.data.table() |>
-      _[, t := .I - .x - lags] |>
-      _[, horizon := .x] |>
-      tidyfast::dt_pivot_longer(-c(t, horizon), names_to = "variable", values_to = "mean_fitted")
-  }) |>
-  purrr::list_rbind() |>
-  _[, cum_mean_fitted := cumsum(mean_fitted), by = .(t, variable)]
-
-hetreg_dt <- purrr::map(1:30, ~ {dt <- hetreg_list[[.x]]$dt; dt$horizon <- .x; dt}) |>
-  purrr::list_rbind()
+hetreg_dt <-
+  horizons |>
+  purrr::set_names() |>
+  purrr::map(~ {fit_het_reg_from_var(v, hetreg_horizon = .x, cumsum = FALSE)$dt}) |>
+  purrr::list_rbind(names_to = "horizon") |>
+  _[, horizon := as.numeric(horizon)]
 
 dt <-
   hetreg_dt |>
-  merge(var_means, by = c("t", "horizon", "variable")) |>
   merge(data[, .(t, date)], by = "t")
 ```
 
@@ -89,7 +76,7 @@ dt |>
   _[variable == "output"] |>
   ggplot(aes(
     x = date,
-    y = cum_mean_fitted
+    y = fitted
   )) +
   geom_line() +
   facet_wrap(vars(horizon), scales = "free_y")
@@ -146,7 +133,7 @@ dt |>
   _[variable == "output"] |>
   ggplot(aes(
     x = log_var_fitted,
-    y = cum_mean_fitted
+    y = fitted
   )) +
   geom_point() +
   facet_wrap(vars(horizon), scales = "free")
@@ -165,7 +152,7 @@ dt |>
   _[variable == "output"] |>
   ggplot(aes(
     x = exp(log_var_fitted / 2),
-    y = cum_mean_fitted
+    y = fitted
   )) +
   geom_point() +
   facet_wrap(vars(horizon), scales = "free")
@@ -184,7 +171,7 @@ lms <-
   _[variable == "output"] |>
   split(f = dt[variable == "output" & horizon %in% horizons, horizon]) |>
   purrr::map(~ {
-    lm(formula = "cum_mean_fitted ~ exp(log_var_fitted / 2)", data = .x)
+    lm(formula = "fitted ~ exp(log_var_fitted / 2)", data = .x)
   })
 
 lms |>
@@ -205,7 +192,7 @@ dt |>
   _[variable == "output"] |>
   ggplot(aes(
     x = date,
-    y = cum_mean_fitted
+    y = fitted
   )) +
   geom_line(aes(color = "mean")) +
   geom_line(aes(y = exp(log_var_fitted / 2), color = "vol")) +
@@ -228,8 +215,8 @@ dt |>
     x = date,
     y = mu
   )) +
-  geom_line(aes(y = cum_mean_fitted - 2 * exp(log_var_fitted / 2), color = "at_risk")) +
-  geom_line(aes(y = cum_mean_fitted + 2 * exp(log_var_fitted / 2), color = "not_at_risk")) +
+  geom_line(aes(y = fitted - 2 * exp(log_var_fitted / 2), color = "at_risk")) +
+  geom_line(aes(y = fitted + 2 * exp(log_var_fitted / 2), color = "not_at_risk")) +
   facet_wrap(vars(horizon), scales = "free_y") +
   theme_bw(base_size = 10)
 
@@ -255,11 +242,11 @@ dt |>
   _[horizon %in% horizons] |>
   _[variable == "output"] |>
   merge(mean_vol_coefs, by = "horizon") |>
-  _[, at_risk := cum_mean_fitted + coef * exp(log_var_fitted / 2)] |>
-  _[, not_at_risk := cum_mean_fitted - coef * exp(log_var_fitted / 2)] |>
+  _[, at_risk := fitted + coef * exp(log_var_fitted / 2)] |>
+  _[, not_at_risk := fitted - coef * exp(log_var_fitted / 2)] |>
   ggplot(aes(
     x = date,
-    y = cum_mean_fitted
+    y = fitted
   )) +
   geom_line(aes(y = at_risk, color = "at_risk")) +
   geom_line(aes(y = not_at_risk, color = "not_at_risk")) +
