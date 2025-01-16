@@ -8,18 +8,42 @@ library(vfciBCHelpers)
 ## Settings
 lags <- 2
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
+end_date <- as.Date("2022-07-01")
+make_stationary <- FALSE
+cumsum <- FALSE
 
-## Make VAR
-data <- get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"))
-fin_data <- get_var_data(add_cols = fin_cols, end_date = as.Date("2022-07-01"))[, fin_cols, with = FALSE]
-var <- fit_var(data, lags = lags)
-
-all_variables <- data[, -"date"] |> colnames() |> set_names()
-data[, t := .I - lags]
+## Make VARs
+fin_data <-
+  get_var_data(
+    vfci = NULL,
+    add_cols = fin_cols,
+    end_date = as.Date("2022-07-01"),
+    make_stationary = make_stationary
+  )
 
 hr_vars <- list(
-  hr_macro = id_linear_het_reg(var, "output", hetreg_horizon = 10, het_reg_lags = 0:lags, sign = "pos"),
-  hr_fin = id_linear_het_reg(var, "output", hetreg_horizon = 10, x2 = fin_cols, extra_data = fin_data, method = "mriv", sign = "pos")
+  hr_macro =
+    get_var_data(vfci = NULL, end_date = as.Date("2022-07-01"), make_stationary = make_stationary) |>
+    fit_var(lags = lags) |>
+    id_linear_het_reg(
+      "output",
+      hetreg_horizon = 12,
+      cumsum = cumsum,
+      het_reg_lags = 0,
+      sign = "pos"
+    ),
+  hr_fin =
+    fin_data[, -c(fin_cols), with = FALSE] |>
+    fit_var(lags = lags) |>
+    id_linear_het_reg(
+      "output",
+      hetreg_horizon = 12,
+      cumsum = cumsum,
+      x2 = fin_cols,
+      extra_data = fin_data[, fin_cols, with = FALSE],
+      method = "mriv",
+      sign = "pos"
+    )
 )
 
 ## Construct VAR IRFs, HDs, etc.
@@ -44,15 +68,16 @@ hr_data <- all_irfs |>
   _[impulse %in% c("Chol_1")] |>
   _[, .(identification, h, response, irf)]
 
-chol_data <- fread("./data/paper-figures/charts/irf-chol.csv")
+fevdfd_data <- fread("./data/paper-figures/charts/irf-fevdfd.csv")
 
 data <- list_rbind(list(
-  chol_data[identification == "vfci_chol"],
-  hr_data[identification == "hr_fin"]
+  fevdfd_data,
+  hr_data
 ))
 
 p <-
   data |>
+  _[identification %in% c("fevdfd_unem", "hr_macro")] |>
   _[, response :=
   factor(
     response,
@@ -85,19 +110,16 @@ p <-
 p
 
 ggsave(
-  "./paper-figures/charts/irf-chol-ext-vfci-hr-int-fin.pdf",
+  "./paper-figures/charts/irf-hr-macro-fevdfd-unem.pdf",
   p, width = 5.5, height = 4, units = "in"
 )
 
 ##
 
-data <- list_rbind(list(
-  chol_data[identification == "vfci_chol"],
-  hr_data[identification == "hr_macro"]
-))
 
 p <-
   data |>
+  _[identification %in% c("fevdfd_unem", "hr_fin")] |>
   _[, response :=
   factor(
     response,
@@ -130,6 +152,6 @@ p <-
 p
 
 ggsave(
-  "./paper-figures/charts/irf-chol-ext-vfci-hr-int-macro.pdf",
+  "./paper-figures/charts/irf-hr-fin-fevdfd-unem.pdf",
   p, width = 5.5, height = 4, units = "in"
 )

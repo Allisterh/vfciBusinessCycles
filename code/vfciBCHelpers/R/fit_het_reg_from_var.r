@@ -16,6 +16,7 @@
 #' @export
 #'
 #' @import data.table
+#' @import zoo
 #'
 fit_het_reg_from_var <- function(
   var,

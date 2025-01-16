@@ -11,6 +11,8 @@ fit_het_reg_from_var(
   constant = TRUE,
   hetreg_method = "twostep",
   hetreg_horizon = 1,
+  cumsum = FALSE,
+  annualize_factor = 1,
   x2 = NULL,
   extra_data = NULL
 )
@@ -25,6 +27,10 @@ fit_het_reg_from_var(
 \item{hetreg_method, }{defaults to "twostep", can change to "ML"}
 
 \item{hetreg_horizon}{defaults to 1, number of periods to calculate the forecast error}
+
+\item{cumsum}{boolean, defaults to FALSE, if TRUE, cumsum the forecast error}
+
+\item{annualize_factor}{numeric, defaults to 1, factor to annualize the growth rates}
 
 \item{x2}{indepedent variables for predicting heteroskedasticity}
 

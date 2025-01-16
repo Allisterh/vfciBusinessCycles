@@ -4,7 +4,15 @@
 \alias{fit_var}
 \title{Fit a VAR to given data with given lags. Ignores a column called "date" and includes a constant.}
 \usage{
-fit_var(data, lags, y_lead = 0, date_col = "date", type = "const")
+fit_var(
+  data,
+  lags,
+  y_lead = 0,
+  cumsum_y_lead = FALSE,
+  cumsum_cols = "all",
+  date_col = "date",
+  type = "const"
+)
 }
 \arguments{
 \item{data}{data.frame, with a date column}
@@ -12,6 +20,11 @@ fit_var(data, lags, y_lead = 0, date_col = "date", type = "const")
 \item{lags}{integer, number of lags to use in VAR}
 
 \item{y_lead}{integer, number of periods to lead the dependent variable for a direct VAR model}
+
+\item{cumsum_y_lead}{logical, if TRUE, cumulative sum the dependent variable}
+
+\item{cumsum_cols}{character, columns to cumsum, defaults to "all",
+pass vector of column names in data}
 
 \item{date_col}{string, defaults to "date", name of the date column}
 

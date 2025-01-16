@@ -12,10 +12,13 @@ est_vfci(
   date_col = "date",
   forward = 1,
   lags = 0,
+  lag_difference = 1,
   cols_to_lag = y,
-  exlags = FALSE,
-  date_begin = "1962-04-01",
+  exlags_het = FALSE,
+  exlags_vfci = FALSE,
+  date_begin = "1962-01-01",
   date_end = "2022-07-01",
+  method = "ML",
   include_all = FALSE,
   data = fread("./data/vfci_data.csv")
 )
@@ -35,15 +38,23 @@ x = c("pc1", "pc2", "pc3", "pc4")}
 
 \item{forward}{how many periods to take forward differences of y}
 
-\item{lags}{how many lags to include in the independent variables, defaults to 0}
+\item{lags}{how many lags to include in the independent variables,
+defaults to 0, which is always ignored. Note that lags are labeled one
+less than the value passed, because the dependent variable is forwarded by
+at least 1.}
 
 \item{cols_to_lag}{which columns to lags of, defaults to just 'y'}
 
-\item{exlags}{boolean, should lags be included in the vfci calculation or excluded}
+\item{exlags_het}{boolean, should lags be included in the vfci calculation or excluded}
+
+\item{exlags_vfci}{boolean, should lags be included in the vfci calculation or excluded}
 
 \item{date_begin}{start date for the data}
 
 \item{date_end}{end date for the data}
+
+\item{method}{"ML" or "twostep", whether to use Maximum Likelihood or two step
+estimation of the heteroskedastic regression.}
 
 \item{include_all}{boolean, whether to return all the get_vfci() data
 (ie model estimation) or just the time series data}

@@ -12,6 +12,7 @@ id_linear_het_reg(
   constant = TRUE,
   hetreg_method = "twostep",
   hetreg_horizon = 1,
+  cumsum = FALSE,
   sign = "pos",
   sign_horizon = 1,
   method = "default",

@@ -11,6 +11,7 @@ get_vfci(
   het = x,
   vfci_vars = het,
   date_col = "date",
+  method = "ML",
   ...,
   gls_opt = NULL
 )
@@ -27,6 +28,9 @@ get_vfci(
 \item{vfci_vars}{variables to use to calculate VFCI, can be a subset of het}
 
 \item{date_col}{date column}
+
+\item{method}{"ML" or "twostep", whether to use Maximum Likelihood or two step
+estimation of the heteroskedastic regression.}
 
 \item{...}{additional arguments to pass to hetreg}
 

@@ -14,10 +14,9 @@ source("./code/clean-raw-data/merge_all_analysis_data.r")
 
 ## VFCI Business Cycle
 source("./code/run-vfci-bc-analysis/compare-vfci.r")
-source("./code/run-vfci-bc-analysis/fit-cholesky-vars.R")
+source("./code/run-vfci-bc-analysis/fit-fevdfd-vars.r")
+source("./code/run-vfci-bc-analysis/fit-cholesky-vars.r")
 source("./code/run-vfci-bc-analysis/fit-hetreg-vars.r")
-source("./code/run-vfci-bc-analysis/fit-max-share-vars.r")
-
 source("./code/run-vfci-bc-analysis/calc-mean-vol.r")
 
 ## Make Figures For Paper

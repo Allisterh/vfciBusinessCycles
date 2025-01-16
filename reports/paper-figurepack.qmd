@@ -28,12 +28,12 @@ str(inline_values)
 #| output: asis
 #| echo: false
 img_files <- fs::dir_ls("./paper-figures/charts/", glob="*.pdf")
-img_files <- stringr::str_remove(img_files, "./paper-figures/")
+#img_files <- stringr::str_remove(img_files, "./paper-figures/")
 img_names <- img_files |>
   stringr::str_remove(".pdf") |>
-  stringr::str_remove("charts/")
+  stringr::str_remove("^.*charts/")
 cat(
-  glue::glue("![{{img_names}}]({{img_files}}){fig-align='center'}\n\n\n", .open = "{{", .close = "}}")
+  glue::glue("![{{img_names}}](.{{img_files}}){fig-align='center'}\n\n\n", .open = "{{", .close = "}}")
 )
 ```
 
@@ -45,17 +45,17 @@ cat(
 #| output: asis
 #| echo: false
 files <- fs::dir_ls("./paper-figures/tables/", glob="*.tex", recurse = TRUE)
-files <- stringr::str_remove(files, "./paper-figures/")
+#files <- stringr::str_remove(files, "./paper-figures/")
 names <- files |>
   stringr::str_remove(".tex") |>
-  stringr::str_remove("tables/")
+  stringr::str_remove("^.*tables/")
 cat(
   glue::glue(
     paste(
       "\\begin{table}",
       "\\caption{<names>}",
       "\\label{<names>}",
-      "\\input{<files>}",
+      "\\input{.<files>}",
       "\\end{table}\n\n",
       sep = "\n"
     ),
