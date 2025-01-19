@@ -9,7 +9,7 @@ library(vfciBCHelpers)
 bc_freqs <- c(2 * pi / 32, 2 * pi / 6)
 lags <- 2
 end_date <- as.Date("2022-07-01")
-make_stationary <- FALSE
+make_stationary <- TRUE
 
 data <- get_var_data(vfci = NULL, end_date = end_date, make_stationary = make_stationary)
 data[, t := .I - lags]

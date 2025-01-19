@@ -8,7 +8,7 @@ library(vfciBCHelpers)
 ## Settings
 lags <- 2
 end_date <- as.Date("2022-07-01")
-make_stationary <- FALSE
+make_stationary <- TRUE
 
 ## Make VAR
 

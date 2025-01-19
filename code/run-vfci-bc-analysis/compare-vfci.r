@@ -5,10 +5,11 @@ library(vfciBCHelpers)
 
 ## Settings
 v_lags <- 2
-make_stationary <- FALSE
+make_stationary <- TRUE
 cumsum <- FALSE
+hetreg_lags <- 0
 end_date <- as.Date("2022-07-01")
-
+hetreg_horizon <- 12
 
 ## Estimate External VFCIs
 ext_vfci_f1 <-
@@ -35,7 +36,7 @@ data <-
 
 v <- fit_var(data, lags = v_lags)
 
-hr <- fit_het_reg_from_var(v, hetreg_horizon = 12, cumsum = cumsum)
+hr <- fit_het_reg_from_var(v, hetreg_horizon = hetreg_horizon, cumsum = cumsum, lags = hetreg_lags)
 
 int_macro_vfci <- hr$dt |>
   merge(copy(data)[, t := .I - v_lags][, .(t, date)], by = "t")
@@ -53,7 +54,7 @@ data <-
 
 v <- fit_var(data[, !c(fin_cols), with = FALSE], lags = v_lags)
 
-hr <- fit_het_reg_from_var(v, hetreg_horizon = 12, cumsum = cumsum, x2 = fin_cols, extra_data = data[, ..fin_cols])
+hr <- fit_het_reg_from_var(v, hetreg_horizon = hetreg_horizon, cumsum = cumsum, x2 = fin_cols, extra_data = data[, ..fin_cols])
 
 int_fin_vfci <- hr$dt |>
   merge(copy(data)[, t := .I - v_lags][, .(t, date)], by = "t")

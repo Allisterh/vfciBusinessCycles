@@ -5,99 +5,53 @@ library(vfciBCHelpers)
 ## Settings
 lags <- 2
 end_date <- as.Date("2022-07-01")
-make_stationary <- FALSE
+make_stationary <- TRUE
 cumsum <- FALSE
+hetreg_lags <- 0
+hetreg_horizon <- 12
 
-## Fit the VAR
+## Macro VFCI
 data <- get_var_data(make_stationary = make_stationary, vfci = NULL, end_date = end_date)
 
 var <- fit_var(data, lags = lags)
 
 data[, t := .I - lags]
 
-het_reg <- fit_het_reg_from_var(var, hetreg_horizon = 12, cumsum = cumsum)
+het_reg <- fit_het_reg_from_var(var, hetreg_horizon = hetreg_horizon, cumsum = cumsum, lags = hetreg_lags)
 
 ## Save out to Disk
 het_reg$dt |>
   merge(data[, .(date, t)], by = "t") |>
   _[, .(date, variable, fitted, log_var_fitted)] |>
-  fwrite("./data/paper-figures/charts/mean-vol-estimate-var.csv")
+  fwrite("./data/paper-figures/charts/mean-vol-estimate-macro-var.csv")
 
-##### Figures
-library(ggplot2)
-data <- fread("./data/paper-figures/charts/mean-vol-estimate-var.csv")
 
-p <-
-  data |>
-  _[variable == "output"] |>
-  ggplot(aes(
-    x = exp(log_var_fitted / 2),
-    y = fitted
-  )) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, ) +
-  labs(
-    x = "Log Var Fitted",
-    y = "Mean Fitted"
-  ) +
-  theme_paper
+## Financial VFCI
+fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 
-p + theme_bw(base_size = 20)
-
-ggsave(
-  "./paper-figures/charts/mean-vol-int-macro-vfci-output.pdf",
-  p, width = 5.5, height = 4, units = "in"
+data <- get_var_data(
+  make_stationary = make_stationary,
+  vfci = NULL,
+  end_date = end_date,
+  add_cols = fin_cols
 )
 
-## Mean and Vol Regression
-reg_table <-
-  data |>
-  _[variable == "output"] |>
-  lm(fitted ~ exp(log_var_fitted / 2), data = _) |>
-  gtsummary::tbl_regression() |>
-  gtsummary::add_glance_source_note(include = c(r.squared)) |>
-  gtsummary::as_gt() |>
-  gt::as_latex() |>
-  stringr::str_remove("\\\\begin\\{table\\}\\[!t\\]") |>
-  stringr::str_remove("\\\\end\\{table\\}")
+var <- fit_var(data[, -fin_cols, with = FALSE], lags = lags)
 
-writeLines(reg_table, "./paper-figures/tables/mean-vol-regression-output.tex")
+data[, t := .I - lags]
+
+het_reg <-
+  fit_het_reg_from_var(
+    var,
+    hetreg_horizon = hetreg_horizon,
+    cumsum = cumsum,
+    x2 = fin_cols,
+    extra_data = data[, ..fin_cols]
+  )
 
 
-## Mean and Vol across Time
-p <-
-  data |>
-  _[variable == "output"] |>
-  ggplot(aes(
-    x = date
-  )) +
-  geom_line(aes(y = fitted, color = "fitted mean")) +
-  geom_line(aes(y = exp(log_var_fitted / 2), color = "vol fitted")) +
-  theme_paper +
-  theme(legend.position = c(0.2, 0.8))
-
-p + theme_bw(base_size = 20)
-
-ggsave(
-  "./paper-figures/charts/mean-vol-across-time.pdf",
-  p, width = 5.5, height = 4, units = "in"
-)
-
-## At Risk and Not at Risk
-p <-
-  data |>
-  _[variable == "output"] |>
-  ggplot(aes(
-    x = date
-  )) +
-  geom_line(aes(y = fitted - 2 * exp(log_var_fitted / 2), color = "At Risk")) +
-  geom_line(aes(y = fitted + 2 * exp(log_var_fitted / 2), color = "Not at Risk")) +
-  theme_paper +
-  theme(legend.position = c(0.2, 0.8))
-
-p + theme_bw(base_size = 20)
-
-ggsave(
-  "./paper-figures/charts/at-risk-not-at-risk.pdf",
-  p, width = 5.5, height = 4, units = "in"
-)
+## Save out to Disk
+het_reg$dt |>
+  merge(data[, .(date, t)], by = "t") |>
+  _[, .(date, variable, fitted, log_var_fitted)] |>
+  fwrite("./data/paper-figures/charts/mean-vol-estimate-fin-var.csv")

@@ -6,7 +6,7 @@ data <-
   list(
     fread("./data/paper-figures/charts/irf-fevdfd.csv"),
     fread("./data/paper-figures/charts/irf-chol.csv"),
-    fread("./data/paper-figures/charts/irf-hr.csv")
+    fread("./data/paper-figures/charts/irf-hetreg.csv")
   ) |>
   purrr::list_rbind()
 

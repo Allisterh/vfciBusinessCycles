@@ -9,8 +9,10 @@ library(vfciBCHelpers)
 lags <- 2
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
 end_date <- as.Date("2022-07-01")
-make_stationary <- FALSE
+make_stationary <- TRUE
 cumsum <- FALSE
+hetreg_lags <- 0
+hetreg_horizon <- 12
 
 ## Make VARs
 data <- get_var_data(vfci = NULL, end_date = end_date, make_stationary = make_stationary)
@@ -34,9 +36,9 @@ hr_vars <- list(
     fit_var(lags = lags) |>
     id_linear_het_reg(
       "output",
-      hetreg_horizon = 12,
+      hetreg_horizon = hetreg_horizon,
       cumsum = cumsum,
-      het_reg_lags = 0,
+      het_reg_lags = hetreg_lags,
       sign = "pos"
     ),
   hr_fin =
@@ -44,7 +46,7 @@ hr_vars <- list(
     fit_var(lags = lags) |>
     id_linear_het_reg(
       "output",
-      hetreg_horizon = 12,
+      hetreg_horizon = hetreg_horizon,
       cumsum = cumsum,
       x2 = fin_cols,
       extra_data = fin_data[, fin_cols, with = FALSE],
