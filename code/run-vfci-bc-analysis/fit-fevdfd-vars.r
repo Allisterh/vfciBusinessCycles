@@ -11,6 +11,8 @@ lags <- 2
 end_date <- as.Date("2022-07-01")
 make_stationary <- FALSE
 
+data <- get_var_data(vfci = NULL, end_date = end_date, make_stationary = make_stationary)
+data[, t := .I - lags]
 
 ## Make VARs
 fevdfd_vars <- list(
@@ -36,58 +38,64 @@ all_irfs <- fevdfd_vars |>
   list_rbind(names_to = "identification") |>
   setDT()
 
-## Save Figure Data
+all_hs <- fevdfd_vars |>
+  map(~ hs(.x)$hs) |>
+  list_rbind(names_to = "identification") |>
+  setDT() |>
+  merge(data[, .(t, date)], by = "t")
 
+all_hd <- fevdfd_vars |>
+  map(~ hd(.x)$hd) |>
+  list_rbind(names_to = "identification") |>
+  setDT() |>
+  merge(data[, .(t, date)], by = "t")
+
+all_fevfd <- fevdfd_vars |>
+  map(~ fevfd(.x)$fevfd) |>
+  list_rbind(names_to = "identification") |>
+  setDT()
+all_fevfd[, total := sum(fevfd), by = .(identification, f, response)]
+all_fevfd[, p := 1 / f * 2 * pi]
+
+all_q <- fevdfd_vars |>
+  map(~ data.table(
+    variable = colnames(.x$y),
+    weight = .x$Q[, 1]
+  )) |>
+  list_rbind(names_to = "identification") |>
+  setDT()
+
+all_b <- fevdfd_vars |>
+  map(~ data.table(
+    variable = colnames(.x$y),
+    weight = solve(.x$B)[1, ]
+  )) |>
+  list_rbind(names_to = "identification") |>
+  setDT()
+
+## Save Figure Data
 all_irfs |>
   _[impulse %in% c("Main")] |>
   _[, .(identification, h, response, irf)] |>
   fwrite("./data/paper-figures/charts/irf-fevdfd.csv")
 
-#####
-
-## Make Figures
-library(ggplot2)
-
-fevdfd_data <- all_irfs |>
+all_hs |>
   _[impulse %in% c("Main")] |>
-  _[, .(identification, h, response, irf)]
+  _[, .(identification, date, hs)] |>
+  fwrite("./data/paper-figures/charts/hs-fevdfd.csv")
 
+all_hd |>
+  _[impulse %in% c("Main")] |>
+  _[, .(identification, date, response, hd, total)] |>
+  fwrite("./data/paper-figures/charts/hd-fevdfd.csv")
 
-p <-
-  fevdfd_data |>
-  _[identification %in% c("fevdfd_vfci_f1", "fevdfd_vfci_f12", "fevdfd_unem")] |>
-  _[, response :=
-  factor(
-    response,
-    levels = variable_labels,
-    labels = labels(variable_labels),
-    ordered = TRUE
-  )] |>
-  ggplot(aes(
-    x = h,
-    y = irf,
-    color = identification
-  )) +
-  geom_hline(yintercept = 0, color = "gray") +
-  geom_line() +
-  facet_wrap(
-    vars(response),
-    scales = "free_y",
-    nrow = 3
-  ) +
-  labs(
-    x = "Horizon (quarters)",
-    y = "Impulse Response Function"
-  ) +
-  theme_paper +
-  theme(
-    legend.position = "inside",
-    legend.position.inside = c(0.88, 0.125)
-  )
+all_fevfd |>
+  _[impulse %in% c("Main")] |>
+  _[, .(identification, f, p, response, fevfd, total)] |>
+  fwrite("./data/paper-figures/charts/fevfd-fevdfd.csv")
 
-p
+all_q |>
+  fwrite("./data/paper-figures/charts/q-fevdfd.csv")
 
-ggsave(
-  "./paper-figures/charts/irf-fevdfd-vfci-fevdfd-unem.pdf",
-  p, width = 5.5, height = 4, units = "in"
-)
+all_b |>
+  fwrite("./data/paper-figures/charts/b-fevdfd.csv")

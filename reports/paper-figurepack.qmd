@@ -6,7 +6,7 @@ format:
       lot: true
       include-in-header:
         - text: |
-            \usepackage{booktabs, longtable, colortbl, array}
+            \usepackage{pdflscape, booktabs, longtable, colortbl, array}
 project:
   execute-dir: project
 ---
@@ -52,11 +52,14 @@ names <- files |>
 cat(
   glue::glue(
     paste(
+      "\\newpage",
+      "\\begin{landscape}",
       "\\begin{table}",
       "\\caption{<names>}",
       "\\label{<names>}",
       "\\input{.<files>}",
-      "\\end{table}\n\n",
+      "\\end{table}",
+      "\\end{landscape}",
       sep = "\n"
     ),
     .open = "<",
