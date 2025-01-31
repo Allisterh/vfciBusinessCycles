@@ -11,7 +11,6 @@
 #' * only allows for an exponential variance function structure defined by
 #' a combination [`varComb()`][nlme::varComb()] of [varExp()][nlme::varExp()]
 #'  terms
-#' * has [broom][broom::broom()] tidiers
 #'
 #' The model estimated is:
 #' \deqn{y_i = x_i \beta + \epsilon_i \\

@@ -44,7 +44,6 @@ to \code{\link[nlme:gls]{gls()}}, the function \code{hetreg()}
 \item only allows for an exponential variance function structure defined by
 a combination \code{\link[nlme:varComb]{varComb()}} of \link[nlme:varExp]{varExp()}
 terms
-\item has \link[broom:broom]{broom} tidiers
 }
 
 The model estimated is:

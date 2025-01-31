@@ -33,6 +33,8 @@ id_linear_het_reg(
 
 \item{hetreg_horizon}{defaults to 1, number of periods to calculate the forecast error}
 
+\item{cumsum}{boolean, defaults to FALSE, if TRUE, cumsum the forecast error}
+
 \item{sign}{Default to "positive". Can be "negative".  Ensures the
 cummulative impact of the main shock on the target variable is the
 given sign.}

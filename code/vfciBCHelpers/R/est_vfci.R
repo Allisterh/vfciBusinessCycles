@@ -11,6 +11,8 @@
 #' defaults to 0, which is always ignored. Note that lags are labeled one
 #' less than the value passed, because the dependent variable is forwarded by
 #' at least 1.
+#' @param lag_difference how many periods to take the difference of the lags,
+#' defaults to 1, but can be set equal to the forward horizon
 #' @param date_col which column in the data.table identifies the 'date' or time domain
 #' @param cols_to_lag which columns to lags of, defaults to just 'y'
 #' @param exlags_het boolean, should lags be included in the vfci calculation or excluded

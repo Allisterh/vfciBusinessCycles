@@ -7,6 +7,7 @@
 #' @param constant, boolean, default to TRUE for constant in het_reg regression
 #' @param hetreg_method, defaults to "twostep", can change to "ML"
 #' @param hetreg_horizon defaults to 1, number of periods to calculate the forecast error
+#' @param cumsum boolean, defaults to FALSE, if TRUE, cumsum the forecast error
 #' @param sign Default to "positive". Can be "negative".  Ensures the
 #' cummulative impact of the main shock on the target variable is the
 #' given sign.

@@ -20,7 +20,7 @@ get_var_data(
   vfci = "vfci",
   vfci_dt = NULL,
   start_date = as.Date("1962-01-01"),
-  end_date = as.Date("2017-01-01"),
+  end_date = as.Date("2024-07-01"),
   make_stationary = FALSE,
   diff_cols = c("output", "investment", "consumption", "hours_worked", "productivity",
     "TFP"),

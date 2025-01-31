@@ -17,7 +17,7 @@ est_vfci(
   exlags_het = FALSE,
   exlags_vfci = FALSE,
   date_begin = "1962-01-01",
-  date_end = "2022-07-01",
+  date_end = "2024-07-01",
   method = "ML",
   include_all = FALSE,
   data = fread("./data/vfci_data.csv")
@@ -42,6 +42,9 @@ x = c("pc1", "pc2", "pc3", "pc4")}
 defaults to 0, which is always ignored. Note that lags are labeled one
 less than the value passed, because the dependent variable is forwarded by
 at least 1.}
+
+\item{lag_difference}{how many periods to take the difference of the lags,
+defaults to 1, but can be set equal to the forward horizon}
 
 \item{cols_to_lag}{which columns to lags of, defaults to just 'y'}
 

@@ -16,7 +16,6 @@
 #' @export
 #'
 #' @import data.table
-#' @import zoo
 #'
 fit_het_reg_from_var <- function(
   var,
@@ -30,7 +29,7 @@ fit_het_reg_from_var <- function(
   extra_data = NULL
 ) {
   ## Set visible global binding to make R CMD check happy
-  . <- horizon <- log_var_fitted <- t <- variable <- var_lag_variables <- NULL
+  . <- horizon <- log_var_fitted <- log_var_fitted_resid <- t <- value <- name <- NULL
 
   ## Get the data
   original_data_wide <-

@@ -51,7 +51,7 @@ get_vfci <- function(
     het_coefs <- h$modelStruct$varStruct |> unlist()
   } else if (method == "twostep") {
     ## Adjusted to be a log vol instead of log variance
-    het_coefs <- coef(h$lm2_adj)[-1] / 2
+    het_coefs <- stats::coef(h$lm2_adj)[-1] / 2
   }
   het_coefs <- het_coefs[which(vfci_vars %in% het)]
 
@@ -78,7 +78,7 @@ get_vfci <- function(
     vfci <- c(log(h$sigma) + as.matrix(het_data[, vfci_vars, with = FALSE]) %*% het_coefs)
   } else if (method == "twostep") {
     ## Adjusted to be a log vol instead of log variance
-    vfci <- predict(h$lm2_adj, newdata = het_data[, vfci_vars, with = FALSE]) / 2
+    vfci <- stats::predict(h$lm2_adj, newdata = het_data[, vfci_vars, with = FALSE]) / 2
   }
 
   ts <- data.table(

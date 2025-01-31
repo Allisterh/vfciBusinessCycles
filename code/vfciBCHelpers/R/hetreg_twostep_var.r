@@ -22,7 +22,8 @@ hetreg_twostep_var <- function(
   cumsum = FALSE,
   extra_data = NULL
 ) {
-
+  fe <- NULL
+  
   data <- get_data_from_var(var) |> as.data.table()
 
   if (!is.null(extra_data)) {
@@ -39,7 +40,7 @@ hetreg_twostep_var <- function(
 
   lm2_formula <-
     paste0(lnres2, " ~ ", paste0(x2, collapse = " + ")) |>
-    as.formula()
+    stats::as.formula()
 
   ## Get the log, squared residuals
   y_loc <- grep(y, colnames(var$y))
