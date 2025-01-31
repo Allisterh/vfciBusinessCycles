@@ -25,7 +25,7 @@ add_cols <- c(
 
 data <- get_var_data(
   vfci = NULL,
-  end_date = "2022-07-01",
+  end_date = "2024-07-01",
   make_stationary = TRUE,
   add_cols = add_cols
   )
