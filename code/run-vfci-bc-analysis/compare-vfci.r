@@ -8,7 +8,7 @@ v_lags <- 2
 make_stationary <- TRUE
 cumsum <- FALSE
 hetreg_lags <- 0
-end_date <- as.Date("2022-07-01")
+end_date <- as.Date("2024-07-01")
 hetreg_horizon <- 12
 
 ## Estimate External VFCIs

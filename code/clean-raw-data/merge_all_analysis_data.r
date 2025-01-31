@@ -72,10 +72,8 @@ dt |>
   dt_pivot_longer(-date) |>
   _[name %in% c(
     "inflation",
-    "pcepi",
-    "pcepilfe",
-    "cpiaucsl",
-    "cpilfesl"
+    "unemployment",
+    "pc1"
   )] |>
   _[, value := scale(value), by = name] |>
   _[!is.na(value)] |>

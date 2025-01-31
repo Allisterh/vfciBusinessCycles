@@ -42,7 +42,7 @@ est_vfci <- function(
   exlags_het = FALSE,
   exlags_vfci = FALSE,
   date_begin = "1962-01-01",
-  date_end = "2022-07-01",
+  date_end = "2024-07-01",
   method = "ML",
   include_all = FALSE,
   data = fread("./data/vfci_data.csv")

@@ -8,7 +8,7 @@ library(vfciBCHelpers)
 ## Settings
 lags <- 2
 fin_cols <- c("pc1", "pc2", "pc3", "pc4")
-end_date <- as.Date("2022-07-01")
+end_date <- as.Date("2024-07-01")
 make_stationary <- TRUE
 cumsum <- FALSE
 hetreg_lags <- 0

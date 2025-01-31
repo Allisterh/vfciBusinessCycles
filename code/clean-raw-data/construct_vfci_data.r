@@ -152,7 +152,7 @@ variables <-
 financial_vars <- c("gspc_vol", "annual_ret", "t10y3m", "tb3smffm", "aaa10ym", "baa_aaa")
 
 ## Construct PCs from financial variables and merge onto variables
-pc_dates <- c("1962-01-01", "2022-07-01")
+pc_dates <- c("1962-01-01", "2024-10-01")
 pca_data <-
   variables |>
   _[date %between% pc_dates] |>
