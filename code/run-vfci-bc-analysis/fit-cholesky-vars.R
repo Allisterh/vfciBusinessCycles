@@ -65,7 +65,7 @@ all_irfs <- chol_vars |>
 all_hs <- chol_vars |>
   map(~ {
     hs(.x)$hs |>
-    merge(.x$dates, by = "t")
+      merge(.x$dates, by = "t")
   }) |>
   list_rbind(names_to = "identification") |>
   setDT()
@@ -73,7 +73,7 @@ all_hs <- chol_vars |>
 all_hd <- chol_vars |>
   map(~ {
     hd(.x)$hd |>
-    merge(.x$dates, by = "t")
+      merge(.x$dates, by = "t")
   }) |>
   list_rbind(names_to = "identification") |>
   setDT()

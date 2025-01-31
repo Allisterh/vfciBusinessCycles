@@ -22,7 +22,7 @@ fin_data <-
   get_var_data(
     vfci = NULL,
     add_cols = fin_cols,
-    end_date = as.Date("2022-07-01"),
+    end_date = end_date,
     make_stationary = make_stationary
   )
 
@@ -30,7 +30,7 @@ hr_vars <- list(
   hr_macro =
     get_var_data(
       vfci = NULL,
-      end_date = as.Date("2022-07-01"),
+      end_date = end_date,
       make_stationary = make_stationary
     ) |>
     fit_var(lags = lags) |>
