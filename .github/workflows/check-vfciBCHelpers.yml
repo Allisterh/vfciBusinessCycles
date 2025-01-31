@@ -24,6 +24,12 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
+      - name: dependencies on Linux
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make libicu-dev libxml2-dev libssl-dev pandoc librdf0-dev libnode-dev libcurl4-gnutls-dev
+          sudo apt install libharfbuzz-dev libfribidi-dev
+
       - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r@v2
