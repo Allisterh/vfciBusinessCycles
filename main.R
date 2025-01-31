@@ -23,8 +23,7 @@ source("./code/run-vfci-bc-analysis/calc-mean-vol.r")
 source("./code/make-paper-figures/run-figure-scripts.r")
 
 ## Copy Figures to Overleaf git submodule
-## NOTE: This only runs on Matt's machine
-if (grepl("matthewdehaven", getwd())) source("./code/make-paper-figures/copy-figures-to-overleaf.r")
+source("./code/make-paper-figures/copy-figures-to-overleaf.r")
 
 ## Run Tests
 testthat::test_dir("tests")
