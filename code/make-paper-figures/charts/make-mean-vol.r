@@ -1,6 +1,7 @@
 library(data.table)
 library(ggplot2)
-
+library(broom)
+library(broom.helpers)
 
 #####
 ## Macro VFCI
