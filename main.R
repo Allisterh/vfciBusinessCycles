@@ -15,6 +15,8 @@ source("./code/clean-raw-data/merge_all_analysis_data.r")
 ## VFCI Business Cycle
 source("./code/run-vfci-bc-analysis/compare-vfci.r")
 source("./code/run-vfci-bc-analysis/fit-fevdfd-vars.r")
+print(list.files("./code/run-vfci-bc-analysis/"))
+print(file.info(list.files("./code/run-vfci-bc-analysis/")))
 source("./code/run-vfci-bc-analysis/fit-cholesky-vars.r")
 source("./code/run-vfci-bc-analysis/fit-hetreg-vars.r")
 source("./code/run-vfci-bc-analysis/calc-mean-vol.r")
