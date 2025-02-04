@@ -1,9 +1,6 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
-on:
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 name: Run Main.R
 
@@ -52,15 +49,3 @@ jobs:
       - name: Run main.R
         run: |
           Rscript main.R
-
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: rmarkdown-logs
-          path: ./code/reports/*.log
-
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: rmarkdown-tex
-          path: ./reports/*.tex
