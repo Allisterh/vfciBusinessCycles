@@ -15,7 +15,7 @@ yahoo_raw <-
 
 # BCA data -----------------------------------------------------------------
 bca_data <- fread("./data-raw/bca_current_data.csv")
-bca_data <- bca_data[, .(date, output, consumption)] |>
+bca_data <- bca_data[, .(date, output, consumption, unemployment, investment, hours_worked)] |>
   tidyfast::dt_pivot_longer(-date, names_to = "symbol", values_to = "price") |>
   _[, date := as.IDate(date)]
 
