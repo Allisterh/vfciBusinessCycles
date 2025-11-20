@@ -1,0 +1,150 @@
+---
+title: "Financial Shocks (Ottonello & Song, WP)"
+format: pdf
+project:
+  execute-dir: project
+execute:
+  freeze: auto
+---
+
+```{r packages}
+#| include: false
+
+library(data.table)
+library(purrr)
+library(vars)
+library(svars)
+require(fevdid)
+require(ggplot2)
+library(vfciBCHelpers)
+library(tidyquant)
+library(sovereign)
+
+fred_key <- "7fdf94c38c6355269067736a82bf7874"
+fredr::fredr_set_key(fred_key)
+```
+
+```{r data}
+#| include: false
+
+fin_shocks <- readxl::read_excel("./data-raw/finshocks_public.xlsx", sheet = "daily-level") |> setDT()
+fin_shocks[, date := as.IDate(date)]
+
+ebp_dt <- fread("./data-raw/ebp_csv.csv")
+
+vix_data <- tq_get("^VIX", get = "stock.prices", from = "1990-01-01") |> setDT() |> _[,.(date, vix = log(close))]
+u_rate <- fredr::fredr("UNRATE", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), u_rate = value)]
+ip_rate <- fredr::fredr("INDPRO", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), ip = log(value))]
+aaa10ym <- fredr::fredr("AAA10YM", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), aaa10ym = value)]
+baa10ym <- fredr::fredr("BAA10YM", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), baa10ym = value)]
+nfci <- fredr::fredr("NFCI", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), nfci = value)]
+cpi <- fredr::fredr("CORESTICKM159SFRBATL", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), cpiex = value)]
+ff <- fredr::fredr("FEDFUNDS", frequency = "m") |> setDT() |> _[, .(date = as.IDate(date), ff = value)]
+
+dt <- merge(fin_shocks, vix_data, by = "date", all = TRUE)
+dt <- dt[, .(
+  vf = sum(vf, na.rm = TRUE),
+  vf_outside = sum(vf_outside, na.rm = TRUE),
+  vf_purged = sum(vf_purged, na.rm = TRUE),
+  vix = mean(vix, na.rm = TRUE)
+  ),
+  by = .(date = as.IDate(format(date, "%Y-%m-01")))]
+
+dt <- merge(dt, ebp_dt, all = TRUE, by = "date") |>
+  merge(u_rate, by = "date", all = TRUE) |>
+  merge(ip_rate, by = "date", all = TRUE) |>
+  merge(aaa10ym, by = "date", all = TRUE) |>
+  merge(baa10ym, by = "date", all = TRUE) |>
+  merge(nfci, by = "date", all = TRUE) |>
+  merge(cpi, by = "date", all = TRUE) |>
+  merge(ff, by = "date", all = TRUE)
+```
+
+
+First, we replicate Figure 2 from Ottonello & Song (WP) using their financial shock.
+
+```{r ottonello-song-fig2}
+#| echo: false
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 5
+
+vdt <- dt[, .(date = as.Date(date), vf_purged, ebp, vix, u_rate, ip, aaa10ym, baa10ym)]
+vdt <- vdt[complete.cases(vdt)]
+iv <- sovereign::VAR(vdt, horizon = 1, p = 1, structure = "IV", instrument = "vf_purged", instrumented = "ebp")
+iv_irfs <- sovereign::var_irf(iv, horizon = 24)
+iv_irfs |> sovereign::plot_irf()
+```
+
+
+Next, use the same instrument with to identify a shock to the NFCI in a VAR with unemployment, industrial production, inflation, and the federal funds rate.
+
+```{r iv-nfci}
+#| echo: false
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 5
+
+vdt <- dt[, .(date = as.Date(date), vf_purged, nfci, u_rate, ip, cpiex, ff)]
+vdt <- vdt[complete.cases(vdt)]
+iv <- sovereign::VAR(vdt, horizon = 1, p = 1, structure = "IV", instrument = "vf_purged", instrumented = "nfci")
+iv_irfs <- sovereign::var_irf(iv, horizon = 24)
+iv_irfs |> sovereign::plot_irf()
+```
+
+
+The same thing, but with the VIX instead of the NFCI.
+
+```{r iv-vix}
+#| echo: false
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 5
+
+vdt <- dt[, .(date = as.Date(date), vf_purged, vix, u_rate, ip, cpiex, ff)]
+vdt <- vdt[complete.cases(vdt)]
+iv <- sovereign::VAR(vdt, horizon = 1, p = 1, structure = "IV", instrument = "vf_purged", instrumented = "vix")
+iv_irfs <- sovereign::var_irf(iv, horizon = 24)
+iv_irfs |> sovereign::plot_irf()
+```
+
+
+## Quarterly VFCI
+
+Use the same shock, but aggregated to a quarterly frequency, to identify a VFCI shock in small BCA VAR.
+
+```{r iv-vfci-small}
+#| echo: false
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 4
+
+dt <- get_var_data(
+    make_stationary = F,
+    cols = c("vfci", "vf_purged", "unemployment", "output", "inflation")
+  )  |>
+  _[, date := as.Date(date)]
+
+iv <- sovereign::VAR(dt, horizon = 1, p = 1, structure = "IV", instrument = "vf_purged", instrumented = "vfci")
+iv_irf <- iv |> sovereign::var_irf()
+iv_irf |> sovereign::plot_irf()
+```
+
+And finally, use the same instrument, but aggregated to a quarterly frequency, to identify a shock to the VFCI in a VAR with the BCA variables
+
+```{r iv-vfci}
+#| echo: false
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 8
+
+dt <- get_var_data(
+    make_stationary = F,
+    add_cols = c("vf_purged")
+  )  |>
+  _[, date := as.Date(date)]
+
+iv <- sovereign::VAR(dt, horizon = 1, p = 1, structure = "IV", instrument = "vf_purged", instrumented = "vfci")
+iv_irf <- iv |> sovereign::var_irf(horizon = 12)
+iv_irf |> sovereign::plot_irf()
+```

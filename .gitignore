@@ -84,3 +84,6 @@ rsconnect/
 *.json
 
 /.quarto/
+
+**/*.quarto_ipynb
+_freeze/

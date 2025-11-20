@@ -52,3 +52,7 @@ Provides information on how to acquire each of the raw data files in this folder
         - `Financial_Stress.xlsx` contains the Financial Stress index built by Lukas Puttmann from newspapers. Downloaded from this [page](https://www.policyuncertainty.com/financial_stress.html) on August 19, 2024.
 
         - 'epu' and 'emv' data are converted from monthly to quarterly data by taking the average each quarter.
+
+- `finshocks_public.xlsx`
+    - Financial shocks from [financialshock.com](https://financialshocks.com). Paper Financial Intermidiaries and the AMcroeconomy: Evidence from a High-Frequency Identification by Pablo Ottonello and Wenting Song.
+    - Constructed as srurprise movements in financial intermediaries' stock prices around earnings announcements.  Under a granular IV approach, these shocks are idiosyncratic to the the macroeconomy, but are big enough to have macroeconomic effects.
